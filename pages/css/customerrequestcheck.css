@@ -1,0 +1,33 @@
+
+@import url("basic.css");
+@import url("orderdetail.css");
+@import url("buttons.css");
+
+#basic{
+
+  display: flex;
+  flex-direction: column;
+  border: 3px double #A89B8C;
+  border-radius: 25px 25px 25px 25px;
+  width:40vw;
+  height: 60vh;
+
+}
+
+#inputdata{
+  display: flex;
+  flex-direction: row;
+  height:80%;
+  width:100%;
+  margin-top: 2%;
+  border-bottom: 3px double #A89B8C;
+}
+
+.buttons{
+  height:20%;
+}
+
+.buttons div{
+  margin-top: 1%;
+  width:60%;
+}

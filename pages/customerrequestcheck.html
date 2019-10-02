@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/customerrequestcheck.css">
+    <title>Find Master Post pirce</title>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/customer/searchorders"><div id="ordersearch">訂單搜尋</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main id="excelupload">
+
+	  		<div id="basic">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='orderlabel'>訂單編號 ( Order Number )：</label>
+                <label id='arealabel'>地區 ( Area )：</label>
+                <label id='skilllabel'>裝修項目 ( Items )：</label>
+                <label id='datelabel'>裝修日期 ( Date )：</label>
+				        <label id='describelabel'>詳細敘述 ( Details )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <input type="text" id='ordernumber' name="orderid" readonly>
+                <div id='area'></div>
+                <div id='skill'></div>
+                <div id='date'></div>
+                <div id='description'></div>
+			        </div>
+		          			
+  				</div>
+
+	  			<div class='buttons'>
+				      <div><button class='goto' type="button" onclick="pageback()">回上一頁 ( Back to Previous )</button></div>
+	  			</div>
+
+	  		</div>
+
+	  	</main>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+
+      function pageback(){
+
+        window.history.go(-1);
+
+      }
+
+      let getsearchorderResult = new XMLHttpRequest;
+
+      getsearchorderResult.onreadystatechange = function(){
+
+        if(getsearchorderResult.readyState === 4){
+          
+         if (getsearchorderResult.status === 200){
+
+          let getorderback = JSON.parse(getsearchorderResult.responseText);
+
+          if( getorderback.error ){
+
+            alert('Error, 請重新登入');
+
+            sessionStorage.removeItem("Auth");
+
+            window.location.replace('/user/signin');
+
+          }else if( getorderback.message ){
+
+            alert('訂單不存在');
+
+            window.location.replace('/customer/searchorders');
+
+          }else{
+
+            let ordernumber = document.getElementById('ordernumber');
+            ordernumber.value = getorderback.data[0].indexid;
+
+            let area = document.getElementById('area');
+            area.innerHTML = getorderback.data[0].orderarea;
+
+            let skill = document.getElementById('skill');
+            skill.innerHTML = getorderback.data[0].orderskill;
+
+            let date = document.getElementById('date');
+            date.innerHTML = getorderback.data[0].workdate;
+
+            let description = document.getElementById('description');
+            description.innerHTML = getorderback.data[0].ordertext;
+
+          }
+         
+         }
+
+        }
+
+      }
+
+      let getquerystring = window.location.href.split('?');
+
+      let getidandstatus = getquerystring[1].split('&');
+
+      let getorderid = getidandstatus[1].split('=');
+
+      let getstatus = getidandstatus[0].split('=');
+
+      if( getstatus[1] == undefined || getorderid[1] == undefined ){
+
+        window.location.replace('/user/errordirect');
+
+      }
+
+      getsearchorderResult.open('GET','/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+
+      getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+      getsearchorderResult.send();
+
+
+
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

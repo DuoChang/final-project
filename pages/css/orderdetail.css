@@ -1,0 +1,92 @@
+
+#excelupload,
+main{
+
+	display: flex;
+	flex-direction: column;
+	margin:1.5%;
+	justify-content: center;
+	align-items: center;
+  min-height: 73vh;
+
+}
+
+#basic{
+
+  display: flex;
+  flex-direction: column;
+  border: 3px double #A89B8C;
+  border-radius: 25px 25px 25px 25px;
+  width:40vw;
+  min-height: 60vh;
+  justify-content: space-around;
+
+}
+
+#inputdata{
+  display: flex;
+  flex-direction: row;
+  min-height:60%;
+  width:100%;
+  margin-top: 2%;
+  border-bottom: 3px double #A89B8C;
+}
+
+#inputleft,
+#inputright{
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height:100%;
+  text-align: left;
+  align-items: left;
+}
+
+
+#inputleft label{
+  font-family: Courier;
+  margin:1.8% 0%;
+  padding-left: 3%;
+}
+
+#inputright div{
+  margin:1.3% 5%;
+  font-family: Microsoft JhengHei;
+}
+
+#inputright input{
+  margin:1.3% 5%;
+  font-family: Microsoft JhengHei;
+  text-align: left;
+  outline: none;
+  border:none;
+  font-size: 1em;
+}
+
+#masterquote{
+  min-height:40%;
+  font-family: Microsoft JhengHei;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:center;
+}
+
+#quoteitem{
+  margin-top: 2%;
+  text-align: left;
+}
+
+#quoteitem div{
+  font-family: Microsoft JhengHei;
+  border-radius: 2px;
+}
+
+#quoteitem label{
+  text-decoration: underline;
+}
+#quote,
+#materiallabel{
+  text-align: center;
+  text-decoration: underline;
+}

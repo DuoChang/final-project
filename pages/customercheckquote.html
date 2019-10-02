@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/customercheckquote.css">
+    <title>Find Master Post pirce</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+      .StripeElement {
+        box-sizing: border-box;
+
+        height: 40px;
+
+        padding: 10px 12px;
+
+        border: 1px solid transparent;
+        border-radius: 4px;
+        background-color: white;
+
+        box-shadow: 0 1px 3px 0 #e6ebf1;
+        -webkit-transition: box-shadow 150ms ease;
+        transition: box-shadow 150ms ease;
+      }
+
+      .StripeElement--focus {
+        box-shadow: 0 1px 3px 0 #cfd7df;
+      }
+
+      .StripeElement--invalid {
+        border-color: #fa755a;
+      }
+
+      .StripeElement--webkit-autofill {
+        background-color: #fefde5 !important;
+      }
+    </style>
+
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/customer/searchorders"><div id="ordersearch">訂單搜尋</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+        <div id="showquoteresult">
+
+          <div id="showquotediv">
+
+            <div id="quoteoutput">
+            
+              <div id="resultdiv"></div>     
+                      
+            </div>
+
+          </div>
+
+        </div>
+
+	  		<div id="basic">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='orderlabel'>訂單編號 ( Order Number )：</label>
+                <label id='arealabel'>地區 ( Area )：</label>
+                <label id='skilllabel'>裝修項目 ( Items )：</label>
+                <label id='datelabel'>裝修日期 ( Date )：</label>
+				        <label id='describelabel'>詳細敘述 ( Details )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <input type="text" id='ordernumber' name="orderid" readonly>
+                <div id='area'></div>
+                <div id='skill'></div>
+                <div id='date'></div>
+                <div id='description'></div>
+			        </div>
+		          			
+  				</div>
+
+          <div id="masterquote">
+
+            <div id="quoteitem">
+
+              <div id="quote"></div><br><div id="materiallabel">耗材明細與網路比價：</div>
+
+              <div id="materialdetails"></div>
+
+            </div>           
+
+          </div>
+
+          
+
+
+          <div class='buttons'>
+            <div><button class='goto' type="button" onclick="accept()">接受報價 ( Accept Quote )</button></div>
+            <div><button class='goto' type="button" onclick="reject()">拒絕報價 ( Reject Quote )</button></div>
+          </div>
+
+          <div id="confirmaddress">
+
+            <div>
+              <label> 請確認裝修地址： </label>
+              <input id="address">
+            </div>
+
+            <div>
+              <button class='goto' onclick="checkaddress()">地址確認 ( Address Comfirm )</button>
+            </div>
+
+          </div>
+
+          <form action="/api/order/accept" method="post" id="payment-form">
+            <div class="form-row">
+              <label for="card-element">
+                請輸入信用卡號
+              </label>
+              <div id="card-element"></div>
+
+              <div id="card-errors" role="alert"></div>
+            </div>
+
+            <button class='goto'>付款 ( Paid )</button>
+          </form>
+
+	  		</div>      
+
+	  	</main>
+
+
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+      
+      let checkquote = document.getElementById('basic');
+
+      let showquoteresult = document.getElementById('showquoteresult');
+
+      let resultdiv = document.getElementById('resultdiv');
+
+      let getsearchorderResult = new XMLHttpRequest;
+
+      getsearchorderResult.onreadystatechange = function(){
+
+        if(getsearchorderResult.readyState === 4){
+          
+         if (getsearchorderResult.status === 200){
+
+          let getorderback = JSON.parse(getsearchorderResult.responseText);
+
+          if( getorderback.error ){
+
+            alert('Error, 請重新登入');
+
+            sessionStorage.removeItem("Auth");
+
+            window.location.replace('/user/signin');
+
+          }else if( getorderback.message ){
+
+            alert('訂單不存在');
+
+            window.location.replace('/customer/searchorders');
+
+          }else if( getorderback.incorrect ){
+
+            alert('Error, 請重新登入');
+
+            window.location.replace('/user/errordirect');
+
+          }else{
+
+            let ordernumber = document.getElementById('ordernumber');
+            ordernumber.value = getorderback.data[0].indexid;
+
+            let area = document.getElementById('area');
+            area.innerHTML = getorderback.data[0].orderarea;
+
+            let skill = document.getElementById('skill');
+            skill.innerHTML = getorderback.data[0].orderskill;
+
+            let date = document.getElementById('date');
+            date.innerHTML = getorderback.data[0].workdate;
+
+            let description = document.getElementById('description');
+            description.innerHTML = getorderback.data[0].ordertext;
+
+            let quote = document.getElementById('quote');
+            quote.innerHTML = '總報價： $ ' + getorderback.data[0].finalquote + ' TWD';
+
+            let materialdetails = document.getElementById('materialdetails');
+
+            let materiallabel = document.getElementById('materiallabel');
+
+            if( getorderback.data[0].tooldetails == null ){
+
+              materiallabel.innerHTML = '耗材明細：無';
+
+            }else{
+
+              let toolobj = JSON.parse(getorderback.data[0].tooldetails);
+
+              let toolobjfinal = JSON.parse(getorderback.data[0].tooldetailsfinal);
+
+              let toolstring='';
+              
+
+              for( let objkey in toolobj ){
+
+                let crawlerprice = toolobjfinal[objkey] ;
+
+                if( crawlerprice > toolobj[objkey] || crawlerprice == toolobj[objkey] ){
+
+                  let comparestring = '報價合理' ;
+
+                  toolstring = toolstring + objkey + ' $' + toolobj[objkey] + ' TWD ' + comparestring + '<br>';
+
+                }else{   
+
+                  let compareprice = ((toolobj[objkey]-crawlerprice)/crawlerprice)*100 ;
+
+                  let comparestring = '+' + compareprice.toFixed(0) + '%' ;
+
+                  toolstring = toolstring + objkey + ' $' + toolobj[objkey] + ' TWD ' + comparestring + '<br>';
+
+                }
+
+              }
+
+              materialdetails.innerHTML = toolstring;
+
+            }
+
+          }
+         
+         }
+
+        }
+
+      }
+
+      let getquerystring = window.location.href.split('?');
+
+      let getidandstatus = getquerystring[1].split('&');
+
+      let getorderid = getidandstatus[1].split('=');
+
+      let getstatus = getidandstatus[0].split('=');
+
+      if( getstatus[1] == undefined || getorderid[1] == undefined ){
+
+        window.location.replace('/user/errordirect');
+
+      }
+
+      getsearchorderResult.open('GET','/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+
+      getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+      getsearchorderResult.send();
+
+      let paymentform = document.getElementById('payment-form');
+
+      let buttons = document.getElementsByClassName('buttons');
+
+      let confirmaddress = document.getElementById('confirmaddress');
+
+      function accept(){
+
+        confirmaddress.style.display = 'flex';
+
+        buttons[0].style.display = 'none';
+
+        let getcustomeraddress = new XMLHttpRequest;
+
+        getcustomeraddress.onreadystatechange = function(){
+
+          if(getcustomeraddress.readyState === 4){
+            
+           if (getcustomeraddress.status === 200){
+
+            getaddressresponse = JSON.parse(getcustomeraddress.responseText);           
+
+            let address = document.getElementById('address');
+
+            address.value = getaddressresponse.data.address;
+
+           }
+
+          }
+
+        }
+
+        getcustomeraddress.open('GET','/api/userprofile/customer' );
+
+        getcustomeraddress.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+        getcustomeraddress.send();
+
+
+      }
+
+      function  checkaddress(){
+        
+        
+        let address = document.getElementById('address');
+
+        console.log(address.value);
+
+        if( address.value == '' ){
+
+          alert('地址不可為空');
+
+        }else{
+
+          let saveaddress = new XMLHttpRequest;
+
+          saveaddress.onreadystatechange = function(){
+
+            if(saveaddress.readyState === 4){
+              
+             if (saveaddress.status === 200){
+
+              console.log(saveaddress.responseText);
+
+              let confirmaddressback = JSON.parse(saveaddress.responseText);
+
+              if(confirmaddressback.error){
+
+                alert('地址確認失敗,請重新嘗試');
+
+              }else{
+
+                confirmaddress.style.display = 'none';
+
+                paymentform.style.display = 'flex';
+
+              }
+
+             }
+
+            }
+
+          }
+
+          let ordernumber = document.getElementById('ordernumber');
+
+          let orderaddress = {};
+
+          orderaddress.address = address.value;
+
+          orderaddress.ordernumber = ordernumber.value;
+
+          let sendjson =  JSON.stringify(orderaddress);
+
+          saveaddress.open('POST','/api/order/saveaddress');
+
+          saveaddress.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+          saveaddress.setRequestHeader("Content-Type","application/json");
+
+          saveaddress.send(sendjson);
+
+        }
+
+      }
+
+      function reject(){
+
+        let rejectquote = new XMLHttpRequest;
+
+        rejectquote.onreadystatechange = function(){
+
+          if(rejectquote.readyState === 4){
+            
+           if (rejectquote.status === 200){
+
+            let rejectquoteback = JSON.parse(rejectquote.responseText);
+
+            if( rejectquoteback.data ){
+
+              checkquote.style.display = 'none';
+
+              showquoteresult.style.display = 'flex';
+
+              resultdiv.innerHTML = '已拒絕報價' ;
+
+            }else{
+
+              alert('Error, 請重新確認');
+
+            }
+           
+           }
+
+          }
+
+        }
+
+        rejectquote.open('GET','/api/order/reject?orderid=' + getorderid[1] );
+
+        rejectquote.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+        rejectquote.send();                
+
+
+      }
+
+      var stripe = Stripe('pk_test_MLzIrfLiXfvKHo22ynGivQhg008DuA5V6O');
+
+      // Create an instance of Elements.
+      var elements = stripe.elements();
+
+      // Custom styling can be passed to options when creating an Element.
+      // (Note that this demo uses a wider set of styles than the guide below.)
+      var style = {
+        base: {
+          color: '#32325d',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      };
+
+      // Create an instance of the card Element.
+      var card = elements.create('card', {style: style});
+
+      // Add an instance of the card Element into the `card-element` <div>.
+      card.mount('#card-element');
+
+      // Handle real-time validation errors from the card Element.
+      card.addEventListener('change', function(event) {
+        var displayError = document.getElementById('card-errors');
+        if (event.error) {
+          displayError.textContent = event.error.message;
+        } else {
+          displayError.textContent = '';
+        }
+      });
+
+      // Handle form submission.
+      var form = document.getElementById('payment-form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        stripe.createToken(card).then(function(result) {
+          if (result.error) {
+            // Inform the user if there was an error.
+            var errorElement = document.getElementById('card-errors');
+            errorElement.textContent = result.error.message;
+          } else {
+            // Send the token to your server.
+            stripeTokenHandler(result.token);
+          }
+        });
+      });
+
+      // Submit the form with the token ID.
+      function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+
+        var quote = document.getElementById('quote').innerHTML;
+        var getprice = quote.split(' ');
+
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+
+        var hiddenInputorderid = document.createElement('input');
+
+        hiddenInputorderid.setAttribute('type', 'hidden');
+        hiddenInputorderid.setAttribute('name', 'orderid');
+        hiddenInputorderid.setAttribute('value', getorderid[1]);
+
+        var hiddenInputprice = document.createElement('input');
+
+        hiddenInputprice.setAttribute('type', 'hidden');
+        hiddenInputprice.setAttribute('name', 'price');
+        hiddenInputprice.setAttribute('value', getprice[2]);
+
+        var hiddenInputaccesstoken = document.createElement('input');
+
+        hiddenInputaccesstoken.setAttribute('type', 'hidden');
+        hiddenInputaccesstoken.setAttribute('name', 'Authorization');
+        hiddenInputaccesstoken.setAttribute('value', sessionStorage.getItem("Auth"));
+        
+        form.appendChild(hiddenInput);
+        form.appendChild(hiddenInputorderid);
+        form.appendChild(hiddenInputprice);
+        form.appendChild(hiddenInputaccesstoken);
+
+        // Submit the form
+        form.submit();
+      }
+
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

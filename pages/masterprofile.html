@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/master.css">
+    <title>Find Master Profile</title>
+    <script>
+
+      function sendupdate(data){
+
+        let updatemaster = new XMLHttpRequest;
+
+        updatemaster.onreadystatechange = function(){
+
+          if(updatemaster.readyState === 4){
+            
+           if (updatemaster.status === 200){
+
+            let updateresponse= JSON.parse(updatemaster.responseText);
+
+            if( updateresponse.data ){
+                alert('更新成功');
+              }else{
+                alert('Error, 請重新嘗試');
+              }
+
+           }
+
+          }
+
+        }
+
+        updatemaster.open('POST','/api/update/masterprofile');
+
+        updatemaster.setRequestHeader("Content-Type",
+              "application/json");
+
+        updatemaster.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+        updatemaster.send(data); 
+
+
+      }
+
+    </script>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/master/searchorders"><div id="ordersearch">查看訂單</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+	  		<div id="masterprofilebasic">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='idlabel'>會員 ID ( ID )：</label>
+                <label id='accountlabel'>Stripe 帳戶 ( Account )：</label>
+                <label id='namelabel'>姓名 ( Name )：</label>
+                <label id='emaillabel'>郵箱 ( E-mail )：</label>
+				        <label id='phonelabel'>手機號碼 ( Phone Number )：</label>
+				        <label id="passwordlabel">密碼 ( Password )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <div id="idnum"></div>
+                <div id="account"></div>
+                <div id="name"></div>
+                <div id="email"></div>
+			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999'>
+			        	<input id="password" type="password" name="password">
+			        </div>        
+		          			
+  				</div>
+
+	  			<div class='buttons'>
+				      <div><button class='goto' type="button" onclick="UpdateBasic()">更新 ( Update )</button></div>  
+	  			</div>
+	  		</div>
+
+        <div id="masterprofileskill">
+
+          <div id="checkskill">
+
+            <div id="checkskilltitle">可裝修項目</div>
+
+            <div id="skillchecklist">
+
+              <div><input class="inputskill" type="checkbox" name="skill" value="light">燈具維修<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="toilet">馬桶裝修<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="waterheater">熱水器</div><br><br>
+              <div><input class="inputskill" type="checkbox" name="skill" value="pipe">水管<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="faucet">水龍頭<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="bathtub">浴缸/淋浴設備</div><br><br>
+              <div><input class="inputskill" type="checkbox" name="skill" value="wire">電線<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="soil">補土<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="paint">油漆</div><br><br>
+              <div><input class="inputskill" type="checkbox" name="skill" value="wallpaper">壁紙<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="tile">磁磚</div><br><br>
+
+            </div>
+          
+      
+                    
+          </div>
+
+          <div class='buttons'>
+                <div><button class='goto' type="button" onclick="UpdateSkill()">更新 ( Update )</button></div>  
+          </div>
+
+        </div>
+
+        <div id="masterprofilearea">
+
+          <div id="checkarea">
+
+            <div id="checkareatitle">可接單區域</div>
+
+            <div id="areachecklist">
+
+              <div><input class="inputarea" type="checkbox" name="city" value="台北">台北<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="新北">新北<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="基隆">基隆</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="桃園">桃園<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="新竹">新竹<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="苗栗">苗栗</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="台中">台中<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="彰化">彰化<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="雲林">雲林</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="嘉義">嘉義<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="台南">台南<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="高雄">高雄</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="屏東">屏東<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="宜蘭">宜蘭<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="花蓮">花蓮</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="台東">台東</div><br><br>
+
+            </div>
+                
+                    
+          </div>
+
+          <div class='buttons'>
+              <div><button class='goto' type="button" onclick="UpdateArea()">更新 ( Update )</button></div>  
+          </div>
+
+        </div>
+
+
+	  	</main>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        alert('請先登入');
+        window.location.replace('https://localhost:3000/user/signin');
+
+      }else{
+
+        let getmasterData = new XMLHttpRequest;
+
+        getmasterData.onreadystatechange = function(){
+
+          if(getmasterData.readyState === 4){
+            
+           if (getmasterData.status === 200){
+
+            let getmasterback = JSON.parse(getmasterData.responseText);
+
+            if(getmasterback.error != null){
+
+              alert('登入已過時,請重新登入');
+              sessionStorage.removeItem("Auth");
+              window.location.replace('/user/signin');
+
+            }else{
+
+              let idnum = document.getElementById('idnum');
+              let name = document.getElementById('name');
+              let email = document.getElementById('email');
+              let inputphone = document.getElementById('phone');
+              let account = document.getElementById('account');
+
+              idnum.innerHTML = getmasterback.data.basic.id;
+              name.innerHTML = getmasterback.data.basic.name;
+              email.innerHTML = getmasterback.data.basic.email;
+              inputphone.value = getmasterback.data.basic.phone;
+              account.innerHTML = getmasterback.data.basic.account;
+
+              let skillarray = getmasterback.data.skill;        
+
+              let inputskill = document.getElementsByClassName('inputskill');
+
+              for( let i = 0 ; i < skillarray.length ; i++ ){
+
+                for( let j = 0 ; j < inputskill.length ; j++ ){
+
+                  if( skillarray[i] == inputskill[j].value){
+
+                    inputskill[j].checked = true;
+
+                  }
+
+                }
+
+              }
+
+              let areaarray = [];
+              areaarray = getmasterback.data.basic.area.split(',');
+
+              let inputarea = document.getElementsByClassName('inputarea');
+
+              for( let i = 0 ; i < areaarray.length ; i++ ){
+
+                for( let j = 0 ; j < inputarea.length ; j++ ){
+
+                  if( areaarray[i] == inputarea[j].value){
+
+                    inputarea[j].checked = true;
+
+                  }
+
+                }
+
+              }
+            
+            }
+
+           }
+
+          }
+
+        }
+
+        getmasterData.open('GET','/api/userprofile/master');
+        getmasterData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        getmasterData.send();
+        
+
+      }
+
+
+      function UpdateBasic(){
+
+        let idnum = document.getElementById('idnum').innerHTML;
+        let inputphone = document.getElementById('phone').value;
+        let inputpass = document.getElementById('password').value;
+
+        let jsonsend = {};
+
+        jsonsend.masterid = idnum;
+        jsonsend.phone = inputphone;
+        jsonsend.password = inputpass;
+        jsonsend.update = 'basic';
+
+        let sendjson = JSON.stringify(jsonsend);
+
+        sendupdate(sendjson);
+
+      }
+
+      function UpdateSkill(){
+
+        let inputskill = document.getElementsByClassName('inputskill');
+
+        let skillarray = [];
+
+        for( let i = 0 ; i < inputskill.length ; i++ ){
+
+          if( inputskill[i].checked ){
+
+            skillarray.push(inputskill[i].value);
+
+          }
+
+        }
+
+        let idnum = document.getElementById('idnum').innerHTML;
+
+        let jsonsend = {};
+
+        jsonsend.masterid = idnum;
+        jsonsend.skill = skillarray;
+        jsonsend.update = 'skill';
+
+        let sendjson = JSON.stringify(jsonsend);
+
+        sendupdate(sendjson);
+
+      }
+
+
+      function UpdateArea(){
+
+        let inputarea = document.getElementsByClassName('inputarea');
+
+        let areaarray = [];
+
+        for( let j = 0 ; j < inputarea.length ; j++ ){
+
+          if( inputarea[j].checked ){
+
+            areaarray.push(inputarea[j].value);
+
+          }
+
+        }
+
+        let idnum = document.getElementById('idnum').innerHTML;
+
+        let jsonsend = {};
+
+        jsonsend.masterid = idnum;
+        jsonsend.area = areaarray;
+        jsonsend.update = 'area';
+
+        let sendjson = JSON.stringify(jsonsend);
+
+        let updatemasterarea = new XMLHttpRequest;
+
+        sendupdate(sendjson);
+
+      }
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

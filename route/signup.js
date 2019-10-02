@@ -1,0 +1,365 @@
+const mysql=require("../util/mysqlcon.js");
+const express = require('express');
+const expressrouter = express.Router();
+const crypto = require('crypto');
+const stripe = require('stripe')('sk_test_1UIhmFMbhl0lO9w4Hdp6jNnC00MXi9WabT');
+
+const bodyParser = require('body-parser');
+expressrouter.use(bodyParser.json());
+expressrouter.use(bodyParser.urlencoded({extended:true}));
+
+const nodemailer = require('nodemailer');
+const credentials = require('../util/credentials.js');
+const mailTransport = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: credentials.gmail.user,
+    pass: credentials.gmail.pass
+  }
+});
+
+expressrouter.post('/api/user/signup',(req,res)=>{
+
+	console.log('get api');
+
+	console.log( req.body );
+
+			/*--Check if http header content is correct--*/
+
+	if( req.header('Content-Type') != "application/json" ){
+
+		console.log('1');
+
+		res.send("{\"error\": \"error\"}");	
+
+	}else{
+
+		console.log('1.5');
+
+		console.log(req.body);
+
+		if( req.body.provider == "customer" ){
+
+			console.log('2');
+
+
+						/*--確認未註冊過--*/
+			
+			mysql.con.query( 'SELECT phone FROM user WHERE phone=\"' + req.body.phone + '\"' ,(err,result)=>{
+
+				console.log('3');
+
+
+				if( err || result.length ===0 ){
+
+					console.log('4');
+
+
+					/*--確認未註冊過--*/
+
+					/*--新增token--*/
+
+					let hash = crypto.createHash('sha256');
+
+					let tokenstring = req.body.phone + Date.now() + 'aaa';
+
+					let usertoken = hash.update(tokenstring);
+
+					let expiredtime = Date.now()+ 7.2e+6 ;
+
+
+					/*--資料送入DB--*/
+
+					let datauser={
+						access_token:hash.digest('hex'),
+						access_expired:expiredtime,
+						name:req.body.name,
+						phone:req.body.phone,
+						password:req.body.password,
+						address:req.body.address,
+					};
+
+					mysql.con.query( 'INSERT INTO user SET ?' , datauser, (err,result)=>{
+
+						console.log('5');
+
+
+						if( err ){
+
+							res.send("{\"error\": \"error\"}");
+
+						}else{
+
+							/*--選取資料送出--*/
+
+							var queryuser = "SELECT * FROM user WHERE phone=\"" + req.body.phone + "\"";
+
+							mysql.con.query(queryuser,(err,result)=>{
+
+								console.log('6');
+
+								if( err ){
+
+									res.send("{\"error\": \"error\"}");
+
+								}else{
+
+									var userres = {};
+									 userres.userid = result[0].userid;
+									 userres.name = result[0].name;
+									 userres.phone = result[0].phone;
+									 userres.address = result[0].address;
+
+									 var userdata = {};
+									 userdata.access_token = result[0].access_token;
+									 userdata.access_expired = result[0].access_expired;
+									 userdata.user = userres;
+
+									var usertotalres = {};
+									usertotalres.data = userdata;
+									console.log(usertotalres);
+									res.json(usertotalres);
+
+								}
+
+							})
+
+						}
+
+
+					});
+
+					
+
+				}else{
+
+					console.log('7');
+
+
+					console.log('已註冊過');
+
+					res.send("{\"error\": \"error\"}");
+				
+				}
+			
+			});
+
+		}else if( req.body.provider == "master" ){
+
+			console.log('8');
+
+
+						/*--確認未註冊過--*/
+			
+			mysql.con.query( 'SELECT phone FROM master WHERE phone=\"' + req.body.phone + '\"' ,(err,result)=>{
+
+				console.log('9');
+
+				if( err ){
+
+					console.log(err);
+
+					res.send("{\"error\": \"error\"}");
+
+				}else if( result.length ===0 ){
+
+					console.log('10');
+
+
+					/*--新增 Stripe 帳戶--*/
+
+					stripe.accounts.create({
+					  country: 'US',
+					  type: 'custom',
+					  requested_capabilities: ['card_payments', 'transfers']
+					}).then(function(acct) {
+
+					  	// asynchronously called
+
+					  	console.log(acct.id);
+
+					  	/*--存 master 基本資料--*/
+
+						let datamaster = {
+							access_token:'wait for verify',
+							access_expired:'wait for verify',
+							name:req.body.name,
+							phone:req.body.phone,
+							email:req.body.email,
+							password:req.body.password,
+							account:acct.id
+						};
+
+						mysql.con.query( 'INSERT INTO master SET ?' , datamaster , (err,result)=>{
+
+							console.log('11');
+
+
+							if( err ){
+
+								res.send("{\"error\": \"error\"}");
+
+							}else{
+
+								mysql.con.query('SELECT masterid FROM master WHERE phone=\"' + req.body.phone + '\"',(err,result)=>{
+
+									console.log('12');
+
+									if( err ){
+
+										res.send("{\"error\": \"error\"}");
+
+									}else{
+
+										var masteridforinsert = result[0].masterid ;
+
+										/*--存 master skill 資料--*/
+
+										let insertmasterskill = {
+										
+											masterid : masteridforinsert
+										
+										}
+
+										let skillsize = req.body.skill.length;
+
+										console.log(req.body.skill);
+
+										let skillarray = [];
+
+										for( let i = 0 ; i < skillsize ; i += 1){
+
+											insertmasterskill[req.body.skill[i]] = 1 ;
+
+										}
+
+										console.log(insertmasterskill);
+
+										mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
+
+											console.log('12.5',result);
+
+											if( err ){
+
+												res.send("{\"error\": \"error\"}");
+
+											}
+
+										})
+
+										/*--存 master area 資料--*/
+
+
+										let areasize = req.body.area.length;
+
+										let areaarray = [];
+
+										for( let i = 0 ; i < areasize ; i += 1){
+
+											areaarray[i] = '(' + masteridforinsert + ',\"' + req.body.area[i] + '\")' ;
+
+										}
+
+										mysql.con.query( 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString(), (err,result)=>{
+
+											console.log('13',result);
+
+											if( err ){
+
+												res.send("{\"error\": \"error\"}");
+
+											}else{
+
+												/*--存 master 驗證資料--*/
+
+												let hash = crypto.createHash('sha256');
+
+												let verifystring = req.body.phone + Date.now() + 'aaa';
+
+												var masteractivecode = hash.update(verifystring);
+
+												var activecode = hash.digest('hex');
+
+												let mailstatus = {
+													email: req.body.email,
+													activecode: activecode,
+													status: 'inactivate'
+												};
+
+												console.log(mailstatus);
+
+												mysql.con.query( 'INSERT INTO mailstatus SET ?' , mailstatus , (err,result)=>{
+
+													console.log('14');
+
+
+													if( err ){
+
+														res.send("{\"error\": \"error\"}");
+
+													}else{
+
+														mailTransport.sendMail({
+																	  
+														  from: '<deathscythe.ms98@g2.nctu.edu.tw>',
+														  
+														  to: req.body.email,
+														  
+														  subject: '在 Find 師傅驗證您的 email ',
+														  
+														  html: '<p>您好<br>請點選如下連結驗證您的信箱<br><a href=\"https://g777708.com/api/user/mailverify?startfind=' + activecode + '\">驗證信箱</a></p>'
+
+
+														}, function(err){
+														
+														  if(err) {
+														
+														    console.log('Unable to send email: ' + err);
+														
+														  }
+														
+														});
+
+														res.send("{\"data\": \"已寄信 & 註冊資料OK\"}");
+
+													}
+
+												});
+
+											}
+
+										})
+
+									}
+
+								})
+
+							}
+
+						});
+					
+					}).catch(err=>{
+
+						console.log(err);
+
+						return res.send("{\"message\": \"error\"}");
+
+					})
+
+				}else{
+
+					console.log('已註冊過');
+
+					res.send("{\"error\": \"error\"}");
+				
+				}
+			
+			});
+
+		}
+
+	}
+
+})
+
+module.exports = expressrouter;

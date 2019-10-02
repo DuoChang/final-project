@@ -1,0 +1,68 @@
+
+
+@import url("basic.css");
+
+main{
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: calc(73vh);
+  margin:1.5%;
+  font-family: monospace;
+  font-size: 1.6em;
+  text-decoration: underline;
+
+}
+
+main div{
+
+  opacity: 1 ;
+
+}
+
+#index,
+#signinlink{
+
+  border-right:1px solid  #A89B8C;
+
+}
+
+#index,
+#signuplinkcustomer,
+#signuplinkmaster{
+
+  border-left:1px solid  #A89B8C;
+
+}
+
+#processtext{
+
+  margin-top: 1.5%;
+  margin-bottom: 0.5%;
+
+}
+
+#process{
+
+  height:55%;
+  width: 55%;
+
+}
+
+#wholeprocess{
+
+  width: 95vw;
+  height: auto;
+
+}
+
+#customersignupimage,
+#mastersignupimage{
+
+  width: 33%;
+  height: 33%;
+
+}

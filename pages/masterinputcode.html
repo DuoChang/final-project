@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/masterinputcode.css">
+    <title>Master Post code</title>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/master/searchorders"><div id="ordersearch">訂單搜尋</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+        <div id="showquoteresult">
+
+          <div id="showquotediv">
+
+            <div id="quoteoutput">
+            
+              <div id="resultdiv"></div>     
+                      
+            </div>
+
+          </div>
+
+        </div>
+
+	  		<div id="basic">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='orderlabel'>訂單編號 ( Order Number )：</label>
+                <label id='arealabel'>地區 ( Area )：</label>
+                <label id='arealabel'>裝修地址 ( Address )：</label>
+                <label id='skilllabel'>裝修項目 ( Items )：</label>
+                <label id='datelabel'>裝修日期 ( Date )：</label>
+				        <label id='describelabel'>詳細敘述 ( Details )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <input type="text" id='ordernumber' name="orderid" readonly>
+                <div id='area'></div>
+                <div id='address'></div>
+                <div id='skill'></div>
+                <div id='date'></div>
+                <div id='description'></div>
+			        </div>
+		          			
+  				</div>
+
+          <div id="masterquote">
+
+            <div id="quoteitem">
+
+              <div id="quote"></div><br><div id="materiallabel">耗材明細：</div>
+
+              <div id="materialdetails"></div>
+
+            </div>           
+
+          </div>
+
+          <div class='buttons'>
+              <div>請輸入支付代碼：<input id='inputcode' name='code' type="text"></div>
+              <div><button class='goto' type="button" onclick="reimburse()">請款 ( Reimburse )</button></div>
+          </div>
+
+	  		</div>      
+
+	  	</main>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+
+      let checkquote = document.getElementById('basic');
+
+      let showquoteresult = document.getElementById('showquoteresult');
+
+      let resultdiv = document.getElementById('resultdiv');
+
+      var getsearchorderResult = new XMLHttpRequest;
+
+      getsearchorderResult.onreadystatechange = function(){
+
+        if(getsearchorderResult.readyState === 4){
+          
+         if (getsearchorderResult.status === 200){
+
+          let getorderback = JSON.parse(getsearchorderResult.responseText);
+
+          if( getorderback.error ){
+
+            alert('Error, 請重新登入');
+
+            sessionStorage.removeItem("Auth");
+
+            window.location.replace('/user/signin');
+
+          }else if( getorderback.message ){
+
+            alert('訂單不存在');
+
+            window.location.replace('/master/searchorders');
+
+          }else{
+
+            let ordernumber = document.getElementById('ordernumber');
+            ordernumber.value = getorderback.data[0].indexid;
+
+            let area = document.getElementById('area');
+            area.innerHTML = getorderback.data[0].orderarea;
+
+            let address = document.getElementById('address');
+            address.innerHTML = getorderback.data[0].address;
+
+            let skill = document.getElementById('skill');
+            skill.innerHTML = getorderback.data[0].orderskill;
+
+            let date = document.getElementById('date');
+            date.innerHTML = getorderback.data[0].workdate;
+
+            let description = document.getElementById('description');
+            description.innerHTML = getorderback.data[0].ordertext;
+
+            let quote = document.getElementById('quote');
+            quote.innerHTML = '工錢： $ ' + getorderback.data[0].originquote + ' TWD';
+
+            let materialdetails = document.getElementById('materialdetails');
+
+            let materiallabel = document.getElementById('materiallabel');
+
+            if( getorderback.data[0].tooldetails == null ){
+
+              materiallabel.innerHTML = '耗材明細：無';
+
+            }else{
+
+              let toolobj = JSON.parse(getorderback.data[0].tooldetails);
+
+              let toolstring='';
+              
+
+              for( let objkey in toolobj ){
+
+                toolstring = toolstring + objkey + ' $' + toolobj[objkey] + ' TWD<br>';
+
+              }
+
+              materialdetails.innerHTML = toolstring;
+
+            }
+
+          }
+         
+         }
+
+        }
+
+      }
+
+      let getquerystring = window.location.href.split('?');
+
+      let getidandstatus = getquerystring[1].split('&');
+
+      let getorderid = getidandstatus[1].split('=');
+
+      let getstatus = getidandstatus[0].split('=');
+
+      if( getstatus[1] == undefined || getorderid[1] == undefined ){
+
+        window.location.replace('/user/errordirect');
+
+      }
+
+      getsearchorderResult.open('GET','/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+
+      getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+      getsearchorderResult.send();
+
+
+      function pageback(){
+
+        window.history.go(-1);
+
+      }
+
+
+      function reimburse(){
+
+        let inputcode = document.getElementById('inputcode').value;
+
+        let ordernumber = document.getElementById('ordernumber').value;
+
+        if( inputcode == '' ){
+          alert('Error,代碼不可為空');
+        }else{
+
+          let quote = document.getElementById('quote').innerHTML;
+
+          console.log(quote, typeof(quote));
+
+          let getprice = quote.split(' ');
+
+          let sendjson = {};
+
+          sendjson.code = inputcode ;
+
+          sendjson.orderid = ordernumber ;
+
+          sendjson.price = getprice[2];
+
+          let paycodesend = JSON.stringify(sendjson);
+
+          var inputcodetopay = new XMLHttpRequest;
+
+          inputcodetopay.onreadystatechange = function(){
+
+            if(inputcodetopay.readyState === 4){
+              
+             if(inputcodetopay.status === 200){
+
+              let inputcodetopayback = JSON.parse(inputcodetopay.responseText);
+
+              console.log(typeof(inputcodetopayback),inputcodetopayback);
+
+              if( inputcodetopayback.data ){
+
+                checkquote.style.display = 'none';
+
+                showquoteresult.style.display = 'flex';
+
+                resultdiv.innerHTML = '已付款至您的 Stripe 帳號<br>訂單已結案';
+
+              }else if( inputcodetopayback.message ){
+
+                alert(' Error, 代碼錯誤 ');
+
+              }else{
+
+                alert('Error , 請重新輸入 ');
+
+              }
+
+             }
+
+            }
+
+          }       
+          
+          inputcodetopay.open('POST','/api/master/order/close');
+
+          inputcodetopay.setRequestHeader("Content-Type","application/json");
+
+          inputcodetopay.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+          inputcodetopay.send(paycodesend);
+
+        }
+
+      }
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

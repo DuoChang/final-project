@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/master.css">
+    <title>Find Sign Up</title>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/user/signin"><div id="signinlink">登入</div></a>
+            <a href="/process/master"><div id="masterprocess">流程</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+	  		<div id="basic">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='namelabel'>姓名 ( Name )：</label>
+                <label id='emaillabel'>郵箱 ( E-mail )：</label>
+				        <label id='phonelabel'>手機號碼 ( Phone Number )：</label>
+				        <label id="passwordlabel">密碼 ( Password )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <input id="name" type="text" name="name">
+                <input id="email" type="email" name="email">
+			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999'>
+			        	<input id="password" type="password" name="password">
+			        </div>        
+		          			
+  				</div>
+
+	  			<div class='buttons'>
+				      <div><button class='goto' type="button" onclick="ToSkill()">下一頁 ( next page )</button></div>  
+	  			</div>
+	  		</div>
+
+        <div id="skill">
+
+          <div id="checkskill">
+
+            <div id="checkskilltitle">可裝修項目</div>
+
+            <div id="skillchecklist">
+
+              <div><input class="inputskill" type="checkbox" name="skill" value="light">燈具維修<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="toilet">馬桶裝修<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="waterheater">熱水器</div><br><br>
+              <div><input class="inputskill" type="checkbox" name="skill" value="pipe">水管<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="faucet">水龍頭<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="bathtub">浴缸/淋浴設備</div><br><br>
+              <div><input class="inputskill" type="checkbox" name="skill" value="wire">電線<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="soil">補土<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="paint">油漆</div><br><br>
+              <div><input class="inputskill" type="checkbox" name="skill" value="wallpaper">壁紙<br><br>
+              <input class="inputskill" type="checkbox" name="skill" value="tile">磁磚</div><br><br>
+
+            </div>
+          
+      
+                    
+          </div>
+
+          <div class='buttons'>
+                <div><button class='goto' type="submit" onclick="ToArea()">下一頁 ( next page )</button></div>  
+          </div>
+
+        </div>
+
+        <div id="area">
+
+          <div id="checkarea">
+
+            <div id="checkareatitle">可接單區域</div>
+
+            <div id="areachecklist">
+
+              <div><input class="inputarea" type="checkbox" name="city" value="台北">台北<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="新北">新北<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="基隆">基隆</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="桃園">桃園<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="新竹">新竹<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="苗栗">苗栗</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="台中">台中<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="彰化">彰化<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="雲林">雲林</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="嘉義">嘉義<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="台南">台南<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="高雄">高雄</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="屏東">屏東<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="宜蘭">宜蘭<br><br>
+              <input class="inputarea" type="checkbox" name="city" value="花蓮">花蓮</div><br><br>
+              <div><input class="inputarea" type="checkbox" name="city" value="台東">台東</div><br><br>
+
+            </div>
+                
+                    
+          </div>
+
+          <div class='buttons'>
+              <div><button class='goto' type="submit" onclick="SignUp()">註冊 ( Sign Up ) 當師傅</button></div>  
+          </div>
+
+        </div>
+
+
+	  	</main>
+
+    <script>
+
+      function ToSkill(){
+
+        let inputname = document.getElementById('name').value;
+        let inputemail = document.getElementById('email').value;
+        let inputphone = document.getElementById('phone').value;
+        let inputpass = document.getElementById('password').value;
+
+        if( inputname == '' || inputemail == '' || inputphone == '' || inputpass == '' ){
+
+          alert('未填寫完成');
+
+        }else{
+
+          let jsonsend = {};
+          jsonsend.provider = 'master';
+          jsonsend.email = inputemail;
+          jsonsend.name = inputname;
+          jsonsend.phone = inputphone;
+          jsonsend.password = inputpass;
+
+          localStorage.setItem('masterbasic',JSON.stringify(jsonsend));
+
+          let basicdata = document.getElementById('basic');
+          let masterskill = document.getElementById('skill');
+
+          basicdata.style.display = 'none';
+          masterskill.style.display = 'flex';
+
+        }
+
+      }
+
+      function ToArea(){
+
+        let inputskill = document.getElementsByClassName('inputskill');
+
+        let skillarray = [];
+
+        for( let i = 0 ; i < inputskill.length ; i++ ){
+
+          if( inputskill[i].checked ){
+
+            skillarray.push(inputskill[i].value);
+
+          }
+
+        }
+
+        if( skillarray.length == 0 ){
+
+          alert('未選擇任一項目');
+
+        }else{
+
+          localStorage.setItem("masterskill",JSON.stringify(skillarray));
+
+          let masterarea = document.getElementById('area');
+          let masterskill = document.getElementById('skill');
+
+          masterarea.style.display = 'flex';
+          masterskill.style.display = 'none';
+
+        }
+
+      }
+
+
+      function SignUp(){
+
+        let inputarea = document.getElementsByClassName('inputarea');
+
+        let areaarray = [];
+
+        for( let j = 0 ; j < inputarea.length ; j++ ){
+
+          if( inputarea[j].checked ){
+
+            areaarray.push(inputarea[j].value);
+
+          }
+
+        }
+
+        if( areaarray.length == 0 ){
+
+          alert('未選擇任一地區');
+
+        }else{
+
+          let jsonsend = JSON.parse(localStorage.getItem('masterbasic'));
+
+          let skillarray = JSON.parse(localStorage.getItem('masterskill'));
+
+          jsonsend.skill = skillarray;
+
+          jsonsend.area = areaarray;
+
+          let sendjson = JSON.stringify(jsonsend);
+
+          let signupData = new XMLHttpRequest();
+        
+          signupData.onreadystatechange=function(){
+
+            if(signupData.readyState === 4){
+              
+             if (signupData.status === 200){
+
+                localStorage.removeItem('masterbasic');
+                localStorage.removeItem('masterskill');
+
+                let signupback = JSON.parse(signupData.responseText);
+
+                if( signupback.error ){
+
+                  alert('已註冊過 / 輸入內容錯誤');
+
+                  window.location.replace('/user/signup/master');
+
+                }else if( signupback.message ){
+
+                  alert('新建 Stripe 帳戶失敗');
+
+                  window.location.replace('/user/signup/master');
+
+                }else{
+
+                  window.location.replace('/user/mailsend');                
+
+                }
+
+              }
+     
+            }
+
+          };
+
+          signupData.open('POST','/api/user/signup');
+
+          signupData.setRequestHeader("Content-Type",
+                "application/json");        
+         
+          signupData.send(sendjson);
+
+        }
+
+      }
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

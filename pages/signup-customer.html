@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/customer.css">
+    <title>Find Sign Up</title>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/user/signin"><div id="signinlink">登入</div></a>
+            <a href="/process/customer"><div id="customerprocess">流程</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+	  		<div id="login">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='namelabel'>姓名 ( Name )：</label>
+                <label id='addresslabel'>住址 ( Address )：</label>
+				        <label id='phonelabel'>手機號碼 ( Phone Number )：</label>
+				        <label id="passwordlabel">密碼 ( Password )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <input id="name" type="text" name="name">
+                <input id="address" type="text" name="address">
+			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999'>
+			        	<input id="password" type="password" name="password">
+			        </div>        
+		          			
+  				</div>
+
+	  			<div class='buttons'>
+				      <div><button class='goto' type="submit" onclick="SignUp()">註冊 ( Sign Up ) 找師傅</button></div>  
+	  			</div>
+	  		</div>
+
+
+	  	</main>
+
+    <script>
+
+      function SignUp(){
+
+        var signupData = new XMLHttpRequest();
+      
+        signupData.onreadystatechange=function(){
+
+          if(signupData.readyState === 4){
+            
+           if (signupData.status === 200){
+
+              let signinback = JSON.parse(signupData.responseText);
+
+              if( signinback.error != null ){
+
+                alert('已註冊過 / 輸入內容錯誤');
+
+              }else{
+
+                let backtoken = "Bearer " + signinback.data.access_token;         
+
+                sessionStorage.setItem("Auth",backtoken);
+
+                window.location.replace('/customer/searchmaster');
+
+              }
+
+            }
+   
+          }
+
+        };
+
+        signupData.open('POST','/api/user/signup');
+
+        signupData.setRequestHeader("Content-Type",
+              "application/json");
+
+        let inputname = document.getElementById('name').value;
+        let inputaddress = document.getElementById('address').value;
+        let inputphone = document.getElementById('phone').value;
+        let inputpass = document.getElementById('password').value;
+
+        let jsonsend = {};
+        jsonsend.provider = 'customer';
+        jsonsend.name = inputname;
+        jsonsend.address = inputaddress;
+        jsonsend.phone = inputphone;
+        jsonsend.password = inputpass;
+
+        let sendjson = JSON.stringify(jsonsend);
+
+        signupData.send(sendjson);
+
+      }
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

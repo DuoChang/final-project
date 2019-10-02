@@ -1,0 +1,16 @@
+
+@import url("basic.css");
+@import url("orderdetail.css");
+@import url("buttons.css");
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+  min-height:20%;
+  margin-bottom: 5%;
+}
+
+.buttons div{
+  width:60%;
+  margin-top: 5%;
+}

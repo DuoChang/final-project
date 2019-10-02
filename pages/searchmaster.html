@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/searchmaster.css">
+    <title>Search Master</title>
+
+  </head>
+
+  <body>
+
+  	<header>
+  		<div class="headertopic">
+  			<div class="headerleft">
+          <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+  			</div>
+  			<div class="headeright">
+	  			<a href="/customer/searchorders"><div id="searchorders">查看訂單</div></a>
+          <a href="/user/profile/customer"><div id="customerprofile">會員資料</div></a>
+  			</div>
+  		</div>
+  	</header>
+
+	  <div class="uparea"></div>
+
+    <div id="searchmasterarea">
+
+      <div id="demandskill">
+
+        <div id="checkskill">
+
+          <div id="checkskilltitle">裝修項目</div>
+
+          <div id="skillchecklist">
+
+            <div><input class="inputskill" type="checkbox" name="skill" value="light">燈具維修<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="toilet">馬桶裝修<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="waterheater">熱水器</div><br><br>
+            <div><input class="inputskill" type="checkbox" name="skill" value="pipe">水管<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="faucet">水龍頭<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="bathtub">浴缸/淋浴設備</div><br><br>
+            <div><input class="inputskill" type="checkbox" name="skill" value="wire">電線<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="soil">補土<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="paint">油漆</div><br><br>
+            <div><input class="inputskill" type="checkbox" name="skill" value="wallpaper">壁紙<br><br>
+            <input class="inputskill" type="checkbox" name="skill" value="tile">磁磚</div><br><br>
+
+          </div>   
+                  
+        </div>
+
+        <div class='demandbuttons'>
+              <div><button class='goto' type="submit" onclick="saveskill()">下一頁 ( next page )</button></div>  
+        </div>
+
+      </div>
+
+      <div id="demandarea">
+
+        <div id="checkarea">
+
+          <div id="checkareatitle">所在區域</div>
+
+          <div id="areachecklist">
+
+            <div><input class="inputarea" type="radio" name="city" value="台北">台北<br><br>
+            <input class="inputarea" type="radio" name="city" value="新北">新北<br><br>
+            <input class="inputarea" type="radio" name="city" value="基隆">基隆</div><br><br>
+            <div><input class="inputarea" type="radio" name="city" value="桃園">桃園<br><br>
+            <input class="inputarea" type="radio" name="city" value="新竹">新竹<br><br>
+            <input class="inputarea" type="radio" name="city" value="苗栗">苗栗</div><br><br>
+            <div><input class="inputarea" type="radio" name="city" value="台中">台中<br><br>
+            <input class="inputarea" type="radio" name="city" value="彰化">彰化<br><br>
+            <input class="inputarea" type="radio" name="city" value="雲林">雲林</div><br><br>
+            <div><input class="inputarea" type="radio" name="city" value="嘉義">嘉義<br><br>
+            <input class="inputarea" type="radio" name="city" value="台南">台南<br><br>
+            <input class="inputarea" type="radio" name="city" value="高雄">高雄</div><br><br>
+            <div><input class="inputarea" type="radio" name="city" value="屏東">屏東<br><br>
+            <input class="inputarea" type="radio" name="city" value="宜蘭">宜蘭<br><br>
+            <input class="inputarea" type="radio" name="city" value="花蓮">花蓮</div><br><br>
+            <div><input class="inputarea" type="radio" name="city" value="台東">台東</div><br><br>
+
+          </div>
+              
+                  
+        </div>
+
+        <div class='demandbuttons'>
+            <div><button class='goto' type="submit" onclick="savearea()">下一頁 ( next page )</button></div>  
+        </div>
+
+      </div>
+
+      <div id="demandbasic">
+
+        <div id="demandinputdata">
+        
+          <div id="demandinputleft">
+              <label id='namelabel'>詳細敘述 - 限 120 字 ( Details )：</label>
+              <label id='date'>請選擇裝修日期 ( Work Date )：</label>
+            </div>
+            
+            <div id="demandinputright">
+              <input id="describecontent" type="text" name="describecontent" maxlength='120'>
+              <input id="workdate" type="date" name="workdate">
+            </div>        
+                  
+        </div>
+
+        <div class='demandbuttons'>
+            <div><button class='goto' type="button" onclick="search()">搜尋 ( Search )</button></div>  
+        </div>
+
+      </div>  
+    
+
+    </div>
+
+    <div id="noresult">
+
+      <div id="nosearchresult">
+
+        <div id="noresultdiv">
+
+          <div id="noresultoutput">
+          
+            <div>無符合結果</div>     
+                    
+          </div>
+
+          <div id='researchbutton'>
+              <div><button id='restartbutton' type="button" onclick="restartsearch()">重新搜尋</button></div>  
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="createorder">
+
+      <div id="createorderresult">
+
+        <div id="createorderdiv">
+
+          <div id="createorderoutput">
+          
+            <div id="ordernumber"></div>     
+                    
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <div id="showresult">
+
+  		<div id="searchresult">
+
+        <div id='RFQbuttons'>
+              <div><button class='RFQ' type="button" onclick="AskQuote()">請師傅報價 ( ask for quote ) </button></div>  
+        </div>
+
+	  	</div>
+
+      <div id="commentarea">
+
+        <div id="closebutton">
+          
+          <button id="closebutton" type="button" onclick="closecomments()" >
+            <img class="closebuttonimge" src="/icons/closebutton.jpg" alt="關閉鈕">
+          </button>
+
+        </div>
+
+        <div id="comments">
+          
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+
+      let today = new Date();
+
+      let thisyear = '' + today.getFullYear();
+
+      let thismonth = today.getMonth() + 1;
+
+      if( thismonth < 10 ){
+
+        thismonth = '0' + thismonth;
+      
+      }
+
+      let thisday = '' + today.getDate();
+
+      if( thisday < 10 ){
+
+        thisday = '0' + thisday;
+      
+      }
+
+      let orderday = thisyear + '-' + thismonth + '-' + thisday ; 
+
+      let workdate = document.getElementById('workdate');
+
+      workdate.min = orderday;
+
+      function restartsearch(){
+
+        window.location.replace('/customer/searchmaster');
+
+      }
+
+      function saveskill(){
+
+        let inputskill = document.getElementsByClassName('inputskill');
+
+        let skillarray = [];
+
+        for( let i = 0 ; i < inputskill.length ; i++ ){
+
+          if( inputskill[i].checked ){
+
+            skillarray.push(inputskill[i].value);
+
+          }
+
+        }
+
+        if( skillarray.length == 0 ){
+
+          alert('未選擇任一項目');
+
+        }else{
+
+          localStorage.setItem("demandskill",JSON.stringify(skillarray));
+
+          let demandarea = document.getElementById('demandarea');
+          let demandskill = document.getElementById('demandskill');
+
+          demandarea.style.display = 'flex';
+          demandskill.style.display = 'none';
+
+        }
+
+      }
+
+      function savearea(){
+
+        let inputarea = document.getElementsByClassName('inputarea');
+
+        let areaarray = [];
+
+        for( let i = 0 ; i < inputarea.length ; i++ ){
+
+          if( inputarea[i].checked ){
+
+            areaarray.push(inputarea[i].value);
+
+          }
+
+        }
+
+        if( areaarray.length == 0 ){
+
+          alert('未選擇任一地區');
+
+        }else{
+
+          localStorage.setItem("demandarea",JSON.stringify(areaarray));
+
+          let demandbasic = document.getElementById('demandbasic');
+          let demandarea = document.getElementById('demandarea');
+
+          demandbasic.style.display = 'flex';
+          demandarea.style.display = 'none';
+
+        }
+
+      }
+
+      
+
+
+      function search(){
+
+        let describecontent = document.getElementById('describecontent').value;
+
+        let workdate = document.getElementById('workdate').value;
+
+        if( workdate == '' ){
+
+          alert('尚未選擇裝修日期');
+
+        }else{
+
+          let skillarray = JSON.parse(localStorage.getItem('demandskill'));
+
+          let areaarray = JSON.parse(localStorage.getItem('demandarea'));
+
+          let jsonsend = {};
+
+          jsonsend.workdate = workdate;
+
+          jsonsend.area = areaarray[0];
+
+          jsonsend.skill = skillarray;
+
+          jsonsend.text = describecontent;
+
+          let sendjson = JSON.stringify(jsonsend);
+
+          localStorage.setItem("userrequest",sendjson);
+
+          let getsearchmasterResult = new XMLHttpRequest;
+
+          getsearchmasterResult.onreadystatechange = function(){
+
+            if(getsearchmasterResult.readyState === 4){
+              
+              if (getsearchmasterResult.status === 200){
+
+                console.log(getsearchmasterResult.responseText);
+
+                let getmasterback = JSON.parse(getsearchmasterResult.responseText);
+
+                console.log(getmasterback);
+
+                console.log('3');
+
+                if(getmasterback.error != null){
+
+                  console.log('85');
+
+                  alert('Error, 請確認登入資訊 ,將重整頁面');
+                  sessionStorage.removeItem("Auth");
+                  window.location.replace('/user/signin');
+
+                }else{
+
+                  console.log('8');               
+
+                  let searchmasterarea =document.getElementById('searchmasterarea');                
+
+                  searchmasterarea.style.display = 'none';
+
+                  if( getmasterback.message ){
+
+                    console.log('77');
+
+                    let noresult = document.getElementById('noresult');
+
+                    noresult.style.display = 'flex';
+
+                  }else{
+
+                    let searchresult = document.getElementById('searchresult');
+
+                    let RFQbuttons = document.getElementById('RFQbuttons');
+
+                    let showresult = document.getElementById('showresult');
+
+                    showresult.style.display = 'flex';
+
+                    sessionStorage.setItem("result",getmasterback.result);
+
+                    for( let i = 0 ; i < getmasterback.result.length ; i++){
+
+                      let newbasic = document.createElement('div');
+
+                      newbasic.className='basic';
+
+                      searchresult.insertBefore(newbasic,RFQbuttons);
+
+                      let basic = document.getElementsByClassName('basic');
+
+                      let newinputdata = document.createElement('div');
+
+                      newinputdata.className = 'inputdata';
+
+                      basic[i].appendChild(newinputdata);
+
+                      let inputdata = document.getElementsByClassName('inputdata');
+
+                      let newinputdiv = document.createElement('div');
+
+                      newinputdiv.className = 'inputdiv';
+
+                      inputdata[i].appendChild(newinputdiv);
+
+                      let inputdiv = document.getElementsByClassName('inputdiv');
+
+                      let newchosemaster = document.createElement('input');
+
+                      newchosemaster.className = 'chosemaster';
+
+                      newchosemaster.type = 'radio';
+
+                      newchosemaster.name = 'master';
+
+                      newchosemaster.value = getmasterback.result[i].masterid;
+
+                      inputdiv[i].appendChild(newchosemaster);
+
+                      let inputmasterid = document.createElement('div');
+
+                      inputmasterid.innerHTML = '師傅 ID ：' + getmasterback.result[i].masterid;
+
+                      inputdata[i].appendChild(inputmasterid);
+
+                      let inputcount = document.createElement('div');
+
+                      if(getmasterback.result[i].rate == 'no'){
+                        inputcount.innerHTML = '無評分　　　　';
+                      }else{
+                        inputcount.innerHTML = '平均評分 ：' + getmasterback.result[i].rate;
+                      }
+
+                      inputdata[i].appendChild(inputcount);
+
+
+                      /*-- create show 評論的 button --*/
+
+                      let newbuttons = document.createElement('div');
+
+                      newbuttons.className = 'buttons';                    
+
+                      basic[i].appendChild(newbuttons);
+
+                      let buttons = document.getElementsByClassName('buttons');
+
+                      let newbuttondiv = document.createElement('div');
+
+                      newbuttondiv.className = 'buttondiv';
+
+                      buttons[i].appendChild(newbuttondiv);
+
+                      let buttondiv = document.getElementsByClassName('buttondiv');
+
+                      let newcommentcount = document.createElement('button');
+
+                      newcommentcount.className = 'commentcount';
+                      newcommentcount.type ='button';
+                      
+                      if( getmasterback.result[i].count ==  0 ){
+
+                        newcommentcount.innerHTML = '無評論';
+
+                      }else{
+
+                        newcommentcount.innerHTML = getmasterback.result[i].count + ' 則評論';
+                        newcommentcount.name = getmasterback.result[i].masterid;
+                        newcommentcount.onclick = clickshowcomments;
+                      
+                      }
+                      buttondiv[i].appendChild(newcommentcount);
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          getsearchmasterResult.open('POST','/api/search/master');
+          getsearchmasterResult.setRequestHeader("Content-Type","application/json");
+          getsearchmasterResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+          getsearchmasterResult.send(sendjson);
+
+        }
+
+      }
+
+      function AskQuote(){
+
+        let getmasterid = document.getElementsByClassName('chosemaster');
+
+        for( let i = 0 ; i < getmasterid.length ; i++ ){
+
+          if( getmasterid[i].checked == true ){
+
+            var masterid = getmasterid[i].value ;
+
+          }
+
+        }
+
+        if( masterid == undefined ){
+
+          alert('未選擇任一師傅');
+
+        }else{
+
+          let createorder = JSON.parse(localStorage.getItem('userrequest'));
+
+          createorder.masterid = masterid ;
+
+          let sendjson = JSON.stringify(createorder);
+
+          let createneworder = new XMLHttpRequest;
+
+          createneworder.onreadystatechange = function(){
+
+            if(createneworder.readyState === 4){
+              
+              if (createneworder.status === 200){
+
+                let getorderback = JSON.parse(createneworder.responseText);
+
+                if(getorderback.error != null){
+
+                  alert('Error ,請重新登入');
+                  sessionStorage.removeItem("Auth");
+                  window.location.replace('/user/signin');
+
+                }else{
+
+                  let showresult = document.getElementById('showresult');
+                  showresult.style.display = 'none';
+                  let createorder = document.getElementById('createorder');
+                  createorder.style.display = 'flex';
+                  let ordernumber = document.getElementById('ordernumber');
+                  ordernumber.innerHTML = '訂單編號：' +  getorderback.data ;
+
+                }
+
+              }
+            }
+
+
+          }
+
+          createneworder.open('POST','/api/order/create');
+          createneworder.setRequestHeader("Content-Type","application/json");
+          createneworder.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+          createneworder.send(sendjson);
+
+        }
+
+      }
+
+      let commentdiv = document.getElementById('commentarea');
+
+      function clickshowcomments(){
+
+        let remove = document.getElementsByClassName('comment');
+
+        while(remove.length>0){
+
+          remove[0].remove();
+
+        }
+
+        let masterid = this.name;
+
+        ShowComments(masterid);
+
+      }
+
+      function ShowComments(masterid){
+
+        commentdiv.style.display = 'flex';
+
+        let getmastercomment = new XMLHttpRequest;
+
+        getmastercomment.onreadystatechange = function(){
+
+          if(getmastercomment.readyState === 4){
+            
+            if (getmastercomment.status === 200){
+
+              let getcommentback = JSON.parse(getmastercomment.responseText);
+
+              console.log(getcommentback);
+
+              if(getcommentback.error != null){
+
+                alert('Error ,請重新登入');
+                sessionStorage.removeItem("Auth");
+                window.location.replace('/user/signin');
+
+              }else if( getcommentback.message ){
+
+                alert('Error, 請重新嘗試');
+
+              }else{
+
+                let comments = document.getElementById('comments');
+
+                for( let i = 0 ; i < getcommentback.data.length ; i++ ){
+
+                  let newcomment = document.createElement('div');
+
+                  newcomment.className = 'comment';
+
+                  comments.appendChild(newcomment);
+
+                  let newcommentdetails = document.createElement('div');
+
+                  newcommentdetails.className = 'commentdetails';
+
+                  let newcommentcontent = document.createElement('div');
+
+                  newcommentcontent.className = 'commentcontent';
+
+                  let comment = document.getElementsByClassName('comment');
+
+                  comment[i].appendChild(newcommentdetails);
+
+                  comment[i].appendChild(newcommentcontent);
+
+                  let commentiddiv = document.createElement('div');
+
+                  commentiddiv.innerHTML = getcommentback.data[i].username;
+
+                  let commentratediv = document.createElement('div');
+
+                  commentratediv.innerHTML = getcommentback.data[i].heartrate;
+
+                  let commentdatediv = document.createElement('div');
+
+                  commentdatediv.innerHTML = getcommentback.data[i].commentdate;
+
+                  let commentdetails = document.getElementsByClassName('commentdetails');
+
+                  commentdetails[i].appendChild(commentiddiv);
+
+                  commentdetails[i].appendChild(commentratediv);
+
+                  commentdetails[i].appendChild(commentdatediv);
+
+                  let commentcontent = document.getElementsByClassName('commentcontent');
+
+                  let contentdiv = document.createElement('div');
+
+                  contentdiv.innerHTML = getcommentback.data[i].content;
+
+                  commentcontent[i].appendChild(contentdiv);
+
+                }
+                
+              }
+
+
+            }
+          
+          }
+        
+        }
+
+        getmastercomment.open('GET','/api/getcomment?masterid=' + masterid);
+        getmastercomment.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        getmastercomment.send();
+
+      }
+
+      function closecomments(){
+
+        commentdiv.style.display = 'none';
+
+      }
+
+      let showresult = document.getElementById('showresult');
+
+      if( showresult.style.display == 'flex' ){
+
+        let getchosemaster = document.getElementsByClassName('chosemaster');
+
+        console.log(getchosemaster);
+
+        for( let i = 0 ; i < getchosemaster.length ; i++ ){
+
+          getchosemaster[i].addEventListener('change', changemastercolor(i) );
+
+        }
+
+      }
+
+      function changemastercolor(i){
+
+        console.log(i);
+
+        let getbasic = document.getElementsByClassName('basic');
+
+        getbasic[i].style.backgroundColor = '#EFE6DD';
+
+      }        
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

@@ -1,0 +1,72 @@
+
+@import url("basic.css");
+@import url("orderdetail.css");
+@import url("buttons.css");
+
+#sendcomment{
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top:3%;
+  min-height: 15vh;
+  border-top: 3px double #A89B8C;
+}
+
+
+#sendcomment div{
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+}
+
+#sendcomment div div{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#sendcomment label{
+  font-family:Microsoft JhengHei;
+  margin:2%;
+}
+
+#commentrate{
+  text-align: center;
+  width:8%;
+  border-radius: 2px;
+}
+
+#commentcontent{
+  border-radius: 2px;
+  min-width:15vw;
+  min-height:15vh;
+}
+
+#writecommentbutton{
+  display: none;
+}
+
+#givecomment{
+  font-family:monospace;
+  border-radius: 2px;
+  background-color: white;
+  border: 1px double black;
+  margin: 3% 0;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+  min-height:20%;
+  margin-bottom: 5%;
+}
+
+.buttons div{
+  width:100%;
+  margin-top: 5%;
+}

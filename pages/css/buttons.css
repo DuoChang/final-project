@@ -1,0 +1,22 @@
+.buttons,
+#researchbutton,
+.demandbuttons,
+.buttons div,
+#researchbutton div,
+.demandbuttons div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:center;
+}
+
+.RFQ,
+#restartbutton,
+.goto{
+  font-family:monospace;
+  border-radius: 2px;
+  background-color: white;
+  border: 1px double black;
+  outline: none;
+  cursor: pointer;
+}

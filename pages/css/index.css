@@ -1,0 +1,49 @@
+
+@import url("basic.css");
+
+#signuplinkcustomer,
+#signinlink{
+  border-right: 1px solid  #A89B8C;
+}
+
+#signuplinkcustomer,
+#signuplinkmaster{
+  border-left: 1px solid  #A89B8C;
+}
+
+main{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-end;
+  text-align: center;
+  min-height: calc(73vh);
+  opacity:0.6;
+  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/pic/main.png') left center no-repeat;
+  background-size: 55% 100%;
+  margin:1.5%;
+
+}
+
+main div{
+
+  opacity: 1 ;
+
+}
+
+#firstline{
+  font-size: 2.4em;
+  font-family: Microsoft JhengHei;
+  font-weight: bold;
+  margin:1%;
+  color:black;
+}
+
+.secondline{
+  font-size: 1.4em;
+  font-family:DIN,Noto Sans TC,Heiti TC,LiHei Pro,Microsoft JhengHei,sans-serif;
+  font-weight: bold;
+  font-style: italic;
+  margin:0.5%;
+  color: dimgray ;
+}

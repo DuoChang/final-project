@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/result.css">
+    <title>Master Quote result</title>
+
+  </head>
+
+  <body>
+
+  	<header>
+  		<div class="headertopic">
+  			<div class="headerleft">
+          <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+  			</div>
+  			<div class="headeright">
+	  			<a href="/master/searchorders"><div id="ordersearch">查看訂單</div></a>
+  			</div>
+  		</div>
+  	</header>
+
+	  <div class="uparea"></div>
+
+    <div id="quoteresult">
+
+      <div id="showquoteresult">
+
+        <div id="showquotediv">
+
+          <div id="quoteoutput">
+          
+            <div id="resultdiv"></div>     
+                    
+          </div>
+
+          <div id='pageback'>
+              <div><button id='pagebackbutton' type="button" onclick="pageback()">回上一頁 ( Back to Previous ) </button></div>  
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+
+
+      let getlink = window.location.href.split('?');
+
+      let getquerystring = getlink[1].split('&');
+
+      let getquotestatus = getquerystring[0].split('=');
+
+      let resultdiv = document.getElementById('resultdiv');
+
+      if( getquotestatus[1] == 1 ){
+
+        resultdiv.innerHTML = '工錢不可空白';
+
+      }else if( getquotestatus[1] == 2 ){
+
+        resultdiv.innerHTML = '標題列不符';
+
+      }else if( getquotestatus[1] == 3 ){
+
+        let getrow = getquerystring[1].split('=');
+
+        let getcolumn = getquerystring[2].split('=');
+
+        resultdiv.innerHTML = '內容格式不符<br>請確認 EXCEL 檔儲存格 ' + getcolumn[1] + getrow[1] ;
+
+      }else if( getquotestatus[1] == 4 ){
+
+        let pageback = document.getElementById('pageback');
+
+        pageback.style.display = 'none';
+
+        resultdiv.innerHTML = '報價成功' ;
+      
+      }else if( getquotestatus[1] == 5 ){
+
+        let getrow = getquerystring[1].split('=');
+
+        resultdiv.innerHTML = '耗材名稱請更加明確<br>請確認 EXCEL 檔第 ' + getrow[1] + ' 列耗材' ;
+
+      }else if( getquotestatus[1] == 6 ){
+
+        resultdiv.innerHTML = 'Error 請重新報價' ;
+
+      }
+
+
+
+      function pageback(){
+
+        window.history.go(-1);
+
+      }
+
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

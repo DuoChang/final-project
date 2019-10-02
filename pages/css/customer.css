@@ -1,0 +1,79 @@
+
+@import url("basic.css");
+@import url("buttons.css");
+
+#searchorders,
+#customerprocess{
+  border-left: 1px solid  #A89B8C;
+}
+
+#signinlink{
+  border-right: 1px solid  #A89B8C;
+}
+
+main{
+	display: flex;
+	flex-direction: column;
+	margin:1.5%;
+	justify-content: center;
+	align-items: center;
+  text-align: center;
+  min-height: 73vh;
+}
+
+#login{
+
+  display: flex;
+  flex-direction: column;
+  border: 3px double #A89B8C;
+  border-radius: 25px 25px 25px 25px;
+  width:40vw;
+  height: 60vh;
+
+}
+
+#inputdata{
+  display: flex;
+  flex-direction: row;
+  height:70%;
+  width:100%;
+}
+
+#inputleft,
+#inputright{
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height:100%;
+  text-align: left;
+  align-items: left;
+  justify-content: center;
+}
+
+
+#inputleft label{
+  font-family: Courier;
+  margin:5% 0%;
+  padding-left: 3%;
+}
+
+#inputright input{
+  border-radius: 2px;
+  margin:5%;
+  font-family: Courier;
+  outline: none;
+}
+
+#inputright div{
+  font-family: Courier;
+  margin:5%;
+}
+
+.buttons div{
+  margin-top: 1%;
+  width:60%;
+}
+
+.buttons{
+  height:20%;
+}

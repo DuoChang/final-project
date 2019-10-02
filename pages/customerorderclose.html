@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/customerorderclose.css">
+    <title>Customer Paid Check</title>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+		  			<a href="/customer/searchorders"><div id="ordersearch">訂單搜尋</div></a>
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+	  		<div id="basic">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+                <label id='orderlabel'>訂單編號 ( Order Number )：</label>
+                <label id='arealabel'>地區 ( Area )：</label>
+                <label id='arealabel'>裝修地址 ( Address )：</label>
+                <label id='skilllabel'>裝修項目 ( Items )：</label>
+                <label id='datelabel'>裝修日期 ( Date )：</label>
+				        <label id='describelabel'>詳細敘述 ( Details )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+                <input type="text" id='ordernumber' name="orderid" readonly>
+                <div id='area'></div>
+                <div id='address'></div>
+                <div id='skill'></div>
+                <div id='date'></div>
+                <div id='description'></div>
+			        </div>
+		          			
+  				</div>
+
+          <div id="masterquote">
+
+            <div id="quoteitem">
+
+              <div id="quote"></div><br><div id="materiallabel">耗材明細與網路比價：</div>
+
+              <div id="materialdetails"></div>
+
+            </div>           
+
+          </div>
+
+          <div class='buttons'>
+              <div id='paycode'></div>
+              <div id='commentstatus'></div>
+              <div>
+                <div id='writecommentbutton'><button class='goto' type="button" onclick="writecomment()">寫評價 ( Give Comment )</button></div>
+                <div><button class='goto' type="button" onclick="pageback()">回上一頁 ( Back to Previous )</button></div>
+              </div>
+          </div>
+
+          <div id="sendcomment">
+
+            <div>
+              <div><label> 評價分數 ( 1 - 5 ) ： </label><input id="commentrate" type="number" min="1" max="5"></div>
+              <div><label> 評價內容： </label><textarea id="commentcontent" cols="15"></textarea></div>         
+            </div>
+
+            <div>
+              <button id='givecomment' onclick="givecomment()">給評價 ( Submit )</button>
+            </div>
+
+          </div>
+
+	  		</div>      
+
+	  	</main>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+
+      /*-- Get order details --*/
+
+      let getsearchorderResult = new XMLHttpRequest;
+
+      getsearchorderResult.onreadystatechange = function(){
+
+        if(getsearchorderResult.readyState === 4){
+          
+         if (getsearchorderResult.status === 200){
+
+          let getorderback = JSON.parse(getsearchorderResult.responseText);
+
+          if( getorderback.error ){
+
+            alert('Error, 請重新登入');
+
+            sessionStorage.removeItem("Auth");
+
+            window.location.replace('/user/signin');
+
+          }else if( getorderback.message ){
+
+            alert('訂單不存在');
+
+            window.location.replace('/customer/searchorders');
+
+          }else{
+
+            let ordernumber = document.getElementById('ordernumber');
+            ordernumber.value = getorderback.data[0].indexid;
+
+            let area = document.getElementById('area');
+            area.innerHTML = getorderback.data[0].orderarea;
+
+            let address = document.getElementById('address');
+            address.innerHTML = getorderback.data[0].address;
+
+            let skill = document.getElementById('skill');
+            skill.innerHTML = getorderback.data[0].orderskill;
+
+            let date = document.getElementById('date');
+            date.innerHTML = getorderback.data[0].workdate;
+
+            let description = document.getElementById('description');
+            description.innerHTML = getorderback.data[0].ordertext;
+
+            let quote = document.getElementById('quote');
+            quote.innerHTML = '總報價： $ ' + getorderback.data[0].finalquote + ' TWD';
+
+            let materialdetails = document.getElementById('materialdetails');
+
+            let materiallabel = document.getElementById('materiallabel');
+
+            if( getorderback.data[0].tooldetails == null ){
+
+              materiallabel.innerHTML = '耗材明細：無';
+
+            }else{
+
+              let toolobj = JSON.parse(getorderback.data[0].tooldetails);
+
+              let toolobjfinal = JSON.parse(getorderback.data[0].tooldetailsfinal);
+
+              let toolstring='';
+              
+
+              for( let objkey in toolobj ){
+
+                let crawlerprice = toolobjfinal[objkey] ;
+
+                if( crawlerprice > toolobj[objkey] || crawlerprice == toolobj[objkey] ){
+
+                  let comparestring = '報價合理' ;
+
+                  toolstring = toolstring + objkey + ' $' + toolobj[objkey] + ' TWD ' + comparestring + '<br>';
+
+                }else{   
+
+                  let compareprice = ((toolobj[objkey]-crawlerprice)/crawlerprice)*100 ;
+
+                  let comparestring = '+' + compareprice.toFixed(0) + '%' ;
+
+                  toolstring = toolstring + objkey + ' $' + toolobj[objkey] + ' TWD ' + comparestring + '<br>';
+
+                }
+
+              }
+
+              materialdetails.innerHTML = toolstring;
+
+            }
+
+            let paycode = document.getElementById('paycode');
+
+            paycode.innerHTML = '支付代碼： ' + getorderback.data[0].code;
+
+          }
+         
+         }
+
+        }
+
+      }
+
+      let getquerystring = window.location.href.split('?');
+
+      let getidandstatus = getquerystring[1].split('&');
+
+      let getorderid = getidandstatus[1].split('=');
+
+      let getstatus = getidandstatus[0].split('=');
+
+      if( getstatus[1] == undefined || getorderid[1] == undefined ){
+
+        window.location.replace('/user/errordirect');
+
+      }
+
+      getsearchorderResult.open('GET','/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+
+      getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+      getsearchorderResult.send();
+
+      /*-- Get comment status --*/
+
+      let getcommentstatus = new XMLHttpRequest;
+
+      getcommentstatus.onreadystatechange = function(){
+
+        if(getcommentstatus.readyState === 4){
+          
+         if (getcommentstatus.status === 200){
+          
+          let getcommentstatusback = JSON.parse(getcommentstatus.responseText);
+
+          if( getcommentstatusback.error ){
+
+            alert('Error, 請重新登入');
+
+            sessionStorage.removeItem("Auth");
+
+            window.location.replace('/user/signin');
+
+          }else if( getcommentstatusback.message ){
+
+            alert('Error, 將重整頁面');
+
+            window.location.reload();
+
+          }else{
+
+            let commentstatus = document.getElementById('commentstatus');
+
+            if( getcommentstatusback.data == 'done' ){
+
+              commentstatus.innerHTML = '已評價';
+
+            }else{
+
+              let writecommentbutton = document.getElementById('writecommentbutton');
+
+              writecommentbutton.style.display = 'flex';
+
+              commentstatus.innerHTML = '尚未評價';
+
+            }
+
+          }
+        
+         }
+
+        }
+
+      }
+
+      getcommentstatus.open('GET','/api/getcomment?orderid=' + getorderid[1] );
+
+      getcommentstatus.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+      getcommentstatus.send();
+
+      /*-- 回上一頁 --*/
+
+      function pageback(){
+
+        window.history.go(-1);
+
+      }
+
+      let buttons = document.getElementsByClassName('buttons');
+      let sendcomment = document.getElementById('sendcomment');
+
+      function writecomment(){
+
+        
+        buttons[0].style.display = 'none';
+        sendcomment.style.display = 'flex';
+
+      }
+
+      function givecomment(){
+
+        let commentrate = document.getElementById('commentrate').value;
+
+        let commentcontent = document.getElementById('commentcontent').value;
+
+        let ordernumber = document.getElementById('ordernumber').value;
+
+        console.log(commentrate,commentcontent);
+
+        if( commentrate == '' || commentcontent == '' ){
+
+          alert('尚未填寫完成');
+
+        }else{
+
+          let savecomment = new XMLHttpRequest;
+
+          savecomment.onreadystatechange = function(){
+
+            if(savecomment.readyState === 4){
+              
+             if (savecomment.status === 200){
+
+              let getcommentstatusback = JSON.parse(getcommentstatus.responseText);
+
+              if( getcommentstatusback.error ){
+
+                alert('Error, 請重新登入');
+                
+                sessionStorage.removeItem("Auth");
+
+                window.location.replace('/user/signin');
+
+              }else if( getcommentstatusback.message ){
+
+                alert('Error, 請重新填寫');
+
+              }else{
+
+                window.location.reload();
+
+              }
+            
+             }
+
+            }
+
+          }
+
+          let newcomment = {};
+
+          newcomment.heartrate = commentrate;
+
+          newcomment.content = commentcontent;
+
+          newcomment.orderid = ordernumber;
+
+          let sendjson = JSON.stringify(newcomment);
+
+          savecomment.open('POST','/api/order/savecomment' );
+
+          savecomment.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+          savecomment.setRequestHeader("Content-Type","application/json");
+
+          savecomment.send(sendjson);
+
+        }
+
+      }
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

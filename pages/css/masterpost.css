@@ -1,0 +1,37 @@
+
+@import url("basic.css");
+@import url("buttons.css");
+@import url("orderdetail.css");
+
+#quoteitem{
+  text-align: center;
+}
+
+#quoteitem input{
+  font-family: Microsoft JhengHei;
+  border-radius: 2px;
+  outline: none;
+  text-align: center;
+  border-bottom: 1px black solid;
+  border-top:none;
+  border-left: none;
+  border-right: none;
+}
+
+#quoteitem label{
+  cursor: pointer;
+}
+
+#uploadquote{
+  display: none;
+  text-align:center;
+}
+
+.buttons{
+  height:15%;
+}
+
+.buttons div{
+  margin-top: 1%;
+  width:40%;
+}

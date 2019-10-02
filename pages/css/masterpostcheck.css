@@ -1,0 +1,18 @@
+
+@import url("basic.css");
+@import url("orderdetail.css");
+@import url("result.css");
+@import url("buttons.css");
+
+#showquoteresult{
+  display: none;
+}
+
+.buttons{
+  min-height:20%;
+}
+
+.buttons div{
+  width:60%;
+  margin-top: 5%;
+}

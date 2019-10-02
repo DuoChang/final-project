@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/searchorders.css">
+    <title>Search Master Orders</title>
+
+  </head>
+
+  <body>
+
+  	<header>
+  		<div class="headertopic">
+  			<div class="headerleft">
+          <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+  			</div>
+  			<div class="headeright">
+          <a href="/process/searchmaster"><div id="mastersearchprocess">流程</div></a>
+	  			<a href="/user/profile/master"><div id="signinlink">會員資料</div></a>
+  			</div>
+  		</div>
+  	</header>
+
+	  <div class="uparea"></div>
+
+    <main id="main">
+
+      <div id="searchitems">
+        
+        <button id="createdbutton" onclick="getcreated('created')">待報價</button>
+        <button id="quotedbutton" onclick="getquoted('quoted')">已報價</button>
+        <button id="paidbutton" onclick="getpaid('paid')">待上工</button>
+        <button id="closedbutton" onclick="getclosed('closed')">已結案</button>
+
+      </div>
+
+      <div id="noresult">
+        <div id="nosearchresult">
+          <div id="noresultdiv">
+            <div id="noresultoutput">            
+              <div>無訂單</div>                           
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="showresultmaster">
+
+    		<div id="searchresult">
+
+  	  	</div>
+
+      </div>
+
+    </main>
+
+    <script>
+
+      if(sessionStorage.getItem("Auth") == null){
+
+        window.location.replace('/user/signin');
+
+      }
+
+      let createdbutton = document.getElementById('createdbutton');
+      let quotedbutton = document.getElementById('quotedbutton');
+      let paidbutton = document.getElementById('paidbutton');
+      let closedbutton = document.getElementById('closedbutton');
+      let searchresult = document.getElementById('searchresult');
+      let showresultmaster = document.getElementById('showresultmaster');
+      let noresult = document.getElementById('noresult');
+
+      function getcreated(){
+
+        showresultmaster.style.background = 'none';
+        showresultmaster.style.opacity = 1;
+
+        let remove = document.getElementsByClassName('orderdetaillink');
+
+        while(remove.length>0){
+
+          remove[0].remove();
+
+        }
+
+        let pagearea = document.getElementById('pagearea');
+        if( pagearea != null ){
+
+          pagearea.remove();
+
+        }
+
+        search('created',1);
+
+        createdbutton.style.backgroundColor = '#faf7f4';
+        quotedbutton.style.backgroundColor =  '#FFFFFF';
+        paidbutton.style.backgroundColor =  '#FFFFFF';
+        closedbutton.style.backgroundColor =  '#FFFFFF';
+
+
+      }
+
+      function getquoted(){
+
+        showresultmaster.style.background = 'none';
+        showresultmaster.style.opacity = 1;
+
+        let remove = document.getElementsByClassName('orderdetaillink');
+        
+        while(remove.length>0){
+
+          remove[0].remove();
+
+        }
+
+        let pagearea = document.getElementById('pagearea');
+        if( pagearea != null ){
+
+          pagearea.remove();
+
+        }
+
+        search('quoted',1);
+
+        createdbutton.style.backgroundColor = '#FFFFFF';
+        quotedbutton.style.backgroundColor =  '#faf7f4';
+        paidbutton.style.backgroundColor =  '#FFFFFF';
+        closedbutton.style.backgroundColor =  '#FFFFFF';
+
+      }
+
+      function getpaid(){
+
+        showresultmaster.style.background = 'none';
+        showresultmaster.style.opacity = 1;
+
+        let remove = document.getElementsByClassName('orderdetaillink');
+
+        while(remove.length>0){
+
+          remove[0].remove();
+
+        }
+
+        let pagearea = document.getElementById('pagearea');
+        if( pagearea != null ){
+
+          pagearea.remove();
+
+        }
+
+        search('paid',1);
+
+        createdbutton.style.backgroundColor = '#FFFFFF';
+        quotedbutton.style.backgroundColor =  '#FFFFFF';
+        paidbutton.style.backgroundColor =  '#faf7f4';
+        closedbutton.style.backgroundColor =  '#FFFFFF';
+
+      }
+
+      function getclosed(){
+
+        showresultmaster.style.background = 'none';
+        showresultmaster.style.opacity = 1;
+
+        let remove = document.getElementsByClassName('orderdetaillink');
+
+        while(remove.length>0){
+
+          remove[0].remove();
+
+        }
+
+        let pagearea = document.getElementById('pagearea');
+        if( pagearea != null ){
+
+          pagearea.remove();
+
+        }
+
+        search('closed',1);
+
+        createdbutton.style.backgroundColor = '#FFFFFF';
+        quotedbutton.style.backgroundColor =  '#FFFFFF';
+        paidbutton.style.backgroundColor =  '#FFFFFF';
+        closedbutton.style.backgroundColor =  '#faf7f4';
+
+      }
+
+      
+      function search(status,page){
+
+        console.log('enter search');
+
+        let getsearchmasterResult = new XMLHttpRequest;
+
+        getsearchmasterResult.onreadystatechange = function(){
+
+          if(getsearchmasterResult.readyState === 4){
+            
+            if (getsearchmasterResult.status === 200){
+
+              let getmasterback = JSON.parse(getsearchmasterResult.responseText);
+
+              console.log(getmasterback);
+
+              console.log('3');
+
+              if(getmasterback.error != null){
+
+                console.log('85');
+
+                alert('Error, 請確認登入資訊 ,將重整頁面');
+                sessionStorage.removeItem("Auth");
+                window.location.replace('/user/signin');
+
+              }else{
+
+                console.log('8');               
+
+                if( getmasterback.message ){          
+
+                  showresultmaster.style.display = 'none';
+
+                  console.log('77');
+
+                  noresult.style.display = 'flex';
+
+                }else{
+
+                  showresultmaster.style.display = 'flex';
+
+                  noresult.style.display = 'none';
+
+                  for( let i = 0 ; i < getmasterback.data.length ; i++){
+
+                    let neworderdetaillink = document.createElement('a');
+
+                    neworderdetaillink.className = 'orderdetaillink';
+
+                    console.log('3056',status);
+                    console.log('7024',getmasterback.data[i].indexid);
+
+                    if( status == 'created'){
+
+                      neworderdetaillink.href = '/master/checkorder/created?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+
+                    }else if( status == 'quoted' ){
+
+                      neworderdetaillink.href = '/master/checkorder/quoted?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+
+                    }else if( status == 'paid' ){
+
+                      neworderdetaillink.href = '/master/checkorder/inputcode?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+
+                    }else if( status == 'closed' ){
+
+                      neworderdetaillink.href = '/master/checkorder/closed?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      
+                    }
+                  
+                    searchresult.appendChild(neworderdetaillink);
+
+                    let orderdetaillink = document.getElementsByClassName('orderdetaillink');
+
+                    let newbasic = document.createElement('div');
+
+                    newbasic.className='basic';
+
+                    orderdetaillink[i].appendChild(newbasic);
+
+                    let basic = document.getElementsByClassName('basic');
+
+                    let newinputdata = document.createElement('div');
+
+                    newinputdata.className = 'inputdata';
+
+                    basic[i].appendChild(newinputdata);
+
+                    let inputdata = document.getElementsByClassName('inputdata');
+
+                    let newinputdiv = document.createElement('div');
+
+                    newinputdiv.innerHTML = '訂單 ID　：' + getmasterback.data[i].indexid;
+
+                    inputdata[i].appendChild(newinputdiv);
+
+                    let newdatediv = document.createElement('div');
+
+                    if( status == 'created' || status == 'quoted'){
+
+                      newdatediv.innerHTML = '訂單日期：'　+ getmasterback.data[i].orderdate;
+                    
+                    }else if( status == 'paid' || status == 'closed' ){
+                    
+                      newdatediv.innerHTML = '裝修日期：'　+ getmasterback.data[i].workdate;
+                    
+                    }                    
+
+                    inputdata[i].appendChild(newdatediv);
+
+                    let newareadiv = document.createElement('div');
+
+                    newareadiv.innerHTML = '地區：'　+ getmasterback.data[i].orderarea;
+
+                    inputdata[i].appendChild(newareadiv);
+
+
+                    /*-- create show 裝修地區的 button --*/
+
+                    let newbuttons = document.createElement('div');
+
+                    newbuttons.className = 'buttons';                    
+
+                    basic[i].appendChild(newbuttons);
+
+                    let buttons = document.getElementsByClassName('buttons');
+
+                    let newbuttondiv = document.createElement('div');
+
+                    newbuttondiv.innerHTML = '裝修項目：' + getmasterback.data[i].orderskill.toString();
+
+                    buttons[i].appendChild(newbuttondiv);
+
+                  }
+
+                  let newpagearea = document.createElement('div');
+
+                  newpagearea.id = 'pagearea' ;
+
+                  showresultmaster.appendChild(newpagearea);
+
+                  let pagearea = document.getElementById('pagearea');
+
+                  for( let i = 0 ; i < getmasterback.page ; i++ ){
+
+                    let newpagebutton = document.createElement('button');
+
+                    newpagebutton.className = 'pagebutton';
+                    newpagebutton.name = ( i + 1 );
+                    newpagebutton.innerHTML = ( i + 1 );
+
+                    if( ( i + 1 ) != page ){
+                
+                      newpagebutton.onclick = changepage;
+
+                      console.log( (i+1) );
+
+                    }else{
+
+                      newpagebutton.style.textDecoration = 'none';
+
+                    }
+
+                    pagearea.appendChild(newpagebutton);
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        console.log(status);
+
+        getsearchmasterResult.open('GET','/api/search/order/master?status=' + status + '&page=' + page );
+        getsearchmasterResult.setRequestHeader("Content-Type","application/json");
+        getsearchmasterResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        getsearchmasterResult.send();
+
+      }
+
+      function changepage(){
+
+        let remove = document.getElementsByClassName('orderdetaillink');
+
+        while(remove.length>0){
+
+          remove[0].remove();
+
+        }
+
+        let pagearea = document.getElementById('pagearea');
+        if( pagearea != null ){
+
+          pagearea.remove();
+
+        }
+
+        let page = this.name;
+
+        let status;
+
+        if( createdbutton.style.backgroundColor == 'rgb(239, 230, 221)' ){
+
+          status = 'created';
+
+        }else if( quotedbutton.style.backgroundColor ==  'rgb(239, 230, 221)' ){
+
+          status = 'quoted';
+
+        }else if( paidbutton.style.backgroundColor ==  'rgb(239, 230, 221)' ){
+
+          status = 'paid';
+
+        }else if( paidbutton.style.backgroundColor ==  'rgb(239, 230, 221)' ){
+
+          status = 'closed';
+
+        }
+
+        search(status,page);
+
+
+      }
+
+
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/css/customer.css">
+    <title>Customer Profile</title>
+
+  </head>
+
+  <body>
+
+	  	<header>
+	  		<div class="headertopic">
+	  			<div class="headerleft">
+            <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
+	  			</div>
+	  			<div class="headeright">
+	  				<a href="/customer/searchmaster"><div id="signinlink">找師傅</div></a>
+		  			<a href="/customer/searchorders"><div id="searchorders">查看訂單</div></a>		  			
+	  			</div>
+	  		</div>
+	  	</header>
+
+	  	<div class="uparea"></div>
+
+  		<main>
+
+	  		<div id="login">
+
+  				<div id="inputdata">
+  				
+  					<div id="inputleft">
+  						<label id='idlabel'>會員 ID ( ID )：</label>
+                		<label id='namelabel'>姓名 ( Name )：</label>
+				        <label id='phonelabel'>手機號碼 ( Phone Number )：</label>
+				        <label id='addresslabel'>地址 ( Address )：</label>
+				        <label id="passwordlabel">密碼 ( Password )：</label>
+			        </div>
+			        
+			        <div id="inputright">
+			        	<div id="idnum"></div>
+                		<div id="name"></div>
+                		<div id="phone"></div>
+                		<input id="address" type="text" name="address">
+			        	<input id="password" type="password" name="password">
+			        </div>        
+		          			
+  				</div>
+
+	  			<div class='buttons'>
+				      <div><button class='goto' type="button" onclick="updatecustomer()">更新 ( Update )</button></div>
+	  			</div>
+	  		</div>
+
+
+	  	</main>
+
+    <script>
+
+    	if(sessionStorage.getItem("Auth") == null){
+
+	        alert('請先登入');
+	        window.location.replace('/user/signin');
+
+	    }
+
+
+	    let idnum = document.getElementById('idnum');
+
+	    let name = document.getElementById('name');
+
+	    let phone = document.getElementById('phone');
+
+	    let address = document.getElementById('address');
+
+	    function updatecustomer(){
+
+        	let inputpass = document.getElementById('password').value;
+
+        	let jsonsend = {};
+
+	        jsonsend.password = inputpass;
+	        jsonsend.address = address.value;
+
+	        let sendjson = JSON.stringify(jsonsend);
+
+	        let updatecustomerData = new XMLHttpRequest;
+
+	        updatecustomerData.onreadystatechange = function(){
+
+	          if(updatecustomerData.readyState === 4){
+	            
+	           if (updatecustomerData.status === 200){
+
+	           	let updateresponse= JSON.parse(updatecustomerData.responseText);
+
+	           	if( updateresponse.data ){
+	           		alert('更新成功');
+	           	}else{
+	           		alert('Error, 請重新嘗試');
+	           	}
+
+	           }
+
+	          }
+
+	        }
+
+	        updatecustomerData.open('POST','/api/update/customerprofile');
+
+	        updatecustomerData.setRequestHeader("Content-Type","application/json");
+
+	        updatecustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+	        updatecustomerData.send(sendjson); 
+
+	    }
+
+	    let getcustomerData = new XMLHttpRequest;
+
+        getcustomerData.onreadystatechange = function(){
+
+          if(getcustomerData.readyState === 4){
+            
+           if (getcustomerData.status === 200){
+
+           	let customerData = JSON.parse(getcustomerData.responseText);
+
+           	if(customerData.error != null){
+
+              alert('登入已過時,請重新登入');
+              sessionStorage.removeItem("Auth");
+              window.location.replace('/user/signin');
+
+            }else{
+
+		       	idnum.innerHTML = customerData.data.userid;
+
+		       	name.innerHTML = customerData.data.name;
+
+		       	phone.innerHTML = customerData.data.phone;
+
+		       	address.value = customerData.data.address;
+
+           }
+
+           }
+           
+          }
+          
+        }
+
+        getcustomerData.open('GET','/api/userprofile/customer');
+        getcustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        getcustomerData.send(); 	
+
+    </script>
+
+  </body>
+  
+  <footer class="footer">
+
+  		<p class="footerp">&copy;2019. All rights reserved.</p>
+
+  </footer>
+
+</html>
