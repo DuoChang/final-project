@@ -61,56 +61,66 @@
 
       function SignUp(){
 
-        var signupData = new XMLHttpRequest();
-      
-        signupData.onreadystatechange=function(){
-
-          if(signupData.readyState === 4){
-            
-           if (signupData.status === 200){
-
-              let signinback = JSON.parse(signupData.responseText);
-
-              if( signinback.error != null ){
-
-                alert('已註冊過 / 輸入內容錯誤');
-
-              }else{
-
-                let backtoken = "Bearer " + signinback.data.access_token;         
-
-                sessionStorage.setItem("Auth",backtoken);
-
-                window.location.replace('/customer/searchmaster');
-
-              }
-
-            }
-   
-          }
-
-        };
-
-        signupData.open('POST','/api/user/signup');
-
-        signupData.setRequestHeader("Content-Type",
-              "application/json");
-
         let inputname = document.getElementById('name').value;
         let inputaddress = document.getElementById('address').value;
         let inputphone = document.getElementById('phone').value;
         let inputpass = document.getElementById('password').value;
 
-        let jsonsend = {};
-        jsonsend.provider = 'customer';
-        jsonsend.name = inputname;
-        jsonsend.address = inputaddress;
-        jsonsend.phone = inputphone;
-        jsonsend.password = inputpass;
+        if( inputname == '' || inputaddress == '' || inputphone == '' || inputpass == '' ){
 
-        let sendjson = JSON.stringify(jsonsend);
+          alert('未填寫完成');
 
-        signupData.send(sendjson);
+        }else{
+
+          var signupData = new XMLHttpRequest();
+        
+          signupData.onreadystatechange=function(){
+
+            if(signupData.readyState === 4){
+              
+             if (signupData.status === 200){
+
+                let signinback = JSON.parse(signupData.responseText);
+
+                if( signinback.error != null ){
+
+                  alert('已註冊過 / 輸入內容錯誤');
+
+                }else{
+
+                  let backtoken = "Bearer " + signinback.data.access_token;         
+
+                  sessionStorage.setItem("Auth",backtoken);
+
+                  window.location.replace('/customer/searchmaster');
+
+                }
+
+              }
+     
+            }
+
+          };
+
+          signupData.open('POST','/api/user/signup');
+
+          signupData.setRequestHeader("Content-Type",
+                "application/json");
+
+          
+
+          let jsonsend = {};
+          jsonsend.provider = 'customer';
+          jsonsend.name = inputname;
+          jsonsend.address = inputaddress;
+          jsonsend.phone = inputphone;
+          jsonsend.password = inputpass;
+
+          let sendjson = JSON.stringify(jsonsend);
+
+          signupData.send(sendjson);
+
+        }
 
       }
 

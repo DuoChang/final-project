@@ -53,21 +53,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 					console.log('4');
 
-
-					/*--確認未註冊過--*/
-
-					/*--新增token--*/
-
-					// let hash = crypto.createHash('sha256');
-
-					// let tokenstring = req.body.phone + Date.now() + 'aaa';
-
-					// let usertoken = hash.update(tokenstring);
-
-					// let expiredtime = Date.now()+ 7.2e+6 ;
-
 					let token = createtoken(req.body.phone);
-
 
 					/*--資料送入DB--*/
 
@@ -272,14 +258,6 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 											}else{
 
 												/*--存 master 驗證資料--*/
-
-												// let hash = crypto.createHash('sha256');
-
-												// let verifystring = req.body.phone + Date.now() + 'aaa';
-
-												// var masteractivecode = hash.update(verifystring);
-
-												// var activecode = hash.digest('hex');
 
 												let mailverifytoken = createtoken(req.body.phone);
 
