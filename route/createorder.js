@@ -9,12 +9,12 @@ expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 const nodemailer = require('nodemailer');
-const credentials = require('../util/credentials.js');
+require('dotenv').config();
 const mailTransport = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: credentials.gmail.user,
-    pass: credentials.gmail.pass
+    user: process.env.MAIL_ACCOUNT,
+    pass: process.env.MAIL_PASS
   }
 });
 
