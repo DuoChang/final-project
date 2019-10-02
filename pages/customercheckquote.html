@@ -128,7 +128,7 @@
 
           </div>
 
-          <form action="/api/order/accept" method="post" id="payment-form">
+          <form action="/api/quote/accept" method="post" id="payment-form">
             <div class="form-row">
               <label for="card-element">
                 請輸入信用卡號
@@ -420,7 +420,7 @@
 
         }
 
-        rejectquote.open('GET','/api/order/reject?orderid=' + getorderid[1] );
+        rejectquote.open('GET','/api/quote/reject?orderid=' + getorderid[1] );
 
         rejectquote.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 

@@ -21,7 +21,7 @@ const mailTransport = nodemailer.createTransport({
 });
 
 
-expressrouter.post('/api/order/accept' ,(req,res)=>{
+expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 	console.log(req.body);
 

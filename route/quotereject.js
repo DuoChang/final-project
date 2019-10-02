@@ -8,7 +8,7 @@ expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 
-expressrouter.get('/api/order/reject' ,(req,res)=>{
+expressrouter.get('/api/quote/reject' ,(req,res)=>{
 
 	if( !req.header('Authorization') || req.header('Authorization') == ''){
 		console.log('898');
