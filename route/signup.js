@@ -1,7 +1,8 @@
 const mysql=require("../util/mysqlcon.js");
+const createtoken=require("../util/createtoken.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const stripe = require('stripe')('sk_test_1UIhmFMbhl0lO9w4Hdp6jNnC00MXi9WabT');
 
 const bodyParser = require('body-parser');
@@ -57,20 +58,22 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 					/*--新增token--*/
 
-					let hash = crypto.createHash('sha256');
+					// let hash = crypto.createHash('sha256');
 
-					let tokenstring = req.body.phone + Date.now() + 'aaa';
+					// let tokenstring = req.body.phone + Date.now() + 'aaa';
 
-					let usertoken = hash.update(tokenstring);
+					// let usertoken = hash.update(tokenstring);
 
-					let expiredtime = Date.now()+ 7.2e+6 ;
+					// let expiredtime = Date.now()+ 7.2e+6 ;
+
+					let token = createtoken(req.body.phone);
 
 
 					/*--資料送入DB--*/
 
 					let datauser={
-						access_token:hash.digest('hex'),
-						access_expired:expiredtime,
+						access_token:token.access_token,
+						access_expired:token.access_expired,
 						name:req.body.name,
 						phone:req.body.phone,
 						password:req.body.password,
@@ -270,17 +273,19 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 												/*--存 master 驗證資料--*/
 
-												let hash = crypto.createHash('sha256');
+												// let hash = crypto.createHash('sha256');
 
-												let verifystring = req.body.phone + Date.now() + 'aaa';
+												// let verifystring = req.body.phone + Date.now() + 'aaa';
 
-												var masteractivecode = hash.update(verifystring);
+												// var masteractivecode = hash.update(verifystring);
 
-												var activecode = hash.digest('hex');
+												// var activecode = hash.digest('hex');
+
+												let mailverifytoken = createtoken(req.body.phone);
 
 												let mailstatus = {
 													email: req.body.email,
-													activecode: activecode,
+													activecode: mailverifytoken.access_token,
 													status: 'inactivate'
 												};
 

@@ -31,9 +31,9 @@ app.use(express.static( __dirname + '/uploads' ));
 
 app.use('/', express.static('./pages/signup-customer.html') );
 app.use('/process/master', express.static('./pages/masterprocess.html') );
+app.use('/process/searchmaster', express.static('./pages/mastersearchprocess.html') );
 app.use('/process/customer', express.static('./pages/customerprocess.html') );
 app.use('/process/searchcustomer', express.static('./pages/customersearchprocess.html') );
-app.use('/process/searchmaster', express.static('./pages/mastersearchprocess.html') );
 app.use('/user/signin', express.static('./pages/signin.html') );
 app.use('/user/signup/customer', express.static('./pages/signup-customer.html') );
 app.use('/user/signup/master', express.static('./pages/signup-master.html') );

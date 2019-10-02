@@ -1,12 +1,11 @@
 const mysql=require("../util/mysqlcon.js");
+const createtoken=require("../util/createtoken.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
-
 
 expressrouter.post('/api/user/signin',(req,res)=>{
 
@@ -32,19 +31,9 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 				}else{
 
-					/*--Create new token and save in DB--*/
+					let customertokentosave = createtoken(req.body.phone);
 
-					let tokenstring = req.body.phone + Date.now() + 'aaa';
-
-					let hash = crypto.createHash('sha256');
-
-					let usertoken = hash.update(tokenstring);
-
-					let expiredtime = Date.now()+ 7.2e+6 ;
-
-					let querytosavetoken = {access_token:hash.digest('hex'),access_expired:expiredtime};
-
-					mysql.con.query('Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"',querytosavetoken,(err,result)=>{
+					mysql.con.query( 'Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , customertokentosave , (err,result)=>{
 
 						if( err || result.length ===0 ){
 
@@ -54,9 +43,9 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 						    /*--SELECT data FROM DB--*/
 
-							let queryuser = "SELECT * FROM user WHERE phone=\"" + req.body.phone + "\"";
+							let queryuser = "SELECT * FROM user WHERE phone=\"" + req.body.phone + "\"" ;
 
-							mysql.con.query(queryuser,(err,result)=>{
+							mysql.con.query( queryuser ,(err,result)=>{
 
 								if( err || result.length ===0 ){
 
@@ -106,19 +95,9 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 				}else{
 
-					/*--Create new token and save in DB--*/
+					let techniciantokentosave = createtoken(req.body.phone);
 
-					let tokenstring = req.body.phone + Date.now() + 'aaa';
-
-					let hash = crypto.createHash('sha256');
-
-					let usertoken = hash.update(tokenstring);
-
-					let expiredtime = Date.now()+ 7.2e+6 ;
-
-					let querytosavetoken = {access_token:hash.digest('hex'),access_expired:expiredtime};
-
-					mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"',querytosavetoken,(err,result)=>{
+					mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , techniciantokentosave , (err,result)=>{
 
 						if( err || result.length ===0 ){
 
