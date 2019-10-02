@@ -15,16 +15,6 @@ const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
 
-const nodemailer = require('nodemailer');
-const credentials = require('../util/credentials.js');
-const mailTransport = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: credentials.gmail.user,
-    pass: credentials.gmail.pass
-  }
-});
-
 let cpUpload = upload.fields([{ name: 'quotefile', maxCount: 1 }]); 
 
 expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
