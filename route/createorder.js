@@ -1,7 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 const moment = require('moment');
 
 const bodyParser = require('body-parser');
@@ -41,34 +40,36 @@ function makerandomletter(max) {
   return text;
 }
 
-function insertorder( res, receivedata , orderday , userid , skillarray ){
+function insertorder( res, receivebodyfromfront , orderdate , userid , skillarray ){
 
-	var num = makerandomletter(2) + randomusefloor(1,999999);
+	let num = makerandomletter(2) + randomusefloor(1,999999);
 
-	let querycode = 'SELECT code FROM orders WHERE code=\"' + num + '\" AND status <> \"closed\"';
-	let code = mysql.con.query(querycode, (err,result)=>{
+	let queryordercode = 'SELECT code FROM orders WHERE code=\"' + num + '\" AND status <> \"closed\"';
+	let code = mysql.con.query( queryordercode, (err,result)=>{
 		if( err || result !=0 ){
 			console.log('13');
-			insertorder(res,receivedata,orderday,userid);
+			insertorder( res , receivebodyfromfront , orderdate , userid, skillarray );
 		}else{			
 			console.log('12',num);
-			let orderitems = {
+			let orderdetails = {
 
 				status:'created',
 				code: num,
 				userid:userid,
-				masterid:receivedata.masterid,
-				orderdate:orderday,
-				orderskill:receivedata.skill.toString(),
-				orderarea:receivedata.area,
-				ordertext: receivedata.text,
-				workdate:receivedata.workdate
+				masterid:receivebodyfromfront.masterid,
+				orderdate:orderdate,
+				orderskill:receivebodyfromfront.skill.toString(),
+				orderarea:receivebodyfromfront.area,
+				ordertext: receivebodyfromfront.text,
+				workdate:receivebodyfromfront.workdate
 
 			};
 
-			console.log('11',orderitems);
+			console.log('11',orderdetails);
 
-			mysql.con.query('INSERT INTO orders SET ?', orderitems ,(err,result)=>{
+			let queryinsertneworder = 'INSERT INTO orders SET ?' ;
+
+			mysql.con.query( queryinsertneworder , orderdetails ,(err,result)=>{
 
 				if( err ){
 
@@ -80,9 +81,9 @@ function insertorder( res, receivedata , orderday , userid , skillarray ){
 
 					console.log('insert success');
 
-					var orderid = result.insertId;
+					let orderid = result.insertId;
 
-					let querymasteremail= 'SELECT email FROM master WHERE masterid=' + receivedata.masterid ;
+					let querymasteremail= 'SELECT email FROM master WHERE masterid=' + receivebodyfromfront.masterid ;
 
 					console.log('7',querymasteremail);
 
@@ -104,7 +105,7 @@ function insertorder( res, receivedata , orderday , userid , skillarray ){
 							  
 							  subject: 'Find 師傅-新需求通知 訂單編號:' + orderid,
 							  
-							  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>新需求明細如下，請查閱報價<br><br>地區：' + receivedata.area + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + receivedata.workdate + '<br>詳細敘述：' + receivedata.text + '<br>請點選以下連結進行報價<br><a href="https://g777708.com/master/checkorder/created?status=created&orderid=' + orderid + '">前往報價</a></p></div>'
+							  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>新需求明細如下，請查閱報價<br><br>地區：' + receivebodyfromfront.area + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + receivebodyfromfront.workdate + '<br>詳細敘述：' + receivebodyfromfront.text + '<br>請點選以下連結進行報價<br><a href="https://g777708.com/master/checkorder/created?status=created&orderid=' + orderid + '">前往報價</a></p></div>'
 
 
 							}, function(err){
@@ -208,7 +209,7 @@ expressrouter.post('/api/order/create',(req,res)=>{
 
 				console.log('777');
 
-				var userid = result[0].userid ;
+				let userid = result[0].userid ;
 
 				if( timenow > result[0].access_expired ){
 
@@ -220,17 +221,15 @@ expressrouter.post('/api/order/create',(req,res)=>{
 
 					console.log('1024');
 
-					let orderday = moment().format('YYYY-MM-DD');	
+					let orderdate = moment().format('YYYY-MM-DD');	
 
-					let receivedata = req.body ;
+					let receivebodyfromfront = req.body ;
 
-					let skillchangetotext = req.body ;
-
-					let skillarray = changeskillcreate(skillchangetotext);
+					let skillarray = changeskillcreate(req.body);
 
 					console.log('G5',skillarray);
 
-					let insertresult = insertorder(res,receivedata,orderday,userid,skillarray);
+					let insertresult = insertorder( res , receivebodyfromfront , orderdate , userid , skillarray );
 
 				}			
 

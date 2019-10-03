@@ -56,11 +56,11 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							let obj = node_xlsx.parse(req.files.quotefile[0].path);
 
-							let excelObj = obj[0].data;
+							let excelobj = obj[0].data;
 
-							console.log(excelObj);
+							console.log(excelobj);
 
-							if( excelObj[0][0] != "耗材編號" || excelObj[0][1] != "耗材名稱" || excelObj[0][2] != "耗材價錢(TWD)" || excelObj.length != 3){
+							if( excelobj[0][0] != "耗材編號" || excelobj[0][1] != "耗材名稱" || excelobj[0][2] != "耗材價錢(TWD)" || excelobj.length != 3){
 
 								fs.unlink( req.files.quotefile[0].path, function () {
 
@@ -76,15 +76,15 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 								let materailobj = {};
 
-								let materialobjcrawler = {};
+								let materialobjcrawlerprice = {};
 
 								var count = 0;
 
-								for( let i = 1 ; i < excelObj.length ; i++ ){
+								for( let i = 1 ; i < excelobj.length ; i++ ){
 
 									console.log(i);							
 
-									if( typeof(excelObj[i][1]) != 'string' ){
+									if( typeof(excelobj[i][1]) != 'string' ){
 
 										fs.unlink(req.files.quotefile[0].path, function () {
 
@@ -92,7 +92,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										return res.redirect('/master/quoteresult?status=3&row=' + (i+1) + '&column=B');
 									
-									}else if( typeof(excelObj[i][2]) != 'number' || excelObj[i][2] < 0 || ( excelObj[i][2] - Math.floor(excelObj[i][2]) ) > 0 ){
+									}else if( typeof(excelobj[i][2]) != 'number' || excelobj[i][2] < 0 || ( excelobj[i][2] - Math.floor(excelobj[i][2]) ) > 0 ){
 
 										fs.unlink(req.files.quotefile[0].path, function () {
 
@@ -102,41 +102,41 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 									}else{
 
-										materailobj[excelObj[i][1]] = excelObj[i][2];
+										materailobj[excelobj[i][1]] = excelobj[i][2];
 
-										sumofmaterialsprice = sumofmaterialsprice + excelObj[i][2] ;
+										sumofmaterialsprice = sumofmaterialsprice + excelobj[i][2] ;
 
-										let materialitemstring = encodeURIComponent(excelObj[i][1]);
+										let materialitemstring = encodeURIComponent(excelobj[i][1]);
 
 										let crawlerstring = 'https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=' + materialitemstring + '&page=1&sort=sale/dc' ;
 
-										let requestresult = request( crawlerstring, function (error, response, body) {
+										let crawlerresult = request( crawlerstring, function (error, response, body) {
 
-										    if (!error && response.statusCode == 200) {
+										    if ( !error && response.statusCode == 200) {
 
-										        let databack = JSON.parse(body);
+										        let crawlerdataback = JSON.parse(body);
 
 										        count = count + 1 ;
 
 										        console.log( count );
 
-										        console.log('0520',databack.prods[0].price);
+										        console.log('0520',crawlerdataback.prods[0].price);
 
-										        materialobjcrawler[excelObj[i][1]] = databack.prods[0].price;
+										        materialobjcrawlerprice[excelobj[i][1]] = crawlerdataback.prods[0].price;
 
-										        if( count == (excelObj.length-1) ){
+										        if( count == (excelobj.length-1) ){
 
-													console.log( 'B7B7' , (excelObj.length-1) );
+													console.log( 'B7B7' , (excelobj.length-1) );
 
-													let getprice = {};
+													let allqoutedata = {};
 
-													getprice.materialobjcrawler = materialobjcrawler;
+													allqoutedata.materialobjcrawlerprice = materialobjcrawlerprice;
 
-													getprice.sumofmaterialsprice = sumofmaterialsprice;
+													allqoutedata.sumofmaterialsprice = sumofmaterialsprice;
 
-													getprice.materailobj = materailobj;
+													allqoutedata.materailobj = materailobj;
 
-													resolve(getprice);
+													resolve(allqoutedata);
 
 													return getpchomeprice;
 
@@ -152,32 +152,32 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							})
 
-							getpchomeprice.then((getprice)=>{
+							getpchomeprice.then((allqoutedata)=>{
 
 								console.log('hi');
 
-								let finalquote = + (originquote * 1.1).toFixed(0) + getprice.sumofmaterialsprice ;
+								let finalquote = + (originquote * 1.1).toFixed(0) + allqoutedata.sumofmaterialsprice ;
 
-								let paidtomaster = + originquote + getprice.sumofmaterialsprice;
+								let amountpaytomaster = + originquote + allqoutedata.sumofmaterialsprice;
 
-								materailstring = JSON.stringify(getprice.materailobj);
+								materailstring = JSON.stringify(allqoutedata.materailobj);
 
-								materialobjcrawlerstring = JSON.stringify(getprice.materialobjcrawler);
+								materialobjcrawlerpricestring = JSON.stringify(allqoutedata.materialobjcrawlerprice);
 
-								console.log('A7A8',materialobjcrawlerstring);
+								console.log('A7A8',materialobjcrawlerpricestring);
 
 								let updateorderitems = {
 									status:"quoted",
 									originquote:originquote,
 									finalquote:finalquote,
 									tooldetails:materailstring,
-									tooldetailsfinal:materialobjcrawlerstring,
-									paytomaster:paidtomaster
+									tooldetailsfinal:materialobjcrawlerpricestring,
+									paytomaster:amountpaytomaster
 								}
 
-								let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
+								let queryupdateorder = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
 								
-								mysql.con.query( updateorderquery , updateorderitems ,(err,result)=>{
+								mysql.con.query( queryupdateorder , updateorderitems ,(err,result)=>{
 
 									if( err ){
 
@@ -206,13 +206,13 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							let finalquote = (originquote * 1.1).toFixed(0);
 
-							let paidtomaster = originquote;
+							let amountpaytomaster = originquote;
 
 							let updateorderitems = {
 								status:"quoted",
 								originquote:originquote,
 								finalquote:finalquote,
-								paytomaster:paidtomaster
+								paytomaster:amountpaytomaster
 							}
 							
 							let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + orderid ;

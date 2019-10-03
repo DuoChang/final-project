@@ -85,9 +85,9 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 						}else if( result[0].status == 'active'){
 
-							let techniciantokentosave = createtoken(req.body.phone);
+							let mastertokentosave = createtoken(req.body.phone);
 
-							mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , techniciantokentosave , (err,result)=>{
+							mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , mastertokentosave , (err,result)=>{
 
 								if( err || result.length ===0 ){
 
@@ -95,14 +95,14 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 								}else{
 
-									let techniciandata = {};
-									techniciandata.access_token = techniciantokentosave.access_token;
-									techniciandata.access_expired = techniciantokentosave.access_expired;
-									techniciandata.provider = 'master';
+									let masterdata = {};
+									masterdata.access_token = mastertokentosave.access_token;
+									masterdata.access_expired = mastertokentosave.access_expired;
+									masterdata.provider = 'master';
 
-									let techniciantotalres = {};
-									techniciantotalres.data = techniciandata;
-									res.json(techniciantotalres);
+									let mastertotalres = {};
+									mastertotalres.data = masterdata;
+									res.json(mastertotalres);
 
 								}
 

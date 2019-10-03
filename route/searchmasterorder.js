@@ -1,17 +1,11 @@
 const mysql=require("../util/mysqlcon.js");
 const changeskill=require("../util/changeskill.js");
-const datetype=require("../util/changedatetype.js");
+const changedatetype=require("../util/changedatetype.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
-const moment = require('moment');
 
 const cookieParser = require('cookie-parser');
 expressrouter.use(cookieParser());
-
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 expressrouter.get('/api/search/order/master',(req,res)=>{
 
@@ -48,25 +42,9 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 
 					if( req.query.status && req.query.orderid ){
 
-						if( req.query.status == 'created' ){
-						
-							var queryorder = 'SELECT masterid,indexid,status,orderarea,orderskill,workdate,ordertext FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"created\"';
-						
-						}else if( req.query.status == 'quoted' ){
-						
-							var queryorder = 'SELECT masterid,indexid,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"quoted\"';
-						
-						}else if( req.query.status == 'paid' ){
-						
-							var queryorder = 'SELECT masterid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"paid\"';
-						
-						}else if( req.query.status == 'closed' ){
-
-							var queryorder = 'SELECT masterid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"closed\"';
-
-						}						
-
-						mysql.con.query(queryorder,(err,result)=>{
+						let queryorderbyid = 'SELECT masterid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status +'\"';
+					
+						mysql.con.query( queryorderbyid ,(err,result)=>{
 
 							if( err ){
 
@@ -80,13 +58,9 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 
 								if( masterid == result[0].masterid ){
 
-									for(let q = 0 ; q < result.length ; q += 1 ){
+									result = changeskill(result);
 
-										result[q].workdate = moment(result[q].workdate).format("YYYY-MM-DD");
-
-									}
-
-									result = changeskill.changeskill(result);
+									result = changedatetype(result);
 
 									console.log(result);
 
@@ -112,23 +86,19 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 
 						console.log('7788');
 
+						let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + masterid + ' AND status=\"' + req.query.status + '\"';
+
 						if ( req.query.status == 'created' || req.query.status == 'quoted' ){
 
-							console.log('787879');
-
-							var queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + masterid + ' AND status=\"' + req.query.status + '\" ORDER BY orderdate ASC';
-
-							console.log('33',queryorderbystatus);
+							queryorderbystatus = queryorderbystatus + ' ORDER BY orderdate ASC';
 
 						}else if( req.query.status == 'paid' ){
 
-							console.log('787880');
-
-							var queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + masterid + ' AND status=\"' + req.query.status + '\" ORDER BY workdate ASC';
+							queryorderbystatus = queryorderbystatus + ' ORDER BY workdate ASC';
 
 						}else if( req.query.status == 'closed' ){
 
-							var queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + masterid + ' AND status=\"' + req.query.status + '\" ORDER BY workdate DESC';
+							queryorderbystatus = queryorderbystatus + ' ORDER BY workdate DESC';
 
 						}
 
@@ -146,20 +116,15 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 							
 							}else{
 
-								for(let q = 0 ; q < result.length ; q += 1 ){
+								result = changeskill(result);
 
-									result[q].workdate = moment(result[q].workdate).format("YYYY-MM-DD");
-									result[q].orderdate = moment(result[q].orderdate).format("YYYY-MM-DD");
-
-								}
-
-								result = changeskill.changeskill(result);
+								result = changedatetype(result);
 
 								let totalpage = Math.ceil( result.length / 4 );
 
 								console.log(totalpage);
 
-								let outputresult = [];
+								let searchmasterorderresult = [];
 
 								if( req.query.page < totalpage ){
 
@@ -173,7 +138,7 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 
 										console.log(count);
 
-										outputresult[count] = result[i] ;
+										searchmasterorderresult[count] = result[i] ;
 
 									}
 
@@ -185,7 +150,7 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 
 										let count = i - ( ( req.query.page -1 ) * 4 ) ;
 
-										outputresult[count] = result[i] ;
+										searchmasterorderresult[count] = result[i] ;
 
 										console.log('C89',count,i);
 
@@ -199,7 +164,7 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 
 								let masterorders = {};
 
-								masterorders.data = outputresult;
+								masterorders.data = searchmasterorderresult;
 
 								masterorders.page = totalpage;
 
