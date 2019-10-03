@@ -134,7 +134,6 @@
         let inputphone = document.getElementById('phone').value;
         let inputpass = document.getElementById('password').value;
         let splitemail = inputemail.split('@');
-        console.log(splitemail);
 
         if( inputname == '' || inputemail == '' || inputphone == '' || inputpass == '' ){
 
@@ -148,11 +147,11 @@
 
           alert('電話長度不足');
 
-        }else if( inputphone[0] != 0 || inputphone[1] != 9 ){
+        }else if( inputphone[0] != 0 || inputphone[1] != 9 || isNaN( +999999999 - inputphone ) ){
 
           alert('電話格式錯誤');
 
-        }else if( inputemail.indexOf('@') == -1 || splitemail[1] == '' ){
+        }else if( inputemail.indexOf('@') == -1 || splitemail[0] == '' || splitemail[1] == '' ){
 
           alert( 'email 格式錯誤' );
 

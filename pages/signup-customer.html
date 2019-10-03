@@ -78,7 +78,7 @@
 
           alert('電話長度不足');
 
-        }else if( inputphone[0] != 0 || inputphone[1] != 9 ){
+        }else if( inputphone[0] != 0 || inputphone[1] != 9 || isNaN( +999999999 - inputphone ) ){
 
           alert('電話格式錯誤');
 
