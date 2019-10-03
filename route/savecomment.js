@@ -46,9 +46,9 @@ expressrouter.post('/api/order/savecomment',(req,res)=>{
 				
 				}else{
 
-					let querytechnicianid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
+					let querymasterid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
 
-					mysql.con.query( querytechnicianid ,(err,result)=>{
+					mysql.con.query( querymasterid ,(err,result)=>{
 
 						if( err || result.length == 0 ){
 

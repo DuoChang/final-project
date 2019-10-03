@@ -44,9 +44,9 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 
 						console.log('A8A');
 
-						let querypaytechniciandetail = 'SELECT paytomaster,masterid,indexid,paymentid,code FROM orders WHERE indexid=' + req.body.orderid;
+						let querypaymasterdetail = 'SELECT paytomaster,masterid,indexid,paymentid,code FROM orders WHERE indexid=' + req.body.orderid;
 
-						mysql.con.query( querypaytechniciandetail ,(err,result)=>{
+						mysql.con.query( querypaymasterdetail ,(err,result)=>{
 
 							if( err ){
 
@@ -70,9 +70,9 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 
 								if( result[0].code == req.body.code ){
 
-									let getaccountquery = 'SELECT account FROM master WHERE masterid=' + result[0].masterid ;
+									let querygetmasteraccount = 'SELECT account FROM master WHERE masterid=' + result[0].masterid ;
 
-									mysql.con.query( getaccountquery ,(err,result)=>{
+									mysql.con.query( querygetmasteraccount ,(err,result)=>{
 
 										if( err ){
 
@@ -102,11 +102,11 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 
 												console.log('A1A1A');
 
-												let closeorderquery = 'UPDATE orders SET transactionid=\"' + transfer.id + '\",status=\"closed\" WHERE code=\"' + req.body.code + '\" AND indexid=' + orderid;
+												let querycloseorder = 'UPDATE orders SET transactionid=\"' + transfer.id + '\",status=\"closed\" WHERE code=\"' + req.body.code + '\" AND indexid=' + orderid;
 
-												console.log(closeorderquery);
+												console.log(querycloseorder);
 
-												mysql.con.query( closeorderquery ,(err,result)=>{
+												mysql.con.query( querycloseorder ,(err,result)=>{
 
 													console.log('A3A3A');
 

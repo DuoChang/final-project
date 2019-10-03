@@ -32,9 +32,9 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 
 					if( req.query.masterid ){
 
-						let querycomments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
+						let querymastercomments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
 					
-						mysql.con.query( querycomments ,(err,result)=>{
+						mysql.con.query( querymastercomments ,(err,result)=>{
 
 							if( err ){
 
@@ -46,10 +46,10 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 
 								result = changedatetype( result );
 
-								let techniciancomments = {};
-								techniciancomments.data = result;
+								let mastercomments = {};
+								mastercomments.data = result;
 
-								res.send(techniciancomments);
+								res.send(mastercomments);
 
 
 							}									

@@ -165,7 +165,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 					  	/*--存 master 基本資料--*/
 
-						let techniciansignupdata = {
+						let mastersignupdata = {
 
 							access_token:'wait for verify',
 							access_expired:'wait for verify',
@@ -177,7 +177,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 						
 						};
 
-						mysql.con.query( 'INSERT INTO master SET ?' , techniciansignupdata , (err,result)=>{
+						mysql.con.query( 'INSERT INTO master SET ?' , mastersignupdata , (err,result)=>{
 
 							console.log('11');
 

@@ -37,19 +37,19 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 					if( req.body.update == 'basic'){
 
-						let updatetechnicianbasicquery = 'UPDATE master SET ? WHERE masterid=' + req.body.masterid ;
+						let updatemasterbasicquery = 'UPDATE master SET ? WHERE masterid=' + req.body.masterid ;
 
-						let technicianbasicdata = {};
+						let masterbasicdata = {};
 
-						technicianbasicdata.phone = req.body.phone;
+						masterbasicdata.phone = req.body.phone;
 
 						if( req.body.password != '' ){
 
-							technicianbasicdata.password = req.body.password;
+							masterbasicdata.password = req.body.password;
 						
 						}
 
-						mysql.con.query( updatetechnicianbasicquery , technicianbasicdata ,(err,result)=>{
+						mysql.con.query( updatemasterbasicquery , masterbasicdata ,(err,result)=>{
 
 							if( err ){
 
@@ -67,9 +67,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 						console.log('2');
 
-						let deletetechnicianskill = ' DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
+						let deletemasterskill = ' DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
 
-						mysql.con.query( deletetechnicianskill , (err,result)=>{
+						mysql.con.query( deletemasterskill , (err,result)=>{
 
 							if( err ){
 
@@ -79,7 +79,7 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 								/*--存 technician skill 資料--*/
 
-								let inserttechnicianskill = {
+								let insertmasterskill = {
 								
 									masterid : req.body.masterid
 								
@@ -93,13 +93,13 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 								for( let i = 0 ; i < skillsize ; i += 1){
 
-									inserttechnicianskill[req.body.skill[i]] = 1 ;
+									insertmasterskill[req.body.skill[i]] = 1 ;
 
 								}
 
-								console.log(inserttechnicianskill);
+								console.log(insertmasterskill);
 
-								mysql.con.query( 'INSERT INTO masterskill SET ?', inserttechnicianskill ,(err,result)=>{
+								mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
 
 									console.log('12.5',result);
 
@@ -120,9 +120,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 					}else if( req.body.update == 'area' ){
 
-						let deletetechnicianarea = 'DELETE FROM masterarea WHERE masterid=' + req.body.masterid ;
+						let deletemasterarea = 'DELETE FROM masterarea WHERE masterid=' + req.body.masterid ;
 
-						mysql.con.query( deletetechnicianarea , (err,result)=>{
+						mysql.con.query( deletemasterarea , (err,result)=>{
 
 							if( err ){
 
@@ -140,9 +140,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 								}
 
-								let insertnewtechnicianskill = 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString();
+								let insertnewmasterskill = 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString();
 
-								mysql.con.query( insertnewtechnicianskill , (err,result)=>{
+								mysql.con.query( insertnewmasterskill , (err,result)=>{
 
 									if( err ){
 
