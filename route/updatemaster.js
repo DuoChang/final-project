@@ -160,7 +160,6 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 						})
 
-
 					}else{
 
 						res.send("{\"error\": \"Invalid request body.\"}");
@@ -174,9 +173,6 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 		})
 
 	}
-
-		
-
 
 })
 

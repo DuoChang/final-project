@@ -19,9 +19,9 @@
           <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
   			</div>
   			<div class="headeright">
-	  			<a href="/customer/searchmaster"><div id="searchmaster">找師傅</div></a>
-          <a href="/process/searchcustomer"><div id="customersearchprocess">流程</div></a>
-          <a href="/user/profile/customer"><div id="signinlink">會員資料</div></a>
+	  			<a href="searchmaster.html"><div id="searchmaster">找師傅</div></a>
+          <a href="customerprocesssignin.html"><div id="customersearchprocess">流程</div></a>
+          <a href="customerprofile.html"><div id="signinlink">會員資料</div></a>
   			</div>
   		</div>
   	</header>
@@ -65,7 +65,7 @@
 
       if(sessionStorage.getItem("Auth") == null){
 
-        window.location.replace('/user/signin');
+        window.location.replace('signin.html');
 
       }
 
@@ -221,7 +221,7 @@
 
                 alert('Error, 請確認登入資訊 ,將重整頁面');
                 sessionStorage.removeItem("Auth");
-                window.location.replace('/user/signin');
+                window.location.replace('signin.html');
 
               }else{
 
@@ -252,19 +252,19 @@
 
                     if( status == 'created' ){
 
-                      neworderdetaillink.href = '/customer/checkorder/created?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      neworderdetaillink.href = 'customerrequestcheck.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
 
                     }else if( status == 'quoted' ){
 
-                      neworderdetaillink.href = '/customer/checkorder/quoted?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      neworderdetaillink.href = 'customercheckquote.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
 
                     }else if( status == 'paid'){
 
-                      neworderdetaillink.href = '/customer/checkorder/paid?status=' + status + '&orderid=' + getmasterback.data[i].indexid;  
+                      neworderdetaillink.href = 'customerpaidcheck.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;  
 
                     }else if( status == 'closed' ){
 
-                      neworderdetaillink.href = '/customer/checkorder/closed?status=' + status + '&orderid=' + getmasterback.data[i].indexid;  
+                      neworderdetaillink.href = 'customerorderclose.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;  
                       
                     }
 
@@ -403,19 +403,19 @@
 
         let status;
 
-        if( createdbutton.style.backgroundColor == 'rgb(239, 230, 221)' ){
+        if( createdbutton.style.backgroundColor == 'rgb(250, 247, 244)' ){
 
           status = 'created';
 
-        }else if( quotedbutton.style.backgroundColor ==  'rgb(239, 230, 221)' ){
+        }else if( quotedbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
 
           status = 'quoted';
 
-        }else if( paidbutton.style.backgroundColor ==  'rgb(239, 230, 221)' ){
+        }else if( paidbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
 
           status = 'paid';
 
-        }else if( paidbutton.style.backgroundColor ==  'rgb(239, 230, 221)' ){
+        }else if( paidbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
 
           status = 'closed';
 

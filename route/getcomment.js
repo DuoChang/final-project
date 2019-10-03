@@ -12,7 +12,7 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 
 		let timenow = Date.now();
 
-		var checkauthorization = "SELECT access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+		let checkauthorization = "SELECT access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
 
 		mysql.con.query(checkauthorization,(err,result)=>{
 
@@ -90,8 +90,5 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 	}
 
 })
-
-
-
 
 module.exports = expressrouter;

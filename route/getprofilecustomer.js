@@ -11,7 +11,7 @@ expressrouter.get('/api/userprofile/customer',(req,res)=>{
 
 		let timenow = Date.now();
 
-		var checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+		let checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
 
 		mysql.con.query( checkauthorization ,(err,result)=>{
 

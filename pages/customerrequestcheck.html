@@ -19,7 +19,7 @@
             <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
 	  			</div>
 	  			<div class="headeright">
-		  			<a href="/customer/searchorders"><div id="ordersearch">訂單搜尋</div></a>
+		  			<a href="searchcustomerorder.html"><div id="ordersearch">訂單搜尋</div></a>
 	  			</div>
 	  		</div>
 	  	</header>
@@ -62,7 +62,7 @@
 
       if(sessionStorage.getItem("Auth") == null){
 
-        window.location.replace('/user/signin');
+        window.location.replace('signin.html');
 
       }
 
@@ -88,13 +88,13 @@
 
             sessionStorage.removeItem("Auth");
 
-            window.location.replace('/user/signin');
+            window.location.replace('signin.html');
 
           }else if( getorderback.message ){
 
             alert('訂單不存在');
 
-            window.location.replace('/customer/searchorders');
+            window.location.replace('searchcustomerorder.html');
 
           }else{
 
@@ -131,7 +131,7 @@
 
       if( getstatus[1] == undefined || getorderid[1] == undefined ){
 
-        window.location.replace('/user/errordirect');
+        window.location.replace('errordirect.html');
 
       }
 

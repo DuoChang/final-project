@@ -19,8 +19,8 @@
           <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
   			</div>
   			<div class="headeright">
-	  			<a href="/customer/searchorders"><div id="searchorders">查看訂單</div></a>
-          <a href="/user/profile/customer"><div id="customerprofile">會員資料</div></a>
+	  			<a href="searchcustomerorder.html"><div id="searchorders">查看訂單</div></a>
+          <a href="customerprofile.html"><div id="customerprofile">會員資料</div></a>
   			</div>
   		</div>
   	</header>
@@ -190,7 +190,7 @@
 
       if(sessionStorage.getItem("Auth") == null){
 
-        window.location.replace('/user/signin');
+        window.location.replace('signin.html');
 
       }
 
@@ -222,7 +222,7 @@
 
       function restartsearch(){
 
-        window.location.replace('/customer/searchmaster');
+        window.location.replace('searchmaster.html');
 
       }
 
@@ -349,7 +349,7 @@
 
                   alert('Error, 請確認登入資訊 ,將重整頁面');
                   sessionStorage.removeItem("Auth");
-                  window.location.replace('/user/signin');
+                  window.location.replace('signin.html');
 
                 }else{
 
@@ -530,7 +530,7 @@
 
                   alert('Error ,請重新登入');
                   sessionStorage.removeItem("Auth");
-                  window.location.replace('/user/signin');
+                  window.location.replace('signin.html');
 
                 }else{
 
@@ -596,7 +596,7 @@
 
                 alert('Error ,請重新登入');
                 sessionStorage.removeItem("Auth");
-                window.location.replace('/user/signin');
+                window.location.replace('signin.html');
 
               }else if( getcommentback.message ){
 

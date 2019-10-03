@@ -32,7 +32,7 @@ expressrouter.get('/api/search/order/master',(req,res)=>{
 			
 			}else{
 
-				var masterid = result[0].masterid ;
+				let masterid = result[0].masterid ;
 
 				if( timenow > result[0].access_expired ){
 

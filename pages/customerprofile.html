@@ -19,8 +19,8 @@
             <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
 	  			</div>
 	  			<div class="headeright">
-	  				<a href="/customer/searchmaster"><div id="signinlink">找師傅</div></a>
-		  			<a href="/customer/searchorders"><div id="searchorders">查看訂單</div></a>		  			
+	  				<a href="searchmaster.html"><div id="signinlink">找師傅</div></a>
+		  			<a href="searchcustomerorder.html"><div id="searchorders">查看訂單</div></a>		  			
 	  			</div>
 	  		</div>
 	  	</header>
@@ -64,7 +64,7 @@
     	if(sessionStorage.getItem("Auth") == null){
 
 	        alert('請先登入');
-	        window.location.replace('/user/signin');
+	        window.location.replace('signin.html');
 
 	    }
 
@@ -134,7 +134,7 @@
 
               alert('登入已過時,請重新登入');
               sessionStorage.removeItem("Auth");
-              window.location.replace('/user/signin');
+              window.location.replace('signin.html');
 
             }else{
 

@@ -21,7 +21,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 	if( !req.cookies.Authorization || req.cookies.Authorization == ''){
 		console.log('898');
 
-		return res.redirect('/master/quoteresult?status=6');
+		return res.redirect('https://g777708.com/masterquoteresult.html?status=6');
 
 	}else{
 
@@ -37,13 +37,13 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 				console.log('title錯誤或未搜尋到內容');
 			
-				return res.redirect('/master/quoteresult?status=6');
+				return res.redirect('https://g777708.com/masterquoteresult.html?status=6');
 			
 			}else{
 
 				if( timenow > result[0].access_expired ){
 
-					return res.redirect('/master/quoteresult?status=6');
+					return res.redirect('https://g777708.com/masterquoteresult.html?status=6');
 				
 				}else{				
 
@@ -66,7 +66,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 								});
 
-								return res.redirect('/master/quoteresult?status=2');
+								return res.redirect('https://g777708.com/masterquoteresult.html?status=2');
 
 							}
 
@@ -90,7 +90,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										});
 
-										return res.redirect('/master/quoteresult?status=3&row=' + (i+1) + '&column=B');
+										return res.redirect('https://g777708.com/masterquoteresult.html?status=3&row=' + (i+1) + '&column=B');
 									
 									}else if( typeof(excelobj[i][2]) != 'number' || excelobj[i][2] < 0 || ( excelobj[i][2] - Math.floor(excelobj[i][2]) ) > 0 ){
 
@@ -98,7 +98,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										});
 
-										return res.redirect('/master/quoteresult?status=3&row=' + (i+1) + '&column=C');
+										return res.redirect('https://g777708.com/masterquoteresult.html?status=3&row=' + (i+1) + '&column=C');
 
 									}else{
 
@@ -181,7 +181,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 									if( err ){
 
-										return res.redirect('/master/quoteresult?status=6');
+										return res.redirect('https://g777708.com/masterquoteresult.html?status=6');
 
 									}else{
 
@@ -193,7 +193,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										});
 
-										return res.redirect('/master/quoteresult?status=4');
+										return res.redirect('https://g777708.com/masterquoteresult.html?status=4');
 
 									}
 
@@ -221,11 +221,11 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 								if( err ){
 
-									return res.redirect('/master/quoteresult?status=6');
+									return res.redirect('https://g777708.com/masterquoteresult.html?status=6');
 
 								}else{
 
-									return res.redirect('/master/quoteresult?status=4');
+									return res.redirect('https://g777708.com/masterquoteresult.html?status=4');
 
 								}
 
@@ -234,7 +234,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 					}else{
 
-						return res.redirect('/master/quoteresult?status=1');
+						return res.redirect('https://g777708.com/masterquoteresult.html?status=1');
 
 					}
 

@@ -19,7 +19,7 @@
             <div>Find 師傅 - 家務修繕小幫手，師傅接案好輕鬆</div>
 	  			</div>
 	  			<div class="headeright">
-		  			<a href="/master/searchorders"><div id="ordersearch">訂單搜尋</div></a>
+		  			<a href="searchmasterorder.html"><div id="ordersearch">訂單搜尋</div></a>
 	  			</div>
 	  		</div>
 	  	</header>
@@ -56,7 +56,7 @@
 
               工錢： $ <input id="quote" name="cost" type="number" min="0" >   TWD <br><br>
 
-              請將耗材明細的 EXCEL 檔 (<a href='/../uploads/example.xlsx'> 範例 </a> )上傳<br>
+              請將耗材明細的 EXCEL 檔 (<a href='example.xlsx'> 範例 </a> )上傳<br>
 
               <label id="uploadlabel">點這裡上傳
                 <input id="uploadquote" name="quotefile" type="file" accept=".xls,.xlsx" />
@@ -78,7 +78,7 @@
 
       if(sessionStorage.getItem("Auth") == null){
 
-        window.location.replace('/user/signin');
+        window.location.replace('signin.html');
 
       }
 
@@ -108,12 +108,12 @@
 
             alert('Error, 請重新登入');
             sessionStorage.removeItem("Auth");
-            window.location.replace('/user/signin');
+            window.location.replace('signin.html');
 
           }else if( getorderback.message ){
 
             alert('訂單不存在');
-            window.location.replace('/master/searchorders');
+            window.location.replace('searchmasterorder.html');
 
           }else{
 
@@ -150,7 +150,7 @@
 
       if( getstatus[1] == undefined || getorderid[1] == undefined ){
 
-        window.location.replace('/user/errordirect');
+        window.location.replace('errordirect.html');
 
       }
 
