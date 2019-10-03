@@ -94,15 +94,15 @@
       
       });
 
-      let getsearchorderResult = new XMLHttpRequest;
+      let getsearchorderresult = new XMLHttpRequest;
 
-      getsearchorderResult.onreadystatechange = function(){
+      getsearchorderresult.onreadystatechange = function(){
 
-        if(getsearchorderResult.readyState === 4){
+        if(getsearchorderresult.readyState === 4){
           
-         if (getsearchorderResult.status === 200){
+         if (getsearchorderresult.status === 200){
 
-          let getorderback = JSON.parse(getsearchorderResult.responseText);
+          let getorderback = JSON.parse(getsearchorderresult.responseText);
 
           if( getorderback.error ){
 
@@ -154,11 +154,11 @@
 
       }
 
-      getsearchorderResult.open('GET','/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+      getsearchorderresult.open('GET','/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
 
-      getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+      getsearchorderresult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
-      getsearchorderResult.send();
+      getsearchorderresult.send();
 
 
 

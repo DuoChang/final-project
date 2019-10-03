@@ -43,8 +43,8 @@
 			        <div id="inputright">
                 <input id="name" type="text" name="name">
                 <input id="email" type="email" name="email">
-			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999'>
-			        	<input id="password" type="password" name="password">
+			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999' maxlength="10" minlength="10">
+			        	<input id="password" type="password" name="password" placeholder='請輸入8-10位數' maxlength="10" minlength="8">
 			        </div>        
 		          			
   				</div>
@@ -133,10 +133,28 @@
         let inputemail = document.getElementById('email').value;
         let inputphone = document.getElementById('phone').value;
         let inputpass = document.getElementById('password').value;
+        let splitemail = inputemail.split('@');
+        console.log(splitemail);
 
         if( inputname == '' || inputemail == '' || inputphone == '' || inputpass == '' ){
 
           alert('未填寫完成');
+
+        }else if( inputpass.length < 8 ){
+
+          alert('密碼長度不足');
+
+        }else if( inputphone.length < 10 ){
+
+          alert('電話長度不足');
+
+        }else if( inputphone[0] != 0 || inputphone[1] != 9 ){
+
+          alert('電話格式錯誤');
+
+        }else if( inputemail.indexOf('@') == -1 || splitemail[1] == '' ){
+
+          alert( 'email 格式錯誤' );
 
         }else{
 

@@ -43,8 +43,8 @@
 			        <div id="inputright">
                 <input id="name" type="text" name="name">
                 <input id="address" type="text" name="address">
-			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999'>
-			        	<input id="password" type="password" name="password">
+			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999' maxlength="10" minlength="10">
+			        	<input id="password" type="password" name="password" placeholder='請輸入8-10位數' maxlength="10" minlength="8">
 			        </div>        
 		          			
   				</div>
@@ -70,17 +70,29 @@
 
           alert('未填寫完成');
 
+        }else if( inputpass.length < 8 ){
+
+          alert('密碼長度不足');
+
+        }else if( inputphone.length < 10 ){
+
+          alert('電話長度不足');
+
+        }else if( inputphone[0] != 0 || inputphone[1] != 9 ){
+
+          alert('電話格式錯誤');
+
         }else{
 
-          var signupData = new XMLHttpRequest();
+          var signupdata = new XMLHttpRequest();
         
-          signupData.onreadystatechange=function(){
+          signupdata.onreadystatechange=function(){
 
-            if(signupData.readyState === 4){
+            if(signupdata.readyState === 4){
               
-             if (signupData.status === 200){
+             if (signupdata.status === 200){
 
-                let signinback = JSON.parse(signupData.responseText);
+                let signinback = JSON.parse(signupdata.responseText);
 
                 if( signinback.error != null ){
 
@@ -102,9 +114,9 @@
 
           };
 
-          signupData.open('POST','/api/user/signup');
+          signupdata.open('POST','/api/user/signup');
 
-          signupData.setRequestHeader("Content-Type",
+          signupdata.setRequestHeader("Content-Type",
                 "application/json");
 
           
@@ -118,7 +130,7 @@
 
           let sendjson = JSON.stringify(jsonsend);
 
-          signupData.send(sendjson);
+          signupdata.send(sendjson);
 
         }
 
