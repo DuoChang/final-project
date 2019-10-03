@@ -29,27 +29,25 @@ expressrouter.post('/api/update/customerprofile',(req,res)=>{
 			
 			}else{
 
-				var userid = result[0].userid ;
-
 				if( timenow > result[0].access_expired ){
 
 					res.send("{\"error\": \"Invalid request body.\"}");
 				
 				}else{
 
-					let updatecustomerquery = 'UPDATE user SET ? WHERE userid=' + userid ;
+					let updatecustomerquery = 'UPDATE user SET ? WHERE userid=' + result[0].userid ;
 
-					let updatedata = {};
+					let updatecustomerdata = {};
 
-					updatedata.address = req.body.address;
+					updatecustomerdata.address = req.body.address;
 
 					if( req.body.password != '' ){
 
-						updatedata.password = req.body.password;
+						updatecustomerdata.password = req.body.password;
 					
 					}
 
-					mysql.con.query( updatecustomerquery , updatedata ,(err,result)=>{
+					mysql.con.query( updatecustomerquery , updatecustomerdata ,(err,result)=>{
 
 						if( err ){
 

@@ -2,11 +2,6 @@ const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
-
-
 expressrouter.get('/api/userprofile/customer',(req,res)=>{
 
 	if( !req.header('Authorization') || req.header('Authorization') == '' ){
@@ -18,7 +13,7 @@ expressrouter.get('/api/userprofile/customer',(req,res)=>{
 
 		var checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
 
-		mysql.con.query(checkauthorization,(err,result)=>{
+		mysql.con.query( checkauthorization ,(err,result)=>{
 
 			if(err || result.length===0 || tokensplit[0] !="Bearer"){
 
@@ -36,9 +31,9 @@ expressrouter.get('/api/userprofile/customer',(req,res)=>{
 				
 				}else{
 
-					let queryuserdeatil='SELECT * FROM user WHERE userid=' + userid;
+					let queryuserdetail='SELECT * FROM user WHERE userid=' + userid ;
 
-					mysql.con.query(queryuserdeatil,(err,result)=>{
+					mysql.con.query( queryuserdetail ,(err,result)=>{
 
 						if( err ){
 
@@ -46,9 +41,9 @@ expressrouter.get('/api/userprofile/customer',(req,res)=>{
 
 						}else{
 
-							let mastertotalres = {};
-							mastertotalres.data = result[0];
-							res.json(mastertotalres);
+							let usertotalres = {};
+							usertotalres.data = result[0];
+							res.json(usertotalres);
 
 						}
 

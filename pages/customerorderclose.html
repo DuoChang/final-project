@@ -234,6 +234,8 @@
           
           let getcommentstatusback = JSON.parse(getcommentstatus.responseText);
 
+          console.log(getcommentstatusback);
+
           if( getcommentstatusback.error ){
 
             alert('Error, 請重新登入');

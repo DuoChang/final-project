@@ -1,4 +1,4 @@
-module.exports.changeskill = function (result){
+module.exports = function (result){
 
 	for(let j = 0 ; j < result.length ; j++ ){
 

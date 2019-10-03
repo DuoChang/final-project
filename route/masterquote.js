@@ -1,7 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' });
 const node_xlsx = require('node-xlsx');
@@ -30,7 +29,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 		let timenow = Date.now();
 
-		let checkauthorization = "SELECT masterid,access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
+		let checkauthorization = "SELECT access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
 
 		mysql.con.query(checkauthorization, (err,result)=>{
 
@@ -42,8 +41,6 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 			
 			}else{
 
-				let masterid = result[0].masterid ;
-
 				if( timenow > result[0].access_expired ){
 
 					return res.redirect('/master/quoteresult?status=6');
@@ -52,7 +49,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 					if( req.body.cost ){
 
-						let ordernum = req.body.orderid;
+						let orderid = req.body.orderid;
 						let originquote = req.body.cost;
 
 						if( req.files.quotefile != undefined ){
@@ -65,7 +62,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							if( excelObj[0][0] != "耗材編號" || excelObj[0][1] != "耗材名稱" || excelObj[0][2] != "耗材價錢(TWD)" || excelObj.length != 3){
 
-								fs.unlink(req.files.quotefile[0].path, function () {
+								fs.unlink( req.files.quotefile[0].path, function () {
 
 								});
 
@@ -75,7 +72,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							var getpchomeprice = new Promise(function(resolve,reject){
 
-								let sumofmaterials = 0 ;
+								let sumofmaterialsprice = 0 ;
 
 								let materailobj = {};
 
@@ -107,7 +104,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										materailobj[excelObj[i][1]] = excelObj[i][2];
 
-										sumofmaterials = sumofmaterials + excelObj[i][2] ;
+										sumofmaterialsprice = sumofmaterialsprice + excelObj[i][2] ;
 
 										let materialitemstring = encodeURIComponent(excelObj[i][1]);
 
@@ -135,7 +132,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 													getprice.materialobjcrawler = materialobjcrawler;
 
-													getprice.sumofmaterials = sumofmaterials;
+													getprice.sumofmaterialsprice = sumofmaterialsprice;
 
 													getprice.materailobj = materailobj;
 
@@ -159,9 +156,9 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 								console.log('hi');
 
-								let finalquote = + (originquote * 1.1).toFixed(0) + getprice.sumofmaterials ;
+								let finalquote = + (originquote * 1.1).toFixed(0) + getprice.sumofmaterialsprice ;
 
-								let paidtomaster = + originquote + getprice.sumofmaterials;
+								let paidtomaster = + originquote + getprice.sumofmaterialsprice;
 
 								materailstring = JSON.stringify(getprice.materailobj);
 
@@ -178,7 +175,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 									paytomaster:paidtomaster
 								}
 
-								let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + ordernum ;
+								let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
 								
 								mysql.con.query( updateorderquery , updateorderitems ,(err,result)=>{
 
@@ -218,7 +215,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 								paytomaster:paidtomaster
 							}
 							
-							let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + ordernum ;
+							let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
 
 							mysql.con.query( updateorderquery , updateorderitems ,(err,result)=>{
 

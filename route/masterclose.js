@@ -1,13 +1,11 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 const stripe = require("stripe")("sk_test_1UIhmFMbhl0lO9w4Hdp6jNnC00MXi9WabT");
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
-
 
 expressrouter.post('/api/master/order/close' ,(req,res)=>{
 
@@ -24,17 +22,15 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 
 		let checkauthorization = "SELECT masterid,access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
 
-		mysql.con.query(checkauthorization,(err,result)=>{
+		mysql.con.query( checkauthorization ,(err,result)=>{
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+			if( err || result.length===0 || tokensplit[0] !="Bearer" ){
 
 				console.log('title錯誤或未搜尋到內容');
 			
 				res.send("{\"error\": \"Invalid Token.\"}");
 			
 			}else{
-
-				let masterid = result[0].masterid ;
 
 				if( timenow > result[0].access_expired ){
 
@@ -48,9 +44,9 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 
 						console.log('A8A');
 
-						let getordercode = 'SELECT paytomaster,masterid,indexid,paymentid,code FROM orders WHERE indexid=' + req.body.orderid;
+						let querypaytechniciandetail = 'SELECT paytomaster,masterid,indexid,paymentid,code FROM orders WHERE indexid=' + req.body.orderid;
 
-						mysql.con.query( getordercode ,(err,result)=>{
+						mysql.con.query( querypaytechniciandetail ,(err,result)=>{
 
 							if( err ){
 
@@ -66,11 +62,11 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 							
 							}else{
 
-								var paymentid = result[0].paymentid;
+								let paymentid = result[0].paymentid;
 
-								var orderid = result[0].indexid;
+								let orderid = result[0].indexid;
 
-								var paytomaster = result[0].paytomaster;
+								let paytomaster = result[0].paytomaster;
 
 								if( result[0].code == req.body.code ){
 
@@ -121,7 +117,6 @@ expressrouter.post('/api/master/order/close' ,(req,res)=>{
 														res.send("{\"error\": \"Invalid token.\"}");
 
 													}else{
-
 														
 														console.log('7788A');
 														res.send("{\"data\": \"Update success\"}");

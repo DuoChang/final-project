@@ -1,8 +1,7 @@
 const mysql=require("../util/mysqlcon.js");
-const gettoday=require("../util/gettoday.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
+const moment = require('moment');
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
@@ -37,7 +36,7 @@ expressrouter.post('/api/order/savecomment',(req,res)=>{
 
 				console.log('777');
 
-				var username = result[0].name ;
+				let username = result[0].name ;
 
 				if( timenow > result[0].access_expired ){
 
@@ -47,9 +46,9 @@ expressrouter.post('/api/order/savecomment',(req,res)=>{
 				
 				}else{
 
-					let querymasterid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
+					let querytechnicianid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
 
-					mysql.con.query( querymasterid ,(err,result)=>{
+					mysql.con.query( querytechnicianid ,(err,result)=>{
 
 						if( err || result.length == 0 ){
 
@@ -57,20 +56,20 @@ expressrouter.post('/api/order/savecomment',(req,res)=>{
 
 						}else{
 
-							let orderday = gettoday.today();
+							let commentdate = moment().format('YYYY-MM-DD');
 
-							let createcomment = 'INSERT INTO comments SET ?';
+							let insertnewcomment = 'INSERT INTO comments SET ?';
 
-							let commentitems = {
+							let commentdetails = {
 								content:req.body.content,
 								orderid:req.body.orderid,
 								heartrate:req.body.heartrate,
-								commentdate:orderday,
+								commentdate:commentdate,
 								username:username,
 								masterid:result[0].masterid
 							}
 
-							mysql.con.query( createcomment , commentitems ,(err,result)=>{
+							mysql.con.query( insertnewcomment , commentdetails ,(err,result)=>{
 
 								if( err ){
 

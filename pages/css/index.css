@@ -19,7 +19,7 @@ main{
   text-align: center;
   min-height: calc(73vh);
   opacity:0.6;
-  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/pic/main.png') left center no-repeat;
+  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/css/pic/main.png') left center no-repeat;
   background-size: 55% 100%;
   margin:1.5%;
 

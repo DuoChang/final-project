@@ -1,7 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
@@ -18,9 +17,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 		let timenow = Date.now();
 
-		let checkauthorization = "SELECT masterid,access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
+		let checkauthorization = "SELECT access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
 
-		mysql.con.query(checkauthorization,(err,result)=>{
+		mysql.con.query( checkauthorization ,(err,result)=>{
 
 			if(err || result.length===0 || tokensplit[0] !="Bearer"){
 
@@ -30,8 +29,6 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 			
 			}else{
 
-				var masterid = result[0].masterid ;
-
 				if( timenow > result[0].access_expired ){
 
 					res.send("{\"error\": \"Invalid request body.\"}");
@@ -40,19 +37,19 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 					if( req.body.update == 'basic'){
 
-						let updatebasicquery = 'UPDATE master SET ? WHERE masterid=' + req.body.masterid ;
+						let updatetechnicianbasicquery = 'UPDATE master SET ? WHERE masterid=' + req.body.masterid ;
 
-						let basicdata = {};
+						let technicianbasicdata = {};
 
-						basicdata.phone = req.body.phone;
+						technicianbasicdata.phone = req.body.phone;
 
 						if( req.body.password != '' ){
 
-							basicdata.password = req.body.password;
+							technicianbasicdata.password = req.body.password;
 						
 						}
 
-						mysql.con.query( updatebasicquery , basicdata ,(err,result)=>{
+						mysql.con.query( updatetechnicianbasicquery , technicianbasicdata ,(err,result)=>{
 
 							if( err ){
 
@@ -70,9 +67,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 						console.log('2');
 
-						let deletemasterskill = 'DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
+						let deletetechnicianskill = ' DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
 
-						mysql.con.query( deletemasterskill , (err,result)=>{
+						mysql.con.query( deletetechnicianskill , (err,result)=>{
 
 							if( err ){
 
@@ -80,9 +77,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 							}else{
 
-								/*--存 master skill 資料--*/
+								/*--存 technician skill 資料--*/
 
-								let insertmasterskill = {
+								let inserttechnicianskill = {
 								
 									masterid : req.body.masterid
 								
@@ -96,13 +93,13 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 								for( let i = 0 ; i < skillsize ; i += 1){
 
-									insertmasterskill[req.body.skill[i]] = 1 ;
+									inserttechnicianskill[req.body.skill[i]] = 1 ;
 
 								}
 
-								console.log(insertmasterskill);
+								console.log(inserttechnicianskill);
 
-								mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
+								mysql.con.query( 'INSERT INTO masterskill SET ?', inserttechnicianskill ,(err,result)=>{
 
 									console.log('12.5',result);
 
@@ -121,13 +118,11 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 						})
 
-
-
 					}else if( req.body.update == 'area' ){
 
-						let deletemasterarea = 'DELETE FROM masterarea WHERE masterid=' + req.body.masterid ;
+						let deletetechnicianarea = 'DELETE FROM masterarea WHERE masterid=' + req.body.masterid ;
 
-						mysql.con.query( deletemasterarea , (err,result)=>{
+						mysql.con.query( deletetechnicianarea , (err,result)=>{
 
 							if( err ){
 
@@ -145,9 +140,9 @@ expressrouter.post('/api/update/masterprofile',(req,res)=>{
 
 								}
 
-								let insertnewmasterskill = 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString();
+								let insertnewtechnicianskill = 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString();
 
-								mysql.con.query( insertnewmasterskill , (err,result)=>{
+								mysql.con.query( insertnewtechnicianskill , (err,result)=>{
 
 									if( err ){
 

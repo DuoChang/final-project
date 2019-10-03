@@ -1,5 +1,4 @@
 const express = require('express');
-const NodeCache = require( "node-cache" );
 const app = express();
 
 const routersignin = require('./route/signin.js');
@@ -21,15 +20,10 @@ const routersaveaddress = require('./route/saveaddress.js');
 const routergetcomment = require('./route/getcomment.js');
 const routersavecomment = require('./route/savecomment.js');
 
-
-app.use(express.static( __dirname ));
 app.use(express.static( __dirname + '/pages' ));
-app.use(express.static( __dirname + '/pages/css' ));
 app.use(express.static( __dirname + '/uploads' ));
 
 /*-- Basics --*/
-
-app.use('/', express.static('./pages/signup-customer.html') );
 app.use('/process/master', express.static('./pages/masterprocess.html') );
 app.use('/process/searchmaster', express.static('./pages/mastersearchprocess.html') );
 app.use('/process/customer', express.static('./pages/customerprocess.html') );

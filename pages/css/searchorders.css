@@ -87,11 +87,11 @@
 }
 
 #showresultcustomer{
-  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/pic/paint2.jpg') center center no-repeat;
+  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/css/pic/paint2.jpg') center center no-repeat;
 }
 
 #showresultmaster{
-  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/pic/faucet.jpg') center center no-repeat;
+  background:-webkit-linear-gradient(top,#FFFFFF,rgba(255,255,255,0)),url('/css/pic/faucet.jpg') center center no-repeat;
 }
 
 #showresultcustomer,

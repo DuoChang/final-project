@@ -1,13 +1,7 @@
 const mysql=require("../util/mysqlcon.js");
-const datetype=require("../util/changedatetype.js");
+const changedatetype=require("../util/changedatetype.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
-
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
-
 
 expressrouter.get('/api/getcomment',(req,res)=>{
 
@@ -40,7 +34,7 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 
 						let querycomments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
 					
-						mysql.con.query(querycomments,(err,result)=>{
+						mysql.con.query( querycomments ,(err,result)=>{
 
 							if( err ){
 
@@ -50,12 +44,12 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 
 								console.log(result);
 
-								result = datetype.changedatetype(result);
+								result = changedatetype( result );
 
-								let mastercomments = {};
-								mastercomments.data = result;
+								let techniciancomments = {};
+								techniciancomments.data = result;
 
-								res.send(mastercomments);
+								res.send(techniciancomments);
 
 
 							}									
@@ -64,9 +58,9 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 
 					}else if( req.query.orderid ){
 
-						let querycommentexist = "SELECT * FROM comments WHERE orderid=" + req.query.orderid ;
+						let queryordercomment = "SELECT * FROM comments WHERE orderid=" + req.query.orderid ;
 
-						mysql.con.query(querycommentexist,(err,result)=>{
+						mysql.con.query( queryordercomment ,(err,result)=>{
 
 							if( err ){
 
@@ -75,7 +69,6 @@ expressrouter.get('/api/getcomment',(req,res)=>{
 							}else if( result.length == 0 ){
 
 								res.send("{\"data\": \"empty\"}");
-
 
 							}else{
 

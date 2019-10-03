@@ -1,8 +1,8 @@
 const mysql=require("../util/mysqlcon.js");
-const gettoday=require("../util/gettoday.js");
 const express = require('express');
 const expressrouter = express.Router();
 const crypto = require('crypto');
+const moment = require('moment');
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
@@ -220,7 +220,7 @@ expressrouter.post('/api/order/create',(req,res)=>{
 
 					console.log('1024');
 
-					let orderday = gettoday.today();	
+					let orderday = moment().format('YYYY-MM-DD');	
 
 					let receivedata = req.body ;
 

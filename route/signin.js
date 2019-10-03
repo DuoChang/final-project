@@ -31,7 +31,7 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 				}else{
 
-					var customertokentosave = createtoken(req.body.phone);
+					let customertokentosave = createtoken(req.body.phone);
 
 					mysql.con.query( 'Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , customertokentosave , (err,result)=>{
 
@@ -85,7 +85,7 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 						}else if( result[0].status == 'active'){
 
-							var techniciantokentosave = createtoken(req.body.phone);
+							let techniciantokentosave = createtoken(req.body.phone);
 
 							mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , techniciantokentosave , (err,result)=>{
 

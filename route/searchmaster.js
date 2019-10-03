@@ -1,8 +1,7 @@
 const mysql=require("../util/mysqlcon.js");
-const datetype=require("../util/changedatetype.js");
+const changedatetype=require("../util/changedatetype.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
@@ -34,9 +33,9 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 				var selectbyarea = new Promise(function(resolve,reject){
 
-					let areaquerymaster = 'SELECT masterid FROM masterarea WHERE area=\"' + req.body.area + '\"';
+					let querygetmasterbyarea = 'SELECT masterid FROM masterarea WHERE area=\"' + req.body.area + '\"';
 					
-					mysql.con.query( areaquerymaster ,(err,result)=>{
+					mysql.con.query( querygetmasterbyarea ,(err,result)=>{
 
 						if( err ){
 
@@ -70,9 +69,9 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 						}
 
-						let getstatus = 'SELECT masterid,email FROM master WHERE masterid IN (' + masterarray.toString() + ')'
+						let querygetemailstatus = 'SELECT masterid,email FROM master WHERE masterid IN (' + masterarray.toString() + ')'
 
-						mysql.con.query( getstatus ,(err,result)=>{
+						mysql.con.query( querygetemailstatus ,(err,result)=>{
 
 							if( err ){
 
@@ -80,25 +79,25 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 							}else{
 
-								var mailarray = [];
+								let emailarray = [];
 
-								var mailarrayforcheck = [] ;
+								let emailarrayforcheck = [] ;
 
-								var masteridarray = [];
+								let masteridarray = [];
 
 								for( let i = 0 ; i < result.length ; i++ ){
 
-									mailarray[i] = '\"' + result[i].email + '\"' ;
-									mailarrayforcheck[i] = result[i].email;
+									emailarray[i] = '\"' + result[i].email + '\"' ;
+									emailarrayforcheck[i] = result[i].email;
 									masteridarray[i] = result[i].masterid;
 
 								}
 
-								let checkemailstatus = 'SELECT email,status FROM mailstatus WHERE email IN (' + mailarray.toString() + ')';
+								let querycheckemailstatus = 'SELECT email FROM mailstatus WHERE email IN (' + emailarray.toString() + ') AND status=\"active\"' ;
 
-								console.log('F123456',checkemailstatus);
+								console.log('F123456',querycheckemailstatus);
 
-								mysql.con.query( checkemailstatus ,(err,result)=>{
+								mysql.con.query( querycheckemailstatus ,(err,result)=>{
 
 									if( err ){
 
@@ -110,17 +109,17 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 										console.log('R3D3',result);
 
-										var masteridbystatus = [];
+										let masteridbystatus = [];
 
 										var count = 0 ;
 
-										for( let i = 0 ; i < mailarrayforcheck.length ; i++ ){
+										for( let i = 0 ; i < emailarrayforcheck.length ; i++ ){
 
 											for( let j = 0 ; j < result.length ; j++ ){
 
-												console.log(mailarrayforcheck[i],result[j].email,result[j].status);
+												console.log( emailarrayforcheck[i] , result[j].email );
 
-												if( mailarrayforcheck[i] == result[j].email && result[j].status == 'active' ){
+												if( emailarrayforcheck[i] == result[j].email ){
 
 													masteridbystatus.push( masteridarray[i] );
 
@@ -132,7 +131,7 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 											console.log(count);
 
-											if( count == (mailarrayforcheck.length) ){
+											if( count == (emailarrayforcheck.length) ){
 
 												console.log('R2D2',masteridbystatus);
 
@@ -174,11 +173,11 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 						console.log('check status',masterid);
 
-						let datequerymaster = 'SELECT masterid FROM masterdate WHERE workdate=\"' + req.body.workdate + '\" AND masterid IN (' + masterid.toString() + ')';
+						let querymasterdate = 'SELECT masterid FROM masterdate WHERE workdate=\"' + req.body.workdate + '\" AND masterid IN (' + masterid.toString() + ')';
 
-						console.log('D999',datequerymaster);
+						console.log('D999',querymasterdate);
 
-						mysql.con.query( datequerymaster ,(err,result)=>{
+						mysql.con.query( querymasterdate ,(err,result)=>{
 
 							if( err ){
 
@@ -194,7 +193,7 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 								}
 
-								var masteridarraybydate = [] ;
+								let masteridarraybydate = [] ;
 
 								for( let i = 0 ; i < masterid.length ; i++ ){
 
@@ -249,7 +248,7 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 							console.log(querymasterbyskill);
 
-							mysql.con.query(querymasterbyskill,(err,result)=>{
+							mysql.con.query( querymasterbyskill ,(err,result)=>{
 
 								if( err ){
 
@@ -261,7 +260,7 @@ expressrouter.post('/api/search/master',(req,res)=>{
 								
 								}else{
 
-									var masterarray = [] ;
+									let masterarray = [] ;
 
 									for( let i = 0 ; i < masteridarraybydate.length ; i++ ){
 
@@ -309,9 +308,9 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 						}else{
 
-							let getmasterrate = 'SELECT masterid,COUNT(*) AS count,SUM(heartrate)/COUNT(*) AS ave FROM comments WHERE masterid IN(' + masterarray.toString() + ') GROUP BY masterid ORDER BY ave DESC';
+							let querygetmasterrate = 'SELECT masterid,COUNT(*) AS count,SUM(heartrate)/COUNT(*) AS ave FROM comments WHERE masterid IN(' + masterarray.toString() + ') GROUP BY masterid ORDER BY ave DESC';
 
-							mysql.con.query( getmasterrate ,(err,result)=>{
+							mysql.con.query( querygetmasterrate ,(err,result)=>{
 
 								if( err ){
 
@@ -358,11 +357,11 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 					masteraveragerate.then((countrate)=>{
 
-						let getcomments = 'SELECT * FROM comments WHERE masterid IN(' + masterarray.toString() + ')';
+						let querygetcomments = 'SELECT * FROM comments WHERE masterid IN(' + masterarray.toString() + ')';
 
 						console.log('B89');
 
-						mysql.con.query(getcomments,(err,result)=>{
+						mysql.con.query( querygetcomments ,(err,result)=>{
 
 							if( err ){
 
@@ -374,7 +373,7 @@ expressrouter.post('/api/search/master',(req,res)=>{
 
 								console.log('C387');
 
-								result = datetype.changedatetype(result);
+								result = changedatetype(result);
 
 								let masterrate = [];
 

@@ -2,7 +2,6 @@ const mysql=require("../util/mysqlcon.js");
 const createtoken=require("../util/createtoken.js");
 const express = require('express');
 const expressrouter = express.Router();
-// const crypto = require('crypto');
 const stripe = require('stripe')('sk_test_1UIhmFMbhl0lO9w4Hdp6jNnC00MXi9WabT');
 
 const bodyParser = require('body-parser');
@@ -57,7 +56,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 					/*--資料送入DB--*/
 
-					let datauser={
+					let usersignupdata={
 						access_token:token.access_token,
 						access_expired:token.access_expired,
 						name:req.body.name,
@@ -66,7 +65,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 						address:req.body.address,
 					};
 
-					mysql.con.query( 'INSERT INTO user SET ?' , datauser, (err,result)=>{
+					mysql.con.query( 'INSERT INTO user SET ?' , usersignupdata , (err,result)=>{
 
 						console.log('5');
 
@@ -79,9 +78,9 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 							/*--選取資料送出--*/
 
-							var queryuser = "SELECT * FROM user WHERE phone=\"" + req.body.phone + "\"";
+							let queryuserdata = "SELECT * FROM user WHERE phone=\"" + req.body.phone + "\"";
 
-							mysql.con.query(queryuser,(err,result)=>{
+							mysql.con.query( queryuserdata ,(err,result)=>{
 
 								console.log('6');
 
@@ -91,18 +90,18 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 								}else{
 
-									var userres = {};
+									let userres = {};
 									 userres.userid = result[0].userid;
 									 userres.name = result[0].name;
 									 userres.phone = result[0].phone;
 									 userres.address = result[0].address;
 
-									 var userdata = {};
-									 userdata.access_token = result[0].access_token;
-									 userdata.access_expired = result[0].access_expired;
-									 userdata.user = userres;
+									let userdata = {};
+									userdata.access_token = result[0].access_token;
+									userdata.access_expired = result[0].access_expired;
+									userdata.user = userres;
 
-									var usertotalres = {};
+									let usertotalres = {};
 									usertotalres.data = userdata;
 									console.log(usertotalres);
 									res.json(usertotalres);
@@ -121,7 +120,6 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 				}else{
 
 					console.log('7');
-
 
 					console.log('已註冊過');
 
@@ -167,7 +165,8 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 					  	/*--存 master 基本資料--*/
 
-						let datamaster = {
+						let techniciansignupdata = {
+
 							access_token:'wait for verify',
 							access_expired:'wait for verify',
 							name:req.body.name,
@@ -175,9 +174,10 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 							email:req.body.email,
 							password:req.body.password,
 							account:acct.id
+						
 						};
 
-						mysql.con.query( 'INSERT INTO master SET ?' , datamaster , (err,result)=>{
+						mysql.con.query( 'INSERT INTO master SET ?' , techniciansignupdata , (err,result)=>{
 
 							console.log('11');
 
@@ -198,13 +198,11 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 									}else{
 
-										var masteridforinsert = result[0].masterid ;
-
 										/*--存 master skill 資料--*/
 
 										let insertmasterskill = {
 										
-											masterid : masteridforinsert
+											masterid : result[0].masterid
 										
 										}
 
@@ -243,7 +241,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 										for( let i = 0 ; i < areasize ; i += 1){
 
-											areaarray[i] = '(' + masteridforinsert + ',\"' + req.body.area[i] + '\")' ;
+											areaarray[i] = '(' + result[0].masterid + ',\"' + req.body.area[i] + '\")' ;
 
 										}
 
@@ -264,7 +262,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 												let mailstatus = {
 													email: req.body.email,
 													activecode: mailverifytoken.access_token,
-													status: 'inactivate'
+													status: 'inactive'
 												};
 
 												console.log(mailstatus);
@@ -272,7 +270,6 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 												mysql.con.query( 'INSERT INTO mailstatus SET ?' , mailstatus , (err,result)=>{
 
 													console.log('14');
-
 
 													if( err ){
 
@@ -288,7 +285,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 														  
 														  subject: '在 Find 師傅驗證您的 email ',
 														  
-														  html: '<p>您好<br>請點選如下連結驗證您的信箱<br><a href=\"https://g777708.com/api/user/mailverify?startfind=' + activecode + '\">驗證信箱</a></p>'
+														  html: '<p>您好<br>請點選如下連結驗證您的信箱<br><a href=\"https://g777708.com/api/user/mailverify?startfind=' + mailverifytoken.access_token + '\">驗證信箱</a></p>'
 
 
 														}, function(err){

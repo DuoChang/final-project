@@ -1,6 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const changeskill=require("../util/changeskill.js");
-const datetype=require("../util/changedatetype.js");
+const changedatetype=require("../util/changedatetype.js");
 const express = require('express');
 const expressrouter = express.Router();
 const crypto = require('crypto');
@@ -82,13 +82,9 @@ expressrouter.get('/api/search/order/customer',(req,res)=>{
 
 								if( userid == result[0].userid ){
 
-									for(let q = 0 ; q < result.length ; q += 1 ){
+									result = changedatetype( result );
 
-										result[q].workdate = moment(result[q].workdate).format("YYYY-MM-DD");
-
-									}
-
-									result = changeskill.changeskill(result);
+									result = changeskill( result );
 
 									console.log(result);
 
@@ -150,14 +146,9 @@ expressrouter.get('/api/search/order/customer',(req,res)=>{
 							
 							}else{
 
-								for(let q = 0 ; q < result.length ; q += 1 ){
+								result = changedatetype( result );
 
-									result[q].workdate = moment(result[q].workdate).format("YYYY-MM-DD");
-									result[q].orderdate = moment(result[q].orderdate).format("YYYY-MM-DD");
-
-								}
-
-								result = changeskill.changeskill(result);
+								result = changeskill( result );
 
 								let totalpage = Math.ceil( result.length / 4 );
 

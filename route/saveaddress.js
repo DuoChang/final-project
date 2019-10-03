@@ -1,7 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
@@ -24,11 +23,11 @@ expressrouter.post('/api/order/saveaddress',(req,res)=>{
 
 		let timenow = Date.now();
 
-		let checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+		let checkauthorization = "SELECT access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
 
 		mysql.con.query(checkauthorization,(err,result)=>{
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+			if( err || result.length===0 || tokensplit[0] !="Bearer" ){
 
 				console.log('title錯誤或未搜尋到內容');
 			
@@ -38,8 +37,6 @@ expressrouter.post('/api/order/saveaddress',(req,res)=>{
 
 				console.log('777');
 
-				var userrid = result[0].userid ;
-
 				if( timenow > result[0].access_expired ){
 
 					console.log('6868');
@@ -48,9 +45,9 @@ expressrouter.post('/api/order/saveaddress',(req,res)=>{
 				
 				}else{
 
-					let updateaddressquery = 'UPDATE orders SET address=\"' + req.body.address + '\" WHERE indexid=' + req.body.ordernumber;
+					let saveorderaddressquery = 'UPDATE orders SET address=\"' + req.body.address + '\" WHERE indexid=' + req.body.ordernumber;
 
-					mysql.con.query(updateaddressquery,(err,result)=>{
+					mysql.con.query( saveorderaddressquery ,(err,result)=>{
 
 						if( err ){
 

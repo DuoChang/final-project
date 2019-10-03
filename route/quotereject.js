@@ -1,12 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
-const crypto = require('crypto');
-
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
-
 
 expressrouter.get('/api/quote/reject' ,(req,res)=>{
 
@@ -19,7 +13,7 @@ expressrouter.get('/api/quote/reject' ,(req,res)=>{
 
 		let timenow = Date.now();
 
-		let checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+		let checkauthorization = "SELECT access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
 
 		mysql.con.query(checkauthorization,(err,result)=>{
 
@@ -30,8 +24,6 @@ expressrouter.get('/api/quote/reject' ,(req,res)=>{
 				res.send("{\"error\": \"Invalid Token.\"}");
 			
 			}else{
-
-				let userid = result[0].userid ;
 
 				if( timenow > result[0].access_expired ){
 
