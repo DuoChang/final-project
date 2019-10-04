@@ -54,6 +54,8 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 					console.log('4');
 
 					let token = createtoken(req.body.phone);
+					let passwordtoken = createpasswordtoken(req.body.phone) ;
+					console.log(passwordtoken);
 
 					/*--資料送入DB--*/
 
@@ -62,7 +64,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 						access_expired:token.access_expired,
 						name:req.body.name,
 						phone:req.body.phone,
-						password:req.body.password,
+						password:passwordtoken,
 						address:req.body.address,
 					};
 
@@ -166,6 +168,8 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 
 					  	/*--存 master 基本資料--*/
 
+					  	let passwordtoken = createpasswordtoken(req.body.phone) ;
+
 						let mastersignupdata = {
 
 							access_token:'wait for verify',
@@ -173,7 +177,7 @@ expressrouter.post('/api/user/signup',(req,res)=>{
 							name:req.body.name,
 							phone:req.body.phone,
 							email:req.body.email,
-							password:req.body.password,
+							password:passwordtoken,
 							account:acct.id
 						
 						};

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 module.exports = function (password){
 
-	let tokenstring = password +  + 'aaa';
+	let tokenstring = 777  + password + 'hire me';
 
 	let hash = crypto.createHash('sha256');
 

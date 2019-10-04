@@ -22,7 +22,7 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 		if( req.body.provider == "customer" ){
 
-			let passwordtoken = createpasswordtoken(passwordtoken) ;
+			let passwordtoken = createpasswordtoken(req.body.phone) ;
 
 						/*--確認註冊過--*/
 			
@@ -63,6 +63,8 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 			});
 
 		}else if( req.body.provider == "master" ){
+
+			let passwordtoken = createpasswordtoken(req.body.phone) ;
 
 						/*--確認註冊過--*/
 			
