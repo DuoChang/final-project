@@ -8,7 +8,11 @@ main{
 	margin:1.5%;
 	justify-content: center;
 	align-items: center;
-  min-height: calc(73vh);
+  min-height:73vh;
+}
+
+#showquoteresult{
+  margin:0;
 }
 
 .buttons{
