@@ -1,12 +1,14 @@
 
 @import url("basic.css");
 
+#index,
 #signuplinkcustomer{
 
   border-right:1px solid  #A89B8C;
 
 }
 
+#signuplinkcustomer,
 #signuplinkmaster{
 
   border-left: 1px solid  #A89B8C;

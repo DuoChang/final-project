@@ -2,11 +2,13 @@
 @import url("basic.css");
 @import url("buttons.css");
 
+#index,
 #searchorders,
 #customerprocess{
   border-left: 1px solid  #A89B8C;
 }
 
+#index,
 #signinlink{
   border-right: 1px solid  #A89B8C;
 }

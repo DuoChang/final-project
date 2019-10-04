@@ -2,6 +2,7 @@
 @import url("basic.css");
 @import url("buttons.css");
 
+#index,
 #customerprofile,
 #masterprocess{
 
@@ -9,6 +10,7 @@
 
 }
 
+#index,
 #searchorders,
 #signinlink{
 
