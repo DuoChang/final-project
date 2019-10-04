@@ -10,8 +10,11 @@ expressrouter.use(cookieParser());
 expressrouter.get('/api/search/order/master',(req,res)=>{
 
 	if( !req.header('Authorization') || req.header('Authorization') == ''){
+
 		console.log('898');
+		
 		res.send("{\"error\": \"Invalid request body.\"}");
+	
 	}else{
 
 		let tokensplit = req.header('Authorization').split(' ');

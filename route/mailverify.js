@@ -10,11 +10,11 @@ expressrouter.get('/api/user/mailverify',(req,res)=>{
 
 		if( err ){
 
-			res.redirect( 'mailverifyfail.html' );
+			res.redirect( '../../mailverifyfail.html' );
 
 		}else{
 							
-			res.redirect( 'mailverify.html' );
+			res.redirect( '../../mailverify.html' );
 
 		}
 		
