@@ -27,7 +27,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 		console.log('898');
 	
-		return res.redirect('https://g777708.com/customerpaidresult.html?status=error');
+		return res.redirect('../customerpaidresult.html?status=error');
 	
 	}else{
 
@@ -43,7 +43,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 				console.log('title錯誤或未搜尋到內容');
 
-				return res.redirect('https://g777708.com/customerpaidresult.html?status=error');
+				return res.redirect('../customerpaidresult.html?status=error');
 			
 			}else{
 
@@ -52,7 +52,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 				if( timenow > result[0].access_expired ){
 
-					return res.redirect('https://g777708.com/customerpaidresult.html?status=error');
+					return res.redirect('../customerpaidresult.html?status=error');
 				
 				}else{
 
@@ -64,7 +64,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 							if( err ){
 
-								return res.redirect('https://g777708.com/customerpaidresult.html?status=error');
+								return res.redirect('../customerpaidresult.html?status=error');
 
 							}else{
 
@@ -109,7 +109,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 											if( err ){
 
-												return res.redirect('https://g777708.com/customerpaidresult.html?status=updatefail');
+												return res.redirect('../customerpaidresult.html?status=updatefail');
 
 											}else{
 
@@ -119,7 +119,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 													if( err || result.length == 0 ){
 
-														return res.redirect('https://g777708.com/customerpaidresult.html?status=updatefail');
+														return res.redirect('../customerpaidresult.html?status=updatefail');
 
 													}else{
 
@@ -148,7 +148,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 														res.cookie('code',code);
 
-														return res.redirect('https://g777708.com/customerpaidresult.html?status=success');
+														return res.redirect('../customerpaidresult.html?status=success');
 
 													}
 
@@ -162,7 +162,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 										console.log(err);
 
-										return res.redirect('https://g777708.com/customerpaidresult.html?status=paidfail');
+										return res.redirect('../customerpaidresult.html?status=paidfail');
 
 									});
 
@@ -175,7 +175,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 					}else{
 
-						return res.redirect('https://g777708.com/customerpaidresult.html?status=error');
+						return res.redirect('../customerpaidresult.html?status=error');
 					
 					}
 
