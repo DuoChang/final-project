@@ -131,7 +131,7 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 														  
 														  subject: 'Find 師傅-消費者已確認報價 訂單編號:' + req.body.orderid,
 														  
-														  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>需求明細如下，請查閱詳細訊息<br><br>客戶：'+ username +'<br>連絡電話：' + userphone + '<br>地區：' + detailaddress + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + workdate + '<br>詳細敘述：' + ordertext + '<br>請點選以下連結前往訂單<br><a href="https://g777708.com/master/checkorder/inputcode?status=paid&orderid=' + req.body.orderid + '">查看訂單</a></p></div>'
+														  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>需求明細如下，請查閱詳細訊息<br><br>客戶：'+ username +'<br>連絡電話：' + userphone + '<br>地區：' + detailaddress + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + workdate + '<br>詳細敘述：' + ordertext + '<br>請點選以下連結前往訂單<br><a href="https://g777708.com/masterinputcode.html?status=paid&orderid=' + req.body.orderid + '">查看訂單</a></p></div>'
 
 
 														}, function(err){

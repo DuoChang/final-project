@@ -1,5 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const createtoken=require("../util/createtoken.js");
+const createpasswordtoken=require("../util/createpasswordtoken.js");
 const express = require('express');
 const expressrouter = express.Router();
 
@@ -21,9 +22,11 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 		if( req.body.provider == "customer" ){
 
+			let passwordtoken = createpasswordtoken(passwordtoken) ;
+
 						/*--確認註冊過--*/
 			
-			mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' ,(err,result)=>{
+			mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
 
 				if( err || result.length ===0 ){
 
@@ -33,7 +36,7 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 					let customertokentosave = createtoken(req.body.phone);
 
-					mysql.con.query( 'Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , customertokentosave , (err,result)=>{
+					mysql.con.query( 'Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' , customertokentosave , (err,result)=>{
 
 						if( err || result.length ===0 ){
 
@@ -63,7 +66,7 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 						/*--確認註冊過--*/
 			
-			mysql.con.query( 'SELECT masterid,email,phone,password FROM master WHERE phone=\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' ,(err,result)=>{
+			mysql.con.query( 'SELECT masterid,email,phone,password FROM master WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
 
 				if( err || result.length ===0 ){
 
@@ -87,7 +90,7 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 							let mastertokentosave = createtoken(req.body.phone);
 
-							mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + req.body.password + '\"' , mastertokentosave , (err,result)=>{
+							mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' , mastertokentosave , (err,result)=>{
 
 								if( err || result.length ===0 ){
 

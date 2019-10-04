@@ -105,7 +105,7 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 							  
 							  subject: 'Find 師傅-新需求通知 訂單編號:' + orderid,
 							  
-							  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>新需求明細如下，請查閱報價<br><br>地區：' + receivebodyfromfront.area + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + receivebodyfromfront.workdate + '<br>詳細敘述：' + receivebodyfromfront.text + '<br>請點選以下連結進行報價<br><a href="https://g777708.com/master/checkorder/created?status=created&orderid=' + orderid + '">前往報價</a></p></div>'
+							  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>新需求明細如下，請查閱報價<br><br>地區：' + receivebodyfromfront.area + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + receivebodyfromfront.workdate + '<br>詳細敘述：' + receivebodyfromfront.text + '<br>請點選以下連結進行報價<br><a href="https://g777708.com/masterquote.html?status=created&orderid=' + orderid + '">前往報價</a></p></div>'
 
 
 							}, function(err){
