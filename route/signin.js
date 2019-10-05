@@ -24,6 +24,8 @@ expressrouter.post('/api/user/signin',(req,res)=>{
 
 			let passwordtoken = createpasswordtoken(req.body.phone) ;
 
+			console.log(passwordtoken);
+
 						/*--確認註冊過--*/
 			
 			mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
