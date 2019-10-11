@@ -195,7 +195,7 @@
 
       }
 
-      getsearchorderResult.open('GET','/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+      getsearchorderResult.open('GET','/checktoken/checkmasterexpire/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
 
       getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
@@ -271,7 +271,7 @@
 
           }       
           
-          inputcodetopay.open('POST','/api/master/order/close');
+          inputcodetopay.open('POST','/checktype/checktoken/checkmasterexpire/api/master/order/close');
 
           inputcodetopay.setRequestHeader("Content-Type","application/json");
 

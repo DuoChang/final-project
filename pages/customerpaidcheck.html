@@ -196,7 +196,7 @@
 
       }
 
-      getsearchorderResult.open('GET','/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+      getsearchorderResult.open('GET','/checktoken/checkuserexpire/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
 
       getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 

@@ -34,7 +34,7 @@
 
         }
 
-        updatemaster.open('POST','/api/update/masterprofile');
+        updatemaster.open('POST','/checktype/checktoken/checkmasterexpire/api/update/masterprofile');
 
         updatemaster.setRequestHeader("Content-Type",
               "application/json");
@@ -251,7 +251,7 @@
 
         }
 
-        getmasterData.open('GET','/api/userprofile/master');
+        getmasterData.open('GET','/checktoken/checkmasterexpire/api/userprofile/master');
         getmasterData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
         getmasterData.send();
         

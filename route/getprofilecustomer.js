@@ -2,57 +2,27 @@ const mysql=require("../util/mysqlcon.js");
 const express = require('express');
 const expressrouter = express.Router();
 
-expressrouter.get('/api/userprofile/customer',(req,res)=>{
+expressrouter.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,res)=>{
 
-	if( !req.header('Authorization') || req.header('Authorization') == '' ){
-		res.send("{\"error\": \"Invalid request body.\"}");
-	}else{
-		let tokensplit = req.header('Authorization').split(' ');
 
-		let timenow = Date.now();
+	let queryuserdetail='SELECT * FROM user WHERE userid=' + req.userid ;
 
-		let checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+	mysql.con.query( queryuserdetail ,(err,result)=>{
 
-		mysql.con.query( checkauthorization ,(err,result)=>{
+		if( err ){
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+			res.send("{\"error\": \"Invalid token.\"}");
 
-				console.log('title錯誤或未搜尋到內容');
-			
-				res.send("{\"error\": \"Invalid request body.\"}");
-			
-			}else{
+		}else{
 
-				let userid = result[0].userid ;
+			let usertotalres = {};
+			usertotalres.data = result[0];
+			res.json(usertotalres);
 
-				if( timenow > result[0].access_expired ){
+		}
 
-					res.send("{\"error\": \"Invalid request body.\"}");
-				
-				}else{
+	})
 
-					let queryuserdetail='SELECT * FROM user WHERE userid=' + userid ;
-
-					mysql.con.query( queryuserdetail ,(err,result)=>{
-
-						if( err ){
-
-							res.send("{\"error\": \"Invalid token.\"}");
-
-						}else{
-
-							let usertotalres = {};
-							usertotalres.data = result[0];
-							res.json(usertotalres);
-
-						}
-
-					})
-
-				}
-			}
-		})		
-	}
 
 })
 

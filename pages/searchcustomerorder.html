@@ -375,8 +375,8 @@
 
         console.log(status);
 
-        getsearchmasterResult.open('GET','/api/search/order/customer?status=' + status + '&page=' + page );
-        getsearchmasterResult.setRequestHeader("Content-Type","application/json");
+        getsearchmasterResult.open('GET','/checktoken/checkuserexpire/api/search/order/customer?status=' + status + '&page=' + page );
+        // getsearchmasterResult.setRequestHeader("Content-Type","application/json");
         getsearchmasterResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
         getsearchmasterResult.send();
 

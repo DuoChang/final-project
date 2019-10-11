@@ -216,7 +216,7 @@
 
       }
 
-      getsearchorderResult.open('GET','/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+      getsearchorderResult.open('GET','/checktoken/checkuserexpire/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
 
       getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
@@ -276,7 +276,7 @@
 
       }
 
-      getcommentstatus.open('GET','/api/getcomment?orderid=' + getorderid[1] );
+      getcommentstatus.open('GET','/checktoken/checkuserexpire/api/getcomment?orderid=' + getorderid[1] );
 
       getcommentstatus.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
@@ -361,7 +361,7 @@
 
           let sendjson = JSON.stringify(newcomment);
 
-          savecomment.open('POST','/api/order/savecomment' );
+          savecomment.open('POST','/checktype/checktoken/checkuserexpire/api/order/savecomment' );
 
           savecomment.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 

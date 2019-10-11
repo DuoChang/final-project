@@ -202,7 +202,7 @@
 
       }
 
-      getsearchorderResult.open('GET','/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+      getsearchorderResult.open('GET','/checktoken/checkmasterexpire/api/search/order/master?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
 
       getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 

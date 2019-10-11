@@ -6,173 +6,139 @@ const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
 
-expressrouter.post('/api/update/masterprofile',(req,res)=>{
+expressrouter.post('/checktype/checktoken/checkmasterexpire/api/update/masterprofile',(req,res)=>{
 
-	if( !req.header('Authorization') || req.header('Authorization') == ''){
-		console.log('898');
-		res.send("{\"error\": \"Invalid request body.\"}");
-	}else{
+	if( req.body.update == 'basic'){
 
-		let tokensplit = req.header('Authorization').split(' ');
+		let updatemasterbasicquery = 'UPDATE master SET ? WHERE masterid=' + req.body.masterid ;
 
-		let timenow = Date.now();
+		let masterbasicdata = {};
 
-		let checkauthorization = "SELECT access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
+		masterbasicdata.phone = req.body.phone;
 
-		mysql.con.query( checkauthorization ,(err,result)=>{
+		if( req.body.password != '' ){
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+			masterbasicdata.password = req.body.password;
+		
+		}
 
-				console.log('title錯誤或未搜尋到內容');
-			
-				res.send("{\"error\": \"Invalid request body.\"}");
-			
+		mysql.con.query( updatemasterbasicquery , masterbasicdata ,(err,result)=>{
+
+			if( err ){
+
+				res.send("{\"error\": \"error\"}");
+
 			}else{
 
-				if( timenow > result[0].access_expired ){
-
-					res.send("{\"error\": \"Invalid request body.\"}");
-				
-				}else{
-
-					if( req.body.update == 'basic'){
-
-						let updatemasterbasicquery = 'UPDATE master SET ? WHERE masterid=' + req.body.masterid ;
-
-						let masterbasicdata = {};
-
-						masterbasicdata.phone = req.body.phone;
-
-						if( req.body.password != '' ){
-
-							masterbasicdata.password = req.body.password;
-						
-						}
-
-						mysql.con.query( updatemasterbasicquery , masterbasicdata ,(err,result)=>{
-
-							if( err ){
-
-								res.send("{\"error\": \"error\"}");
-
-							}else{
-
-								res.send("{\"data\": \"success\"}");
-
-							}
-
-						})
-
-					}else if( req.body.update == 'skill' ){
-
-						console.log('2');
-
-						let deletemasterskill = ' DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
-
-						mysql.con.query( deletemasterskill , (err,result)=>{
-
-							if( err ){
-
-								res.send("{\"error\": \"error\"}");
-
-							}else{
-
-								/*--存 technician skill 資料--*/
-
-								let insertmasterskill = {
-								
-									masterid : req.body.masterid
-								
-								}
-
-								let skillsize = req.body.skill.length;
-
-								console.log(req.body.skill);
-
-								let skillarray = [];
-
-								for( let i = 0 ; i < skillsize ; i += 1){
-
-									insertmasterskill[req.body.skill[i]] = 1 ;
-
-								}
-
-								console.log(insertmasterskill);
-
-								mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
-
-									console.log('12.5',result);
-
-									if( err ){
-
-										res.send("{\"error\": \"error\"}");
-
-									}else{
-
-										res.send("{\"data\": \"success\"}");
-									}
-
-								})
-
-							}
-
-						})
-
-					}else if( req.body.update == 'area' ){
-
-						let deletemasterarea = 'DELETE FROM masterarea WHERE masterid=' + req.body.masterid ;
-
-						mysql.con.query( deletemasterarea , (err,result)=>{
-
-							if( err ){
-
-								res.send("{\"error\": \"error\"}");
-
-							}else{
-
-								let areasize = req.body.area.length;
-
-								areaarray = [];
-
-								for( let i = 0 ; i < areasize ; i += 1){
-
-									areaarray[i] = '(' + req.body.masterid + ',\"' + req.body.area[i] + '\")' ;
-
-								}
-
-								let insertnewmasterskill = 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString();
-
-								mysql.con.query( insertnewmasterskill , (err,result)=>{
-
-									if( err ){
-
-										res.send("{\"error\": \"error\"}");
-
-									}else{
-
-										res.send("{\"data\": \"success\"}");
-
-									}
-
-								})
-
-							}
-
-						})
-
-					}else{
-
-						res.send("{\"error\": \"Invalid request body.\"}");
-
-					}
-
-				}
+				res.send("{\"data\": \"success\"}");
 
 			}
 
 		})
 
+	}else if( req.body.update == 'skill' ){
+
+		console.log('2');
+
+		let deletemasterskill = ' DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
+
+		mysql.con.query( deletemasterskill , (err,result)=>{
+
+			if( err ){
+
+				res.send("{\"error\": \"error\"}");
+
+			}else{
+
+				/*--存 technician skill 資料--*/
+
+				let insertmasterskill = {
+				
+					masterid : req.body.masterid
+				
+				}
+
+				let skillsize = req.body.skill.length;
+
+				console.log(req.body.skill);
+
+				let skillarray = [];
+
+				for( let i = 0 ; i < skillsize ; i += 1){
+
+					insertmasterskill[req.body.skill[i]] = 1 ;
+
+				}
+
+				console.log(insertmasterskill);
+
+				mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
+
+					console.log('12.5',result);
+
+					if( err ){
+
+						res.send("{\"error\": \"error\"}");
+
+					}else{
+
+						res.send("{\"data\": \"success\"}");
+					}
+
+				})
+
+			}
+
+		})
+
+	}else if( req.body.update == 'area' ){
+
+		let deletemasterarea = 'DELETE FROM masterarea WHERE masterid=' + req.body.masterid ;
+
+		mysql.con.query( deletemasterarea , (err,result)=>{
+
+			if( err ){
+
+				res.send("{\"error\": \"error\"}");
+
+			}else{
+
+				let areasize = req.body.area.length;
+
+				areaarray = [];
+
+				for( let i = 0 ; i < areasize ; i += 1){
+
+					areaarray[i] = '(' + req.body.masterid + ',\"' + req.body.area[i] + '\")' ;
+
+				}
+
+				let insertnewmasterskill = 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString();
+
+				mysql.con.query( insertnewmasterskill , (err,result)=>{
+
+					if( err ){
+
+						res.send("{\"error\": \"error\"}");
+
+					}else{
+
+						res.send("{\"data\": \"success\"}");
+
+					}
+
+				})
+
+			}
+
+		})
+
+	}else{
+
+		res.send("{\"error\": \"Invalid request body.\"}");
+
 	}
+
 
 })
 

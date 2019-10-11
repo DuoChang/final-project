@@ -481,7 +481,7 @@
 
           }
 
-          getsearchmasterResult.open('POST','/api/search/master');
+          getsearchmasterResult.open('POST','/checktype/checktoken/checkuserexpire/api/search/master');
           getsearchmasterResult.setRequestHeader("Content-Type","application/json");
           getsearchmasterResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
           getsearchmasterResult.send(sendjson);
@@ -549,7 +549,7 @@
 
           }
 
-          createneworder.open('POST','/api/order/create');
+          createneworder.open('POST','/checktype/checktoken/checkuserexpire/api/order/create');
           createneworder.setRequestHeader("Content-Type","application/json");
           createneworder.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
           createneworder.send(sendjson);
@@ -667,7 +667,7 @@
         
         }
 
-        getmastercomment.open('GET','/api/getcomment?masterid=' + masterid);
+        getmastercomment.open('GET','/checktoken/checkuserexpire/api/getcomment?masterid=' + masterid);
         getmastercomment.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
         getmastercomment.send();
 

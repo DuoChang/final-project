@@ -110,7 +110,7 @@
 
 	        }
 
-	        updatecustomerData.open('POST','/api/update/customerprofile');
+	        updatecustomerData.open('POST','/checktype/checktoken/checkuserexpire/api/update/customerprofile');
 
 	        updatecustomerData.setRequestHeader("Content-Type","application/json");
 
@@ -154,7 +154,7 @@
           
         }
 
-        getcustomerData.open('GET','/api/userprofile/customer');
+        getcustomerData.open('GET','/checktoken/checkuserexpire/api/userprofile/customer');
         getcustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
         getcustomerData.send(); 	
 

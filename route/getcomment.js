@@ -3,90 +3,61 @@ const changedatetype=require("../util/changedatetype.js");
 const express = require('express');
 const expressrouter = express.Router();
 
-expressrouter.get('/api/getcomment',(req,res)=>{
+expressrouter.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
-	if( !req.header('Authorization') || req.header('Authorization') == '' ){
-		res.send("{\"error\": \"Invalid request body.\"}");
-	}else{
-		let tokensplit = req.header('Authorization').split(' ');
 
-		let timenow = Date.now();
+	if( req.query.masterid ){
 
-		let checkauthorization = "SELECT access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+		let querymastercomments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
+	
+		mysql.con.query( querymastercomments ,(err,result)=>{
 
-		mysql.con.query(checkauthorization,(err,result)=>{
+			if( err ){
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+				res.send("{\"message\": \"Invalid query\"}");
 
-				console.log('title錯誤或未搜尋到內容');
-			
-				res.send("{\"error\": \"Invalid request body.\"}");
-			
 			}else{
 
-				if( timenow > result[0].access_expired ){
+				console.log(result);
 
-					res.send("{\"error\": \"Invalid request body.\"}");
-				
-				}else{
+				result = changedatetype( result );
 
-					if( req.query.masterid ){
+				let mastercomments = {};
+				mastercomments.data = result;
 
-						let querymastercomments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
-					
-						mysql.con.query( querymastercomments ,(err,result)=>{
-
-							if( err ){
-
-								res.send("{\"message\": \"Invalid query\"}");
-
-							}else{
-
-								console.log(result);
-
-								result = changedatetype( result );
-
-								let mastercomments = {};
-								mastercomments.data = result;
-
-								res.send(mastercomments);
+				res.send(mastercomments);
 
 
-							}									
+			}									
 
-						})
+		})
 
-					}else if( req.query.orderid ){
+	}else if( req.query.orderid ){
 
-						let queryordercomment = "SELECT * FROM comments WHERE orderid=" + req.query.orderid ;
+		let queryordercomment = "SELECT * FROM comments WHERE orderid=" + req.query.orderid ;
 
-						mysql.con.query( queryordercomment ,(err,result)=>{
+		mysql.con.query( queryordercomment ,(err,result)=>{
 
-							if( err ){
+			if( err ){
 
-								res.send("{\"message\": \"Invalid query\"}");
+				res.send("{\"message\": \"Invalid query\"}");
 
-							}else if( result.length == 0 ){
+			}else if( result.length == 0 ){
 
-								res.send("{\"data\": \"empty\"}");
+				res.send("{\"data\": \"empty\"}");
 
-							}else{
+			}else{
 
-								res.send("{\"data\": \"done\"}");
+				res.send("{\"data\": \"done\"}");
 
-							}									
+			}									
 
-						})
-					
-					}else{
+		})
+	
+	}else{
 
-						res.send("{\"message\": \"Invalid query\"}");
+		res.send("{\"message\": \"Invalid query\"}");
 
-					}
-
-				}
-			}
-		})		
 	}
 
 })

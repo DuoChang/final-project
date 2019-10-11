@@ -7,189 +7,150 @@ const expressrouter = express.Router();
 const cookieParser = require('cookie-parser');
 expressrouter.use(cookieParser());
 
-expressrouter.get('/api/search/order/master',(req,res)=>{
+expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,res)=>{
 
-	if( !req.header('Authorization') || req.header('Authorization') == ''){
+	if( req.query.status && req.query.orderid ){
 
-		console.log('898');
-		
-		res.send("{\"error\": \"Invalid request body.\"}");
+		let queryorderbyid = 'SELECT masterid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status +'\"';
 	
-	}else{
+		mysql.con.query( queryorderbyid ,(err,result)=>{
 
-		let tokensplit = req.header('Authorization').split(' ');
+			if( err ){
 
-		let timenow = Date.now();
+				res.send("{\"error\": \"Invalid token.\"}");
 
-		let checkauthorization = "SELECT masterid,access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
+			}else if( result.length ===0 ){
 
-		mysql.con.query(checkauthorization,(err,result)=>{
-
-			console.log(err,result);
-
-			if( err || result.length===0 || tokensplit[0] !="Bearer"){
-
-				console.log('title錯誤或未搜尋到內容');
-			
-				res.send("{\"error\": \"Invalid request body.\"}");
+				res.send("{\"message\": \"No result\"}");
 			
 			}else{
 
-				let masterid = result[0].masterid ;
+				if( masterid == result[0].masterid ){
 
-				if( timenow > result[0].access_expired ){
+					result = changeskill(result);
 
-					res.send("{\"error\": \"Invalid request body.\"}");
-				
+					result = changedatetype(result);
+
+					console.log(result);
+
+					let masterorders = {};
+
+					masterorders.data = result;
+
+					res.cookie('Authorization',req.header('Authorization'));
+
+					res.send(masterorders);
+
 				}else{
 
-					if( req.query.status && req.query.orderid ){
+					res.send("{\"message\": \"No result\"}");
 
-						let queryorderbyid = 'SELECT masterid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status +'\"';
-					
-						mysql.con.query( queryorderbyid ,(err,result)=>{
+				}
 
-							if( err ){
+			}
 
-								res.send("{\"error\": \"Invalid token.\"}");
+		})
 
-							}else if( result.length ===0 ){
+	}else if( req.query.status && !req.query.orderid ){
 
-								res.send("{\"message\": \"No result\"}");
-							
-							}else{
+		console.log('7788');
 
-								if( masterid == result[0].masterid ){
+		let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + req.masterid + ' AND status=\"' + req.query.status + '\"';
 
-									result = changeskill(result);
+		if ( req.query.status == 'created' || req.query.status == 'quoted' ){
 
-									result = changedatetype(result);
+			queryorderbystatus = queryorderbystatus + ' ORDER BY orderdate ASC';
 
-									console.log(result);
+		}else if( req.query.status == 'paid' ){
 
-									let masterorders = {};
+			queryorderbystatus = queryorderbystatus + ' ORDER BY workdate ASC';
 
-									masterorders.data = result;
+		}else if( req.query.status == 'closed' ){
 
-									res.cookie('Authorization',req.header('Authorization'));
+			queryorderbystatus = queryorderbystatus + ' ORDER BY workdate DESC';
 
-									res.send(masterorders);
+		}
 
-								}else{
+		console.log('34',queryorderbystatus);
 
-									res.send("{\"message\": \"No result\"}");
+		mysql.con.query(queryorderbystatus,(err,result)=>{
 
-								}
+			if( err ){
 
-							}
+				res.send("{\"error\": \"Invalid token.\"}");
 
-						})
+			}else if( result.length ===0 ){
 
-					}else if( req.query.status && !req.query.orderid ){
+				res.send("{\"message\": \"No result\"}");
+			
+			}else{
 
-						console.log('7788');
+				result = changeskill(result);
 
-						let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + masterid + ' AND status=\"' + req.query.status + '\"';
+				result = changedatetype(result);
 
-						if ( req.query.status == 'created' || req.query.status == 'quoted' ){
+				let totalpage = Math.ceil( result.length / 4 );
 
-							queryorderbystatus = queryorderbystatus + ' ORDER BY orderdate ASC';
+				console.log(totalpage);
 
-						}else if( req.query.status == 'paid' ){
+				let searchmasterorderresult = [];
 
-							queryorderbystatus = queryorderbystatus + ' ORDER BY workdate ASC';
+				if( req.query.page < totalpage ){
 
-						}else if( req.query.status == 'closed' ){
+					console.log('AWA789');
 
-							queryorderbystatus = queryorderbystatus + ' ORDER BY workdate DESC';
+					for( let i = ( (req.query.page -1 ) * 4 ) ; i < ( ( req.query.page * 4 ) ) ; i++ ){
 
-						}
+						console.log(i);
 
-						console.log('34',queryorderbystatus);
+						let count = i - ( ( req.query.page -1 ) * 4 ) ;
 
-						mysql.con.query(queryorderbystatus,(err,result)=>{
+						console.log(count);
 
-							if( err ){
-
-								res.send("{\"error\": \"Invalid token.\"}");
-
-							}else if( result.length ===0 ){
-
-								res.send("{\"message\": \"No result\"}");
-							
-							}else{
-
-								result = changeskill(result);
-
-								result = changedatetype(result);
-
-								let totalpage = Math.ceil( result.length / 4 );
-
-								console.log(totalpage);
-
-								let searchmasterorderresult = [];
-
-								if( req.query.page < totalpage ){
-
-									console.log('AWA789');
-
-									for( let i = ( (req.query.page -1 ) * 4 ) ; i < ( ( req.query.page * 4 ) ) ; i++ ){
-
-										console.log(i);
-
-										let count = i - ( ( req.query.page -1 ) * 4 ) ;
-
-										console.log(count);
-
-										searchmasterorderresult[count] = result[i] ;
-
-									}
-
-								}else if( req.query.page == totalpage ){
-
-									console.log('C3C4',result.length);
-
-									for( let i =( (req.query.page -1 ) * 4 ) ; i < result.length ; i++ ){
-
-										let count = i - ( ( req.query.page -1 ) * 4 ) ;
-
-										searchmasterorderresult[count] = result[i] ;
-
-										console.log('C89',count,i);
-
-									}
-
-								}else{
-
-									res.send("{\"message\": \"No result\"}");
-
-								}
-
-								let masterorders = {};
-
-								masterorders.data = searchmasterorderresult;
-
-								masterorders.page = totalpage;
-
-								res.cookie('Authorization',req.header('Authorization'));
-
-								res.send(masterorders);
-
-							}
-
-						})	
-
-					}else{
-
-						res.send("{\"incorrect\": \"No result\"}");
+						searchmasterorderresult[count] = result[i] ;
 
 					}
 
+				}else if( req.query.page == totalpage ){
+
+					console.log('C3C4',result.length);
+
+					for( let i =( (req.query.page -1 ) * 4 ) ; i < result.length ; i++ ){
+
+						let count = i - ( ( req.query.page -1 ) * 4 ) ;
+
+						searchmasterorderresult[count] = result[i] ;
+
+						console.log('C89',count,i);
+
+					}
+
+				}else{
+
+					res.send("{\"message\": \"No result\"}");
+
 				}
+
+				let masterorders = {};
+
+				masterorders.data = searchmasterorderresult;
+
+				masterorders.page = totalpage;
+
+				res.cookie('Authorization',req.header('Authorization'));
+
+				res.send(masterorders);
+
 			}
-		})
+
+		})	
+
+	}else{
+
+		res.send("{\"incorrect\": \"No result\"}");
 
 	}
+
 
 })
 

@@ -7,186 +7,151 @@ const expressrouter = express.Router();
 const cookieParser = require('cookie-parser');
 expressrouter.use(cookieParser());
 
-expressrouter.get('/api/search/order/customer',(req,res)=>{
+expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,res)=>{
 
 	console.log(req.query);
 
-	if( !req.header('Authorization') || req.header('Authorization') == ''){
-		console.log('898');
-		res.send("{\"error\": \"Invalid request body.\"}");
-	}else{
+	if( req.query.status && req.query.orderid ){
 
-		let tokensplit = req.header('Authorization').split(' ');
+		let queryorderbyid = 'SELECT userid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,finalquote,tooldetails,tooldetailsfinal FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status + '\"';
 
-		let timenow = Date.now();
+		mysql.con.query( queryorderbyid ,(err,result)=>{
 
-		let checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+			if( err ){
 
-		mysql.con.query(checkauthorization,(err,result)=>{
+				res.send("{\"error\": \"Invalid token.\"}");
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+			}else if( result.length ===0 ){
 
-				console.log('title錯誤或未搜尋到內容');
-			
-				res.send("{\"error\": \"Invalid request body.\"}");
+				res.send("{\"message\": \"No result\"}");
 			
 			}else{
 
-				let userid = result[0].userid ;
+				if( userid == result[0].userid ){
 
-				if( timenow > result[0].access_expired ){
+					result = changedatetype( result );
 
-					res.send("{\"error\": \"Invalid request body.\"}");
-				
+					result = changeskill( result );
+
+					console.log(result);
+
+					let userorders = {};
+
+					userorders.data = result;
+
+					res.cookie('Authorization',req.header('Authorization'));
+
+					res.send(userorders);
+
 				}else{
 
-					if( req.query.status && req.query.orderid ){
+					res.send("{\"message\": \"No result\"}");
 
-						let queryorderbyid = 'SELECT userid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,finalquote,tooldetails,tooldetailsfinal FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status + '\"';
+				}
 
-						mysql.con.query( queryorderbyid ,(err,result)=>{
+				
 
-							if( err ){
+			}
 
-								res.send("{\"error\": \"Invalid token.\"}");
+		})
 
-							}else if( result.length ===0 ){
+	}else if( req.query.status && !req.query.orderid ){
 
-								res.send("{\"message\": \"No result\"}");
-							
-							}else{
+		console.log('7788');
 
-								if( userid == result[0].userid ){
+		let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE userid=' + req.userid + ' AND status=\"' + req.query.status + '\"';
 
-									result = changedatetype( result );
+		if ( req.query.status == 'created' || req.query.status == 'quoted' ){
 
-									result = changeskill( result );
+			queryorderbystatus = queryorderbystatus + ' ORDER BY orderdate ASC';
 
-									console.log(result);
+		}else if( req.query.status == 'paid' ){
 
-									let userorders = {};
+			queryorderbystatus = queryorderbystatus + ' ORDER BY workdate ASC';
 
-									userorders.data = result;
+		}else if( req.query.status == 'closed' ){
 
-									res.cookie('Authorization',req.header('Authorization'));
+			queryorderbystatus = queryorderbystatus + ' ORDER BY workdate DESC';
 
-									res.send(userorders);
+		}
 
-								}else{
+		console.log('34',queryorderbystatus);
 
-									res.send("{\"message\": \"No result\"}");
+		mysql.con.query(queryorderbystatus,(err,result)=>{
 
-								}
+			if( err ){
 
-								
+				res.send("{\"error\": \"Invalid token.\"}");
 
-							}
+			}else if( result.length ===0 ){
 
-						})
+				res.send("{\"message\": \"No result\"}");
+			
+			}else{
 
-					}else if( req.query.status && !req.query.orderid ){
+				result = changedatetype( result );
 
-						console.log('7788');
+				result = changeskill( result );
 
-						let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE userid=' + userid + ' AND status=\"' + req.query.status + '\"';
+				let totalorderpage = Math.ceil( result.length / 4 );
 
-						if ( req.query.status == 'created' || req.query.status == 'quoted' ){
+				console.log(totalorderpage);
 
-							queryorderbystatus = queryorderbystatus + ' ORDER BY orderdate ASC';
+				let searchcustomerorderresult = [];
 
-						}else if( req.query.status == 'paid' ){
+				if( req.query.page < totalorderpage ){
 
-							queryorderbystatus = queryorderbystatus + ' ORDER BY workdate ASC';
+					console.log('AWA789');
 
-						}else if( req.query.status == 'closed' ){
+					for( let i = ( (req.query.page -1 ) * 4 ) ; i < ( ( req.query.page * 4 ) ) ; i++ ){
 
-							queryorderbystatus = queryorderbystatus + ' ORDER BY workdate DESC';
+						console.log(i);
 
-						}
+						let count = i - ( ( req.query.page -1 ) * 4 ) ;
 
-						console.log('34',queryorderbystatus);
+						console.log(count);
 
-						mysql.con.query(queryorderbystatus,(err,result)=>{
-
-							if( err ){
-
-								res.send("{\"error\": \"Invalid token.\"}");
-
-							}else if( result.length ===0 ){
-
-								res.send("{\"message\": \"No result\"}");
-							
-							}else{
-
-								result = changedatetype( result );
-
-								result = changeskill( result );
-
-								let totalorderpage = Math.ceil( result.length / 4 );
-
-								console.log(totalorderpage);
-
-								let searchcustomerorderresult = [];
-
-								if( req.query.page < totalorderpage ){
-
-									console.log('AWA789');
-
-									for( let i = ( (req.query.page -1 ) * 4 ) ; i < ( ( req.query.page * 4 ) ) ; i++ ){
-
-										console.log(i);
-
-										let count = i - ( ( req.query.page -1 ) * 4 ) ;
-
-										console.log(count);
-
-										searchcustomerorderresult[count] = result[i] ;
-
-									}
-
-								}else if( req.query.page == totalorderpage ){
-
-									console.log('C3C4',result.length);
-
-									for( let i =( (req.query.page -1 ) * 4 ) ; i < result.length ; i++ ){
-
-										let count = i - ( ( req.query.page -1 ) * 4 ) ;
-
-										searchcustomerorderresult[count] = result[i] ;
-
-										console.log('C89',count,i);
-
-									}
-
-								}else{
-
-									res.send("{\"message\": \"No result\"}");
-
-								}
-
-								let userorders = {};
-
-								userorders.data = searchcustomerorderresult;
-
-								userorders.page = totalorderpage;
-
-								res.cookie('Authorization',req.header('Authorization'));
-
-								res.send(userorders);
-
-							}
-
-						})	
-
-					}else{
-
-						res.send("{\"incorrect\": \"No result\"}");
+						searchcustomerorderresult[count] = result[i] ;
 
 					}
 
+				}else if( req.query.page == totalorderpage ){
+
+					console.log('C3C4',result.length);
+
+					for( let i =( (req.query.page -1 ) * 4 ) ; i < result.length ; i++ ){
+
+						let count = i - ( ( req.query.page -1 ) * 4 ) ;
+
+						searchcustomerorderresult[count] = result[i] ;
+
+						console.log('C89',count,i);
+
+					}
+
+				}else{
+
+					res.send("{\"message\": \"No result\"}");
+
 				}
+
+				let userorders = {};
+
+				userorders.data = searchcustomerorderresult;
+
+				userorders.page = totalorderpage;
+
+				res.cookie('Authorization',req.header('Authorization'));
+
+				res.send(userorders);
+
 			}
-		})
+
+		})	
+
+	}else{
+
+		res.send("{\"incorrect\": \"No result\"}");
 
 	}
 

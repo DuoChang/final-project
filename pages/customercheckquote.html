@@ -276,7 +276,7 @@
 
       }
 
-      getsearchorderResult.open('GET','/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
+      getsearchorderResult.open('GET','/checktoken/checkuserexpire/api/search/order/customer?status=' + getstatus[1] + '&orderid=' + getorderid[1] );
 
       getsearchorderResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
@@ -314,7 +314,7 @@
 
         }
 
-        getcustomeraddress.open('GET','/api/userprofile/customer' );
+        getcustomeraddress.open('GET','/checktoken/checkuserexpire/api/userprofile/customer' );
 
         getcustomeraddress.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
@@ -376,7 +376,7 @@
 
           let sendjson =  JSON.stringify(orderaddress);
 
-          saveaddress.open('POST','/api/order/saveaddress');
+          saveaddress.open('POST','/checktype/checktoken/checkuserexpire/api/order/saveaddress');
 
           saveaddress.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
@@ -420,7 +420,7 @@
 
         }
 
-        rejectquote.open('GET','/api/quote/reject?orderid=' + getorderid[1] );
+        rejectquote.open('GET','/checktoken/checkuserexpire/api/quote/reject?orderid=' + getorderid[1] );
 
         rejectquote.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 

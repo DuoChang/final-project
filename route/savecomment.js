@@ -7,92 +7,48 @@ const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());
 expressrouter.use(bodyParser.urlencoded({extended:true}));
 
-expressrouter.post('/api/order/savecomment',(req,res)=>{
+expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/savecomment',(req,res)=>{
 
-	console.log(req.body);
+	let querymasterid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
 
-	if( !req.header('Authorization') || req.header('Authorization') == ''){
-		console.log('898');
-		res.send("{\"error\": \"Invalid request body.\"}");
-	}else{
+	mysql.con.query( querymasterid ,(err,result)=>{
 
-		console.log(456);
+		if( err || result.length == 0 ){
 
-		let tokensplit = req.header('Authorization').split(' ');
+			res.send("{\"message\": \"no result\"}");
 
-		let timenow = Date.now();
+		}else{
 
-		let checkauthorization = "SELECT name,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+			let commentdate = moment().format('YYYY-MM-DD');
 
-		mysql.con.query(checkauthorization,(err,result)=>{
+			let insertnewcomment = 'INSERT INTO comments SET ?';
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
-
-				console.log('title錯誤或未搜尋到內容');
-			
-				res.send("{\"error\": \"Invalid request body.\"}");
-			
-			}else{
-
-				console.log('777');
-
-				let username = result[0].name ;
-
-				if( timenow > result[0].access_expired ){
-
-					console.log('6868');
-
-					res.send("{\"error\": \"Invalid request body.\"}");
-				
-				}else{
-
-					let querymasterid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
-
-					mysql.con.query( querymasterid ,(err,result)=>{
-
-						if( err || result.length == 0 ){
-
-							res.send("{\"message\": \"no result\"}");
-
-						}else{
-
-							let commentdate = moment().format('YYYY-MM-DD');
-
-							let insertnewcomment = 'INSERT INTO comments SET ?';
-
-							let commentdetails = {
-								content:req.body.content,
-								orderid:req.body.orderid,
-								heartrate:req.body.heartrate,
-								commentdate:commentdate,
-								username:username,
-								masterid:result[0].masterid
-							}
-
-							mysql.con.query( insertnewcomment , commentdetails ,(err,result)=>{
-
-								if( err ){
-
-									res.send("{\"message\": \"no result\"}");
-
-								}else{
-
-									res.send("{\"data\": \"Update success\"}");
-
-								}
-
-							})
-
-						}
-
-					})
-
-				}			
-
+			let commentdetails = {
+				content:req.body.content,
+				orderid:req.body.orderid,
+				heartrate:req.body.heartrate,
+				commentdate:commentdate,
+				username:username,
+				masterid:result[0].masterid
 			}
 
-		})
-	}	
+			mysql.con.query( insertnewcomment , commentdetails ,(err,result)=>{
+
+				if( err ){
+
+					res.send("{\"message\": \"no result\"}");
+
+				}else{
+
+					res.send("{\"data\": \"Update success\"}");
+
+				}
+
+			})
+
+		}
+
+	})
 
 })
 
