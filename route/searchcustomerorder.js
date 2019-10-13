@@ -27,7 +27,7 @@ expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,r
 			
 			}else{
 
-				if( userid == result[0].userid ){
+				if( req.userid == result[0].userid ){
 
 					result = changedatetype( result );
 

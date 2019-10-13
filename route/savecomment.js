@@ -28,7 +28,7 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/savecomment'
 				orderid:req.body.orderid,
 				heartrate:req.body.heartrate,
 				commentdate:commentdate,
-				username:username,
+				username:req.username,
 				masterid:result[0].masterid
 			}
 

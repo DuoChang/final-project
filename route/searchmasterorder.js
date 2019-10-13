@@ -25,7 +25,7 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 			
 			}else{
 
-				if( masterid == result[0].masterid ){
+				if( req.masterid == result[0].masterid ){
 
 					result = changeskill(result);
 

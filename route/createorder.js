@@ -13,8 +13,8 @@ const mailTransport = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
     user: process.env.MAIL_ACCOUNT,
-    pass: process.env.
-  }MAIL_PASS
+    pass: process.env.MAIL_PASS
+  }
 });
 
 function paddingLeft(str,lenght){
@@ -190,7 +190,7 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/create',(req
 
 	console.log('G5',skillarray);
 
-	let insertresult = insertorder( res , receivebodyfromfront , orderdate , userid , skillarray );
+	let insertresult = insertorder( res , receivebodyfromfront , orderdate , req.userid , skillarray );
 
 })
 

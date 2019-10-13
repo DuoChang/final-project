@@ -8,7 +8,7 @@ expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 expressrouter.post('/checktype/checktoken/checkuserexpire/api/update/customerprofile',(req,res)=>{
 
-	let updatecustomerquery = 'UPDATE user SET ? WHERE userid=' + result[0].userid ;
+	let updatecustomerquery = 'UPDATE user SET ? WHERE userid=' + req.userid ;
 
 	let updatecustomerdata = {};
 

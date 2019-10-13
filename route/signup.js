@@ -3,7 +3,7 @@ const createtoken=require("../util/createtoken.js");
 const createpasswordtoken=require("../util/createpasswordtoken.js");
 const express = require('express');
 const expressrouter = express.Router();
-const stripe = require('stripe')('sk_test_1UIhmFMbhl0lO9w4Hdp6jNnC00MXi9WabT');
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const bodyParser = require('body-parser');
 expressrouter.use(bodyParser.json());

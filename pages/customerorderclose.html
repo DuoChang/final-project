@@ -313,7 +313,11 @@
 
         if( commentrate == '' || commentcontent == '' ){
 
-          alert('尚未填寫完成');
+          alert( '尚未填寫完成' );
+
+        }else if( commentrate > 5 || commentrate < 1 ){
+
+          alert( '分數請輸入 1-5 ' );
 
         }else{
 

@@ -55,7 +55,7 @@ app.use("*/checkuserexpire/*", function(req, res, next){
 
 	let tokensplit = req.header('Authorization').split(' ');
 
-	let checkauthorization = "SELECT userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+	let checkauthorization = "SELECT name,userid,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
 
 	mysql.con.query(checkauthorization,(err,result)=>{
 
@@ -73,6 +73,7 @@ app.use("*/checkuserexpire/*", function(req, res, next){
 			
 			}else{
 
+				req.username = result[0].name;
 				req.userid = result[0].userid ;
 
 				next();
