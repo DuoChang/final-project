@@ -6,7 +6,7 @@ This website is a platform for technicians to take the case; people who searchin
 
 ## Backend Spot
 
-* Stripe Connect:credit card check out & payment transfer
+* Stripe Connect: credit card check out & payment transfer
 * node-xlsx: get content from excel file
 * request: obtain price from PCHome
 * AWS EC2：Linux + MySQL + Ngix
