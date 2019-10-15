@@ -72,8 +72,6 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 				let querycheckmail = "SELECT status FROM mailstatus WHERE email=\"" + result[0].email + "\"";
 
-				console.log(querycheckmail);
-
 				mysql.con.query(querycheckmail,(err,result)=>{
 
 					if( err || result.length ===0 ){

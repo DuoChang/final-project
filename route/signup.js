@@ -21,30 +21,17 @@ const mailTransport = nodemailer.createTransport({
 
 expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
-	console.log('get api');
-
-	console.log( req.body );
-
-	console.log('1.5');
-
 	if( req.body.provider == "customer" ){
-
-		console.log('2');
-
 
 					/*--確認未註冊過--*/
 		
 		mysql.con.query( 'SELECT phone FROM user WHERE phone=\"' + req.body.phone + '\"' ,(err,result)=>{
-
-			console.log('3');
 
 			if( err ){
 
 				res.send("{\"error\": \"error\"}");
 
 			}else if( result.length == 0 ){
-
-				console.log('4');
 
 				let token = createtoken(req.body.phone);
 				let passwordtoken = createpasswordtoken(req.body.phone) ;
@@ -63,9 +50,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 				mysql.con.query( 'INSERT INTO user SET ?' , usersignupdata , (err,result)=>{
 
-					console.log('5');
-
-
 					if( err ){
 
 						res.send("{\"error\": \"error\"}");
@@ -77,8 +61,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 						let queryuserdata = "SELECT * FROM user WHERE phone=\"" + req.body.phone + "\"";
 
 						mysql.con.query( queryuserdata ,(err,result)=>{
-
-							console.log('6');
 
 							if( err ){
 
@@ -115,37 +97,23 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 			}else{
 
-				console.log('7');
-
-				console.log('已註冊過');
-
 				res.send("{\"error\": \"error\"}");
-			
+
 			}
 		
 		});
 
 	}else if( req.body.provider == "master" ){
 
-		console.log('8');
-
-
 					/*--確認未註冊過--*/
 		
 		mysql.con.query( 'SELECT phone FROM master WHERE phone=\"' + req.body.phone + '\"' ,(err,result)=>{
 
-			console.log('9');
-
 			if( err ){
-
-				console.log(err);
 
 				res.send("{\"error\": \"error\"}");
 
 			}else if( result.length == 0 ){
-
-				console.log('10');
-
 
 				/*--新增 Stripe 帳戶--*/
 
@@ -156,8 +124,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 				}).then(function(acct) {
 
 				  	// asynchronously called
-
-				  	console.log(acct.id);
 
 				  	/*--存 master 基本資料--*/
 
@@ -177,9 +143,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 					mysql.con.query( 'INSERT INTO master SET ?' , mastersignupdata , (err,result)=>{
 
-						console.log('11');
-
-
 						if( err ){
 
 							res.send("{\"error\": \"error\"}");
@@ -187,8 +150,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 						}else{
 
 							mysql.con.query('SELECT masterid FROM master WHERE phone=\"' + req.body.phone + '\"',(err,result)=>{
-
-								console.log('12');
 
 								if( err ){
 
@@ -206,8 +167,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 									let skillsize = req.body.skill.length;
 
-									console.log(req.body.skill);
-
 									let skillarray = [];
 
 									for( let i = 0 ; i < skillsize ; i += 1){
@@ -216,11 +175,7 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 									}
 
-									console.log(insertmasterskill);
-
 									mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
-
-										console.log('12.5',result);
 
 										if( err ){
 
@@ -245,8 +200,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 									mysql.con.query( 'INSERT INTO masterarea(masterid,area) VALUES ' + areaarray.toString(), (err,result)=>{
 
-										console.log('13',result);
-
 										if( err ){
 
 											res.send("{\"error\": \"error\"}");
@@ -263,11 +216,7 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 												status: 'inactive'
 											};
 
-											console.log(mailstatus);
-
 											mysql.con.query( 'INSERT INTO mailstatus SET ?' , mailstatus , (err,result)=>{
-
-												console.log('14');
 
 												if( err ){
 
@@ -323,8 +272,6 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 				})
 
 			}else{
-
-				console.log('已註冊過');
 
 				res.send("{\"error\": \"error\"}");
 			

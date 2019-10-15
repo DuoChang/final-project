@@ -38,8 +38,6 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/update/masterpro
 
 	}else if( req.body.update == 'skill' ){
 
-		console.log('2');
-
 		let deletemasterskill = ' DELETE FROM masterskill WHERE masterid=' + req.body.masterid ;
 
 		mysql.con.query( deletemasterskill , (err,result)=>{
@@ -60,8 +58,6 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/update/masterpro
 
 				let skillsize = req.body.skill.length;
 
-				console.log(req.body.skill);
-
 				let skillarray = [];
 
 				for( let i = 0 ; i < skillsize ; i += 1){
@@ -70,11 +66,7 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/update/masterpro
 
 				}
 
-				console.log(insertmasterskill);
-
 				mysql.con.query( 'INSERT INTO masterskill SET ?', insertmasterskill ,(err,result)=>{
-
-					console.log('12.5',result);
 
 					if( err ){
 

@@ -7,9 +7,9 @@ This website is a platform for technicians to take the case; people who searchin
 ## Backend Spot
 
 * Stripe Connect: credit card check out & payment transfer
-* node-xlsx: get content from excel file
+* node-xlsx: bulk-import from excel file
 * request: obtain price from PCHome
-* AWS EC2：Linux + MySQL + Ngix
+* AWS EC2：Linux + MySQL + Nginx
 * MySQL: 2NF, Foreign Key, Index
 * SSL Certificate: Let's Encrypt
 
@@ -48,5 +48,6 @@ This website is a platform for technicians to take the case; people who searchin
 ## Contact
 
 HAO-HUAI CHANG ( 張顥懷 )
+
 E-Mail: g777710.ms98@gmail.com
 

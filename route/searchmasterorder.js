@@ -85,9 +85,17 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 			
 			}else{
 
+				console.log(typeof(result[0].indexid));
+
+				console.log(result[0].orderdate);
+
 				result = changeskill(result);
 
 				result = changedatetype(result);
+
+				console.log(result[0].orderdate);
+
+				console.log(typeof(result[0].orderdate));
 
 				let totalpage = Math.ceil( result.length / 4 );
 

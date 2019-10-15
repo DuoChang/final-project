@@ -90,10 +90,7 @@ expressrouter.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,re
 					masterskillarray.push('tile');
 				}
 
-
 				masterdata.skill = masterskillarray;
-
-				console.log(masterdata);
 
 				let mastertotalres = {};
 				mastertotalres.data = masterdata;

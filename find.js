@@ -7,8 +7,6 @@ app.use(express.static( __dirname + '/uploads' ));
 
 app.use("*/checktype/*", function(req, res, next){
 
-	console.log('check Content-Type');
-
 	if( req.header('Content-Type') != "application/json" ){
 
 		res.send("{\"error\": \"Invalid request body.\"}");	
@@ -22,8 +20,6 @@ app.use("*/checktype/*", function(req, res, next){
 });
 
 app.use("*/checktoken/*", function(req, res, next){
-
-	console.log('enter check Authorization');
 	
 	if( !req.header('Authorization') || req.header('Authorization') == ''){
 
@@ -49,8 +45,6 @@ app.use("*/checktoken/*", function(req, res, next){
 
 app.use("*/checkuserexpire/*", function(req, res, next){
 
-	console.log('enter check user expired');
-
 	let timenow = Date.now();
 
 	let tokensplit = req.header('Authorization').split(' ');
@@ -60,8 +54,6 @@ app.use("*/checkuserexpire/*", function(req, res, next){
 	mysql.con.query(checkauthorization,(err,result)=>{
 
 		if( err || result.length===0 ){
-
-			console.log('title錯誤或未搜尋到內容');
 		
 			res.send("{\"error\": \"Invalid request body.\"}");
 		
@@ -88,8 +80,6 @@ app.use("*/checkuserexpire/*", function(req, res, next){
 
 app.use("*/checkmasterexpire/*", function(req, res, next){
 
-	console.log('enter check master expired');
-
 	let timenow = Date.now();
 
 	let tokensplit = req.header('Authorization').split(' ');
@@ -99,8 +89,6 @@ app.use("*/checkmasterexpire/*", function(req, res, next){
 	mysql.con.query(checkauthorization,(err,result)=>{
 
 		if( err || result.length===0 ){
-
-			console.log('title錯誤或未搜尋到內容');
 		
 			res.send("{\"error\": \"Invalid request body.\"}");
 		
