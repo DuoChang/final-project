@@ -14,7 +14,7 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 					/*--確認註冊過--*/
 
-		let passwordtoken = createpasswordtoken(req.body.phone) ;
+		let passwordtoken = createpasswordtoken(req.body.password) ;
 
 		mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
 
@@ -54,7 +54,7 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 	}else if( req.body.provider == "master" ){
 
-		let passwordtoken = createpasswordtoken(req.body.phone) ;
+		let passwordtoken = createpasswordtoken(req.body.password) ;
 
 					/*--確認註冊過--*/
 		
