@@ -34,8 +34,7 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 			}else if( result.length == 0 ){
 
 				let token = createtoken(req.body.phone);
-				let passwordtoken = createpasswordtoken(req.body.phone) ;
-				console.log(passwordtoken);
+				let passwordtoken = createpasswordtoken(req.body.password) ;
 
 				/*--資料送入DB--*/
 
@@ -127,7 +126,7 @@ expressrouter.post('/checktype/api/user/signup',(req,res)=>{
 
 				  	/*--存 master 基本資料--*/
 
-				  	let passwordtoken = createpasswordtoken(req.body.phone) ;
+				  	let passwordtoken = createpasswordtoken(req.body.password) ;
 
 					let mastersignupdata = {
 

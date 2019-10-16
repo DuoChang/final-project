@@ -1,5 +1,6 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
+const createpasswordtoken=require("../util/createpasswordtoken.js");
 const expressrouter = express.Router();
 
 const bodyParser = require('body-parser');
@@ -16,7 +17,9 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/update/customerpro
 
 	if( req.body.password != '' ){
 
-		updatecustomerdata.password = req.body.password;
+		let passwordtoken = createpasswordtoken(req.body.password) ;
+
+		updatecustomerdata.password = passwordtoken;
 	
 	}
 

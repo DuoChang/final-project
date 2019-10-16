@@ -10,12 +10,12 @@ expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
-	if( req.body.provider == "customer" ){
+	if( req.body.provider == "customer" ){		
+
+					/*--確認註冊過--*/
 
 		let passwordtoken = createpasswordtoken(req.body.phone) ;
 
-					/*--確認註冊過--*/
-		
 		mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
 
 			if( err || result.length ===0 ){
