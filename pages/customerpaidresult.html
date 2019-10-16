@@ -62,33 +62,21 @@
 
       if( getstatus[1] == 'error' ){
 
-        console.log('error');
-
         resultdiv.innerHTML = 'Error , 請重新嘗試';
 
       }else if( getstatus[1] == 'updatefail' ){
-
-        console.log('updatefail');
 
         resultdiv.innerHTML = '更新訂單失敗 , 請聯繫客服處理';
 
       }else if( getstatus[1] == 'paidfail' ){
 
-        console.log('paidfail');
-
         resultdiv.innerHTML = '付款失敗 , 請重新嘗試';
 
       }else if( getstatus[1] == 'success' ){
 
-        console.log('success');
-
         let getcookie = document.cookie;
 
-        console.log(getcookie);
-
         let cookiecontent = getcookie.split(';');
-
-        console.log(cookiecontent);
 
         for( let i = 0 ; i < cookiecontent.length ; i++ ){
 
@@ -96,13 +84,9 @@
 
             var code = cookiecontent[i].split('=');
 
-            console.log('a',code);
-
           }
 
         }
-
-        console.log(code);
 
         resultdiv.innerHTML = '已付款成功<br>支付代碼：' + code[1];
 

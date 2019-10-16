@@ -9,6 +9,8 @@ expressrouter.use(cookieParser());
 
 expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,res)=>{
 
+	console.log(req.query);
+
 	if( req.query.status && req.query.orderid ){
 
 		let queryorderbyid = 'SELECT masterid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,tooldetails FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status +'\"';
@@ -31,8 +33,6 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 
 					result = changedatetype(result);
 
-					console.log(result);
-
 					let masterorders = {};
 
 					masterorders.data = result;
@@ -53,8 +53,6 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 
 	}else if( req.query.status && !req.query.orderid ){
 
-		console.log('7788');
-
 		let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE masterid=' + req.masterid + ' AND status=\"' + req.query.status + '\"';
 
 		if ( req.query.status == 'created' || req.query.status == 'quoted' ){
@@ -71,8 +69,6 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 
 		}
 
-		console.log('34',queryorderbystatus);
-
 		mysql.con.query(queryorderbystatus,(err,result)=>{
 
 			if( err ){
@@ -85,35 +81,21 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 			
 			}else{
 
-				console.log(typeof(result[0].indexid));
-
-				console.log(result[0].orderdate);
-
 				result = changeskill(result);
 
 				result = changedatetype(result);
 
-				console.log(result[0].orderdate);
-
-				console.log(typeof(result[0].orderdate));
-
 				let totalpage = Math.ceil( result.length / 4 );
-
-				console.log(totalpage);
 
 				let searchmasterorderresult = [];
 
-				if( req.query.page < totalpage ){
+				console.log(totalpage,req.query.page);
 
-					console.log('AWA789');
+				if( req.query.page < totalpage ){
 
 					for( let i = ( (req.query.page -1 ) * 4 ) ; i < ( ( req.query.page * 4 ) ) ; i++ ){
 
-						console.log(i);
-
 						let count = i - ( ( req.query.page -1 ) * 4 ) ;
-
-						console.log(count);
 
 						searchmasterorderresult[count] = result[i] ;
 
@@ -121,15 +103,11 @@ expressrouter.get('/checktoken/checkmasterexpire/api/search/order/master',(req,r
 
 				}else if( req.query.page == totalpage ){
 
-					console.log('C3C4',result.length);
-
 					for( let i =( (req.query.page -1 ) * 4 ) ; i < result.length ; i++ ){
 
 						let count = i - ( ( req.query.page -1 ) * 4 ) ;
 
 						searchmasterorderresult[count] = result[i] ;
-
-						console.log('C89',count,i);
 
 					}
 

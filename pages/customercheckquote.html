@@ -227,7 +227,6 @@
 
               let toolstring='';
               
-
               for( let objkey in toolobj ){
 
                 let crawlerprice = toolobjfinal[objkey] ;
@@ -325,10 +324,7 @@
 
       function  checkaddress(){
         
-        
         let address = document.getElementById('address');
-
-        console.log(address.value);
 
         if( address.value == '' ){
 
@@ -343,8 +339,6 @@
             if(saveaddress.readyState === 4){
               
              if (saveaddress.status === 200){
-
-              console.log(saveaddress.responseText);
 
               let confirmaddressback = JSON.parse(saveaddress.responseText);
 

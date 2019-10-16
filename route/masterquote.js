@@ -19,16 +19,12 @@ let cpUpload = upload.fields([{ name: 'quotefile', maxCount: 1 }]);
 expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 	if( !req.cookies.Authorization || req.cookies.Authorization == ''){
-		
-		console.log('898');
 
 		return res.redirect('../masterquoteresult.html?status=6');
 
 	}else{
 
 		let tokensplit = req.cookies.Authorization.split(' ');
-
-		console.log(tokensplit);
 
 		let timenow = Date.now();
 
@@ -37,8 +33,6 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 		mysql.con.query(checkauthorization, (err,result)=>{
 
 			if(err || result.length===0 || tokensplit[0] !="Bearer"){
-
-				console.log('title錯誤或未搜尋到內容');
 
 				return res.redirect('../masterquoteresult.html?status=6');
 			
@@ -61,8 +55,6 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							let excelobj = obj[0].data;
 
-							console.log(excelobj);
-
 							if( excelobj[0][0] != "耗材編號" || excelobj[0][1] != "耗材名稱" || excelobj[0][2] != "耗材價錢(TWD)" || excelobj.length != 3){
 
 								fs.unlink( req.files.quotefile[0].path, function () {
@@ -83,9 +75,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 								var count = 0;
 
-								for( let i = 1 ; i < excelobj.length ; i++ ){
-
-									console.log(i);							
+								for( let i = 1 ; i < excelobj.length ; i++ ){						
 
 									if( typeof(excelobj[i][1]) != 'string' ){
 
@@ -121,15 +111,9 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										        count = count + 1 ;
 
-										        console.log( count );
-
-										        console.log('0520',crawlerdataback.prods[0].price);
-
 										        materialobjcrawlerprice[excelobj[i][1]] = crawlerdataback.prods[0].price;
 
 										        if( count == (excelobj.length-1) ){
-
-													console.log( 'B7B7' , (excelobj.length-1) );
 
 													let allqoutedata = {};
 
@@ -167,8 +151,6 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 								materialobjcrawlerpricestring = JSON.stringify(allqoutedata.materialobjcrawlerprice);
 
-								console.log('A7A8',materialobjcrawlerpricestring);
-
 								let updateorderitems = {
 									status:"quoted",
 									originquote:originquote,
@@ -189,8 +171,6 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 									}else{
 
 											/*-- 最後刪除 --*/
-
-										console.log('AAA');
 
 										fs.unlink(req.files.quotefile[0].path, function () {
 

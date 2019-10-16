@@ -339,21 +339,15 @@
 
                 let getmasterback = JSON.parse(getsearchmasterResult.responseText);
 
-                console.log(getmasterback);
-
-                console.log('3');
-
                 if(getmasterback.error != null){
 
-                  console.log('85');
-
                   alert('Error, 請確認登入資訊 ,將重整頁面');
+                  
                   sessionStorage.removeItem("Auth");
+                  
                   window.location.replace('signin.html');
 
-                }else{
-
-                  console.log('8');               
+                }else{             
 
                   let searchmasterarea =document.getElementById('searchmasterarea');                
 
@@ -426,9 +420,13 @@
                       let inputcount = document.createElement('div');
 
                       if(getmasterback.result[i].rate == 'no'){
+                      
                         inputcount.innerHTML = '無評分　　　　';
+                      
                       }else{
+                      
                         inputcount.innerHTML = '平均評分 ：' + getmasterback.result[i].rate;
+                      
                       }
 
                       inputdata[i].appendChild(inputcount);
@@ -529,16 +527,23 @@
                 if(getorderback.error != null){
 
                   alert('Error ,請重新登入');
+                  
                   sessionStorage.removeItem("Auth");
+                  
                   window.location.replace('signin.html');
 
                 }else{
 
                   let showresult = document.getElementById('showresult');
+                  
                   showresult.style.display = 'none';
+                  
                   let createorder = document.getElementById('createorder');
+                  
                   createorder.style.display = 'flex';
+                  
                   let ordernumber = document.getElementById('ordernumber');
+                  
                   ordernumber.innerHTML = '訂單編號：' +  getorderback.data ;
 
                 }
@@ -595,7 +600,9 @@
               if(getcommentback.error != null){
 
                 alert('Error ,請重新登入');
+                
                 sessionStorage.removeItem("Auth");
+                
                 window.location.replace('signin.html');
 
               }else if( getcommentback.message ){
@@ -685,8 +692,6 @@
 
         let getchosemaster = document.getElementsByClassName('chosemaster');
 
-        console.log(getchosemaster);
-
         for( let i = 0 ; i < getchosemaster.length ; i++ ){
 
           getchosemaster[i].addEventListener('change', changemastercolor(i) );
@@ -696,8 +701,6 @@
       }
 
       function changemastercolor(i){
-
-        console.log(i);
 
         let getbasic = document.getElementsByClassName('basic');
 

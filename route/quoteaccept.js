@@ -21,12 +21,8 @@ const mailTransport = nodemailer.createTransport({
 
 expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
-	console.log(req.body);
-
 	if( !req.body.Authorization || req.body.Authorization == ''){
 
-		console.log('898');
-	
 		return res.redirect('../../customerpaidresult.html?status=error');
 	
 	}else{
@@ -40,8 +36,6 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 		mysql.con.query( checkauthorization ,(err,result)=>{
 
 			if( err || result.length===0 || tokensplit[0] !="Bearer" ){
-
-				console.log('title錯誤或未搜尋到內容');
 
 				return res.redirect('../../customerpaidresult.html?status=error');
 			
@@ -100,8 +94,6 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 									  transfer_group: req.body.orderid
 									}).then(function(charge) {
 									  // asynchronously called
-
-									  console.log(charge);
 
 									  	let queryupdateorderstautspaid = 'UPDATE orders SET status=\"paid\",paymentid=\"' + charge.id + '\" WHERE indexid=' + req.body.orderid ;
 

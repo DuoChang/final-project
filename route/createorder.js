@@ -47,10 +47,11 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 	let queryordercode = 'SELECT code FROM orders WHERE code=\"' + num + '\" AND status <> \"closed\"';
 	let code = mysql.con.query( queryordercode, (err,result)=>{
 		if( err || result !=0 ){
-			console.log('13');
+
 			insertorder( res , receivebodyfromfront , orderdate , userid, skillarray );
+		
 		}else{			
-			console.log('12',num);
+
 			let orderdetails = {
 
 				status:'created',
@@ -65,27 +66,19 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 
 			};
 
-			console.log('11',orderdetails);
-
 			let queryinsertneworder = 'INSERT INTO orders SET ?' ;
 
 			mysql.con.query( queryinsertneworder , orderdetails ,(err,result)=>{
 
 				if( err ){
 
-					console.log('BB8',err);
-
 					res.send("{\"error\": \"Invalid token.\"}");
 
 				}else{
 
-					console.log('insert success');
-
 					let orderid = result.insertId;
 
 					let querymasteremail= 'SELECT email FROM master WHERE masterid=' + receivebodyfromfront.masterid ;
-
-					console.log('7',querymasteremail);
 
 					mysql.con.query(querymasteremail,(err,result)=>{
 
@@ -94,8 +87,6 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 							res.send("{\"error\": \"Invalid token.\"}");
 
 						}else{
-
-							console.log('8',result);
 
 							mailTransport.sendMail({
 														  
@@ -180,15 +171,11 @@ function changeskillcreate(skillchangetotext){
 
 expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/create',(req,res)=>{
 
-	console.log('1024');
-
 	let orderdate = moment().format('YYYY-MM-DD');	
 
 	let receivebodyfromfront = req.body ;
 
 	let skillarray = changeskillcreate(req.body);
-
-	console.log('G5',skillarray);
 
 	let insertresult = insertorder( res , receivebodyfromfront , orderdate , req.userid , skillarray );
 

@@ -7,7 +7,7 @@ app.use(express.static( __dirname + '/uploads' ));
 
 app.use("*/checktype/*", function(req, res, next){
 
-	if( req.header('Content-Type') != "application/json" ){
+	if( req.header( 'Content-Type') != "application/json" ){
 
 		res.send("{\"error\": \"Invalid request body.\"}");	
 

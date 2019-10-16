@@ -10,8 +10,6 @@ expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
-	console.log(req.body);
-
 	if( req.body.provider == "customer" ){
 
 		let passwordtoken = createpasswordtoken(req.body.phone) ;

@@ -18,8 +18,6 @@ expressrouter.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
 			}else{
 
-				console.log(result);
-
 				result = changedatetype( result );
 
 				let mastercomments = {};

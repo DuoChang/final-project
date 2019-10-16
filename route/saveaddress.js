@@ -8,10 +8,6 @@ expressrouter.use(bodyParser.urlencoded({extended:true}));
 
 expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/saveaddress',(req,res)=>{
 
-	console.log(req.header('Authorization'));
-
-	console.log(req.body);
-
 	let saveorderaddressquery = 'UPDATE orders SET address=\"' + req.body.address + '\" WHERE indexid=' + req.body.ordernumber;
 
 	mysql.con.query( saveorderaddressquery ,(err,result)=>{

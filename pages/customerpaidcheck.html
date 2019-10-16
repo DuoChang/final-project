@@ -96,12 +96,15 @@
           if( getorderback.error ){
 
             alert('Error, 請重新登入');
+            
             sessionStorage.removeItem("Auth");
+            
             window.location.replace('signin.html');
 
           }else if( getorderback.message ){
 
             alert('訂單不存在');
+            
             window.location.replace('searchcustomerorder.html');
 
           }else{

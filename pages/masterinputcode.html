@@ -216,12 +216,12 @@
         let ordernumber = document.getElementById('ordernumber').value;
 
         if( inputcode == '' ){
+        
           alert('Error,代碼不可為空');
+        
         }else{
 
           let quote = document.getElementById('quote').innerHTML;
-
-          console.log(quote, typeof(quote));
 
           let getprice = quote.split(' ');
 
@@ -244,8 +244,6 @@
              if(inputcodetopay.status === 200){
 
               let inputcodetopayback = JSON.parse(inputcodetopay.responseText);
-
-              console.log(typeof(inputcodetopayback),inputcodetopayback);
 
               if( inputcodetopayback.data ){
 

@@ -23,9 +23,13 @@
             let updateresponse= JSON.parse(updatemaster.responseText);
 
             if( updateresponse.data ){
+
                 alert('更新成功');
+              
               }else{
+              
                 alert('Error, 請重新嘗試');
+              
               }
 
            }
@@ -172,6 +176,7 @@
       if(sessionStorage.getItem("Auth") == null){
 
         alert('請先登入');
+
         window.location.replace('signin.html');
 
       }else{
@@ -189,7 +194,9 @@
             if(getmasterback.error != null){
 
               alert('登入已過時,請重新登入');
+
               sessionStorage.removeItem("Auth");
+              
               window.location.replace('signin.html');
 
             }else{

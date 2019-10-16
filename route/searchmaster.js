@@ -73,19 +73,13 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 					let querycheckemailstatus = 'SELECT email FROM mailstatus WHERE email IN (' + emailarray.toString() + ') AND status=\"active\"' ;
 
-					console.log('F123456',querycheckemailstatus);
-
 					mysql.con.query( querycheckemailstatus ,(err,result)=>{
 
 						if( err ){
 
-							console.log('R33',err);
-
 							res.send("{\"error\": \"Invalid token.\"}");
 
 						}else{
-
-							console.log('R3D3',result);
 
 							let masteridbystatus = [];
 
@@ -94,8 +88,6 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 							for( let i = 0 ; i < emailarrayforcheck.length ; i++ ){
 
 								for( let j = 0 ; j < result.length ; j++ ){
-
-									console.log( emailarrayforcheck[i] , result[j].email );
 
 									if( emailarrayforcheck[i] == result[j].email ){
 
@@ -107,11 +99,7 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 								count += 1;
 
-								console.log(count);
-
 								if( count == (emailarrayforcheck.length) ){
-
-									console.log('R2D2',masteridbystatus);
 
 									if( masteridbystatus.length == 0 ){
 
@@ -149,11 +137,7 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 		selectbymailstatus.then((masterid)=>{
 
-			console.log('check status',masterid);
-
 			let querymasterdate = 'SELECT masterid FROM masterdate WHERE workdate=\"' + req.body.workdate + '\" AND masterid IN (' + masterid.toString() + ')';
-
-			console.log('D999',querymasterdate);
 
 			mysql.con.query( querymasterdate ,(err,result)=>{
 
@@ -209,10 +193,9 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 			}else{
 
 				let skillsize = req.body.skill.length;
-
-				console.log(req.body.skill);
-
+				
 				let skillarray = [];
+
 				let checkskillarray = [];
 
 				for( let i = 0 ; i < skillsize ; i += 1){
@@ -223,8 +206,6 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 				}
 
 				let querymasterbyskill = 'SELECT masterid FROM masterskill WHERE (' + skillarray.toString() + ') IN ((' + checkskillarray.toString() + '))';
-
-				console.log(querymasterbyskill);
 
 				mysql.con.query( querymasterbyskill ,(err,result)=>{
 
@@ -292,8 +273,6 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 					if( err ){
 
-						console.log('388');
-
 						res.send("{\"error\": \"Invalid token.\"}");
 
 					}else if( result.length == 0 ){
@@ -315,8 +294,6 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 						searchmasterresult.result = masterrate;	
 
-						console.log('A8A9');
-
 						return res.send(searchmasterresult);
 
 					}else{
@@ -337,19 +314,13 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 			let querygetcomments = 'SELECT * FROM comments WHERE masterid IN(' + masterarray.toString() + ')';
 
-			console.log('B89');
-
 			mysql.con.query( querygetcomments ,(err,result)=>{
 
 				if( err ){
 
-					console.log('BBB');
-
 					res.send("{\"error\": \"Invalid token.\"}");
 
 				}else{
-
-					console.log('C387');
 
 					result = changedatetype(result);
 

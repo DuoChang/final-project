@@ -194,8 +194,6 @@
       
       function search(status,page){
 
-        console.log('enter search');
-
         let getsearchmasterResult = new XMLHttpRequest;
 
         getsearchmasterResult.onreadystatechange = function(){
@@ -206,27 +204,19 @@
 
               let getmasterback = JSON.parse(getsearchmasterResult.responseText);
 
-              console.log(getmasterback);
-
-              console.log('3');
-
               if(getmasterback.error != null){
 
-                console.log('85');
-
                 alert('Error, 請確認登入資訊 ,將重整頁面');
+               
                 sessionStorage.removeItem("Auth");
+                
                 window.location.replace('signin.html');
 
-              }else{
-
-                console.log('8');               
+              }else{             
 
                 if( getmasterback.message ){          
 
                   showresultmaster.style.display = 'none';
-
-                  console.log('77');
 
                   noresult.style.display = 'flex';
 
@@ -241,9 +231,6 @@
                     let neworderdetaillink = document.createElement('a');
 
                     neworderdetaillink.className = 'orderdetaillink';
-
-                    console.log('3056',status);
-                    console.log('7024',getmasterback.data[i].indexid);
 
                     if( status == 'created'){
 
@@ -348,8 +335,6 @@
                 
                       newpagebutton.onclick = changepage;
 
-                      console.log( (i+1) );
-
                     }else{
 
                       newpagebutton.style.textDecoration = 'none';
@@ -370,10 +355,7 @@
 
         }
 
-        console.log(status);
-
         getsearchmasterResult.open('GET','/checktoken/checkmasterexpire/api/search/order/master?status=' + status + '&page=' + page );
-        // getsearchmasterResult.setRequestHeader("Content-Type","application/json");
         getsearchmasterResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
         getsearchmasterResult.send();
 
@@ -404,15 +386,18 @@
 
           status = 'created';
 
-        }else if( quotedbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
+        }
+        if( quotedbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
 
           status = 'quoted';
 
-        }else if( paidbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
+        }
+        if( paidbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
 
           status = 'paid';
 
-        }else if( paidbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
+        }
+        if( closedbutton.style.backgroundColor ==  'rgb(250, 247, 244)' ){
 
           status = 'closed';
 

@@ -9,8 +9,6 @@ expressrouter.use(cookieParser());
 
 expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,res)=>{
 
-	console.log(req.query);
-
 	if( req.query.status && req.query.orderid ){
 
 		let queryorderbyid = 'SELECT userid,indexid,code,address,status,orderarea,orderskill,workdate,ordertext,originquote,finalquote,tooldetails,tooldetailsfinal FROM orders WHERE indexid=' + req.query.orderid + ' AND status=\"' + req.query.status + '\"';
@@ -32,8 +30,6 @@ expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,r
 					result = changedatetype( result );
 
 					result = changeskill( result );
-
-					console.log(result);
 
 					let userorders = {};
 
@@ -57,8 +53,6 @@ expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,r
 
 	}else if( req.query.status && !req.query.orderid ){
 
-		console.log('7788');
-
 		let queryorderbystatus = 'SELECT indexid,orderarea,orderskill,orderdate,workdate,ordertext FROM orders WHERE userid=' + req.userid + ' AND status=\"' + req.query.status + '\"';
 
 		if ( req.query.status == 'created' || req.query.status == 'quoted' ){
@@ -74,8 +68,6 @@ expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,r
 			queryorderbystatus = queryorderbystatus + ' ORDER BY workdate DESC';
 
 		}
-
-		console.log('34',queryorderbystatus);
 
 		mysql.con.query(queryorderbystatus,(err,result)=>{
 
@@ -95,21 +87,13 @@ expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,r
 
 				let totalorderpage = Math.ceil( result.length / 4 );
 
-				console.log(totalorderpage);
-
 				let searchcustomerorderresult = [];
 
 				if( req.query.page < totalorderpage ){
 
-					console.log('AWA789');
-
 					for( let i = ( (req.query.page -1 ) * 4 ) ; i < ( ( req.query.page * 4 ) ) ; i++ ){
 
-						console.log(i);
-
 						let count = i - ( ( req.query.page -1 ) * 4 ) ;
-
-						console.log(count);
 
 						searchcustomerorderresult[count] = result[i] ;
 
@@ -117,15 +101,11 @@ expressrouter.get('/checktoken/checkuserexpire/api/search/order/customer',(req,r
 
 				}else if( req.query.page == totalorderpage ){
 
-					console.log('C3C4',result.length);
-
 					for( let i =( (req.query.page -1 ) * 4 ) ; i < result.length ; i++ ){
 
 						let count = i - ( ( req.query.page -1 ) * 4 ) ;
 
 						searchcustomerorderresult[count] = result[i] ;
-
-						console.log('C89',count,i);
 
 					}
 
