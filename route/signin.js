@@ -54,7 +54,7 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 	}else if( req.body.provider == "master" ){
 
-		let passwordtoken = createpasswordtoken(req.body.password) ;
+		let passwordtoken = createpasswordtoken( req.body.password ) ;
 
 					/*--確認註冊過--*/
 		

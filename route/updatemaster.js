@@ -19,7 +19,7 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/update/masterpro
 
 		if( req.body.password != '' ){
 
-			let passwordtoken = createpasswordtoken(req.body.password) ;
+			let passwordtoken = createpasswordtoken( req.body.password) ;
 
 			masterbasicdata.password = passwordtoken;
 		

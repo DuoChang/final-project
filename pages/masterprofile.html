@@ -90,7 +90,7 @@
                 <div id="name"></div>
                 <div id="email"></div>
 			        	<input id="phone" type="text" name="phone" placeholder='ex: 0910999999'>
-			        	<input id="password" type="password" name="password">
+			        	<input id="password" type="password" name="password" maxlength="10">
 			        </div>        
 		          			
   				</div>
@@ -270,18 +270,27 @@
 
         let idnum = document.getElementById('idnum').innerHTML;
         let inputphone = document.getElementById('phone').value;
-        let inputpass = document.getElementById('password').value;
+        let inputpass = document.getElementById('password').value;      
 
-        let jsonsend = {};
+        if( inputpass != '' && inputpass.length < 8 ){
 
-        jsonsend.masterid = idnum;
-        jsonsend.phone = inputphone;
-        jsonsend.password = inputpass;
-        jsonsend.update = 'basic';
+          alert('更新密碼長度不足');
 
-        let sendjson = JSON.stringify(jsonsend);
+        }else{
 
-        sendupdate(sendjson);
+          let jsonsend = {};
+
+          jsonsend.masterid = idnum;
+          jsonsend.phone = inputphone;
+          jsonsend.password = inputpass;
+
+          jsonsend.update = 'basic';
+
+          let sendjson = JSON.stringify(jsonsend);
+
+          sendupdate(sendjson);
+
+        }     
 
       }
 

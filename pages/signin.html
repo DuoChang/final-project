@@ -85,96 +85,116 @@
 
       function SignIn(){
 
-        var signinData = new XMLHttpRequest();
-      
-        signinData.onreadystatechange=function(){
-
-          if(signinData.readyState === 4){
-            
-           if (signinData.status === 200){
-
-              let signinback = JSON.parse(signinData.responseText);
-
-              if( signinback.error != null ){
-
-                alert('手機號碼/密碼錯誤 ( phone/password incorrect ) ');
-
-              }else if( signinback.message ){
-
-                alert('帳號未啟用 ( account not active )');
-
-              }else{
-
-                let backtoken = "Bearer " + signinback.data.access_token;         
-
-                sessionStorage.setItem("Auth",backtoken);
-
-                let lastpageurl = document.referrer ;
-
-                if(signinback.data.provider == 'customer'){
-
-                  if( lastpageurl.indexOf('signup') > -1 || lastpageurl.indexOf('g777708.com') == -1 || lastpageurl.indexOf('errordirect') > -1 || lastpageurl == 'https://g777708.com/' ){
-
-                    window.location.replace('searchcustomerorder.html');
-
-                  }else{
-
-                    window.location.replace(lastpageurl);
-
-                  }    
-
-                }else{
-
-                  if( lastpageurl.indexOf('signup') > -1 || lastpageurl.indexOf('g777708.com') == -1 || lastpageurl.indexOf('errordirect') > -1 || lastpageurl.indexOf('mailverify') > -1 || lastpageurl.indexOf('mailsend') > -1 || lastpageurl == 'https://g777708.com/' ){
-
-                    window.location.replace('searchmasterorder.html');
-
-                  }else{
-
-                    window.location.replace(lastpageurl);
-
-                  }                  
-
-                }
-            
-              }
-
-            }
-   
-          }
-
-        };
-
-        signinData.open('POST','/checktype/api/user/signin');
-
-        signinData.setRequestHeader("Content-Type",
-              "application/json");
-
         let rolecustomer = document.getElementById('changetoin');
         let inputphone = document.getElementById('phone').value;
         let inputpass = document.getElementById('password').value;
 
-        let jsonsend = {};
-        jsonsend.phone = inputphone;
-        jsonsend.password = inputpass;
+        if( inputphone == '' || inputpass == '' ){
 
-        if( rolecustomer.style.backgroundColor == 'rgb(239, 230, 221)' ){
-          
-          jsonsend.provider = 'customer';
+          alert('未填寫完成');
 
-        }else if(rolecustomer.style.backgroundColor == ''){
+        }else if( inputpass.length < 8 ){
 
-          jsonsend.provider = 'customer';
+          alert('密碼長度不足');
+
+        }else if( inputphone.length < 10 ){
+
+          alert('電話長度不足');
+
+        }else if( inputphone[0] != 0 || inputphone[1] != 9 || isNaN( +999999999 - inputphone ) ){
+
+          alert('電話格式錯誤');
 
         }else{
 
-          jsonsend.provider = 'master';
+          var signinData = new XMLHttpRequest();
+        
+          signinData.onreadystatechange=function(){
+
+            if(signinData.readyState === 4){
+              
+             if (signinData.status === 200){
+
+                let signinback = JSON.parse(signinData.responseText);
+
+                if( signinback.error != null ){
+
+                  alert('手機號碼/密碼錯誤 ( phone/password incorrect ) ');
+
+                }else if( signinback.message ){
+
+                  alert('帳號未啟用 ( account not active )');
+
+                }else{
+
+                  let backtoken = "Bearer " + signinback.data.access_token;         
+
+                  sessionStorage.setItem("Auth",backtoken);
+
+                  let lastpageurl = document.referrer ;
+
+                  if(signinback.data.provider == 'customer'){
+
+                    if( lastpageurl.indexOf('signup') > -1 || lastpageurl.indexOf('g777708.com') == -1 || lastpageurl.indexOf('errordirect') > -1 || lastpageurl == 'https://g777708.com/' ){
+
+                      window.location.replace('searchcustomerorder.html');
+
+                    }else{
+
+                      window.location.replace(lastpageurl);
+
+                    }    
+
+                  }else{
+
+                    if( lastpageurl.indexOf('signup') > -1 || lastpageurl.indexOf('g777708.com') == -1 || lastpageurl.indexOf('errordirect') > -1 || lastpageurl.indexOf('mailverify') > -1 || lastpageurl.indexOf('mailsend') > -1 || lastpageurl == 'https://g777708.com/' ){
+
+                      window.location.replace('searchmasterorder.html');
+
+                    }else{
+
+                      window.location.replace(lastpageurl);
+
+                    }                  
+
+                  }
+              
+                }
+
+              }
+     
+            }
+
+          };
+
+          signinData.open('POST','/checktype/api/user/signin');
+
+          signinData.setRequestHeader("Content-Type",
+                "application/json");     
+
+          let jsonsend = {};
+          jsonsend.phone = inputphone;
+          jsonsend.password = inputpass;
+
+          if( rolecustomer.style.backgroundColor == 'rgb(239, 230, 221)' ){
+            
+            jsonsend.provider = 'customer';
+
+          }else if(rolecustomer.style.backgroundColor == ''){
+
+            jsonsend.provider = 'customer';
+
+          }else{
+
+            jsonsend.provider = 'master';
+
+          }
+
+          let sendjson = JSON.stringify(jsonsend);
+
+          signinData.send(sendjson);
 
         }
-
-        let sendjson = JSON.stringify(jsonsend);
-
-        signinData.send(sendjson);
 
       }
 

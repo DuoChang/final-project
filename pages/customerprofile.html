@@ -46,7 +46,7 @@
                 		<div id="name"></div>
                 		<div id="phone"></div>
                 		<input id="address" type="text" name="address">
-			        	<input id="password" type="password" name="password">
+			        	<input id="password" type="password" name="password" maxlength="10">
 			        </div>        
 		          			
   				</div>
@@ -79,46 +79,58 @@
 
         	let inputpass = document.getElementById('password').value;
 
-        	let jsonsend = {};
+        	if( inputpass != '' && inputpass.length < 8 ){
 
-	        jsonsend.password = inputpass;
-	        jsonsend.address = address.value;
+	          alert('更新密碼長度不足');
 
-	        let sendjson = JSON.stringify(jsonsend);
+	        }else if( address.value == '' ){
 
-	        let updatecustomerData = new XMLHttpRequest;
+	          alert('地址不可為空');
 
-	        updatecustomerData.onreadystatechange = function(){
+	        }else{
 
-	          if(updatecustomerData.readyState === 4){
-	            
-	           if (updatecustomerData.status === 200){
+	        	let jsonsend = {};
 
-	           	let updateresponse= JSON.parse(updatecustomerData.responseText);
+		        jsonsend.password = inputpass;
+		        jsonsend.address = address.value;
 
-	           	if( updateresponse.data ){
+		        let sendjson = JSON.stringify(jsonsend);
 
-	           		alert('更新成功');
-	           	
-	           	}else{
-	           	
-	           		alert('Error, 請重新嘗試');
-	           	
-	           	}
+		        let updatecustomerData = new XMLHttpRequest;
 
-	           }
+		        updatecustomerData.onreadystatechange = function(){
 
-	          }
+		          if(updatecustomerData.readyState === 4){
+		            
+		           if (updatecustomerData.status === 200){
 
-	        }
+		           	let updateresponse= JSON.parse(updatecustomerData.responseText);
 
-	        updatecustomerData.open('POST','/checktype/checktoken/checkuserexpire/api/update/customerprofile');
+		           	if( updateresponse.data ){
 
-	        updatecustomerData.setRequestHeader("Content-Type","application/json");
+		           		alert('更新成功');
+		           	
+		           	}else{
+		           	
+		           		alert('Error, 請重新嘗試');
+		           	
+		           	}
 
-	        updatecustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+		           }
 
-	        updatecustomerData.send(sendjson); 
+		          }
+
+		        }
+
+		        updatecustomerData.open('POST','/checktype/checktoken/checkuserexpire/api/update/customerprofile');
+
+		        updatecustomerData.setRequestHeader("Content-Type","application/json");
+
+		        updatecustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+
+		        updatecustomerData.send(sendjson); 
+
+	    	}
 
 	    }
 
