@@ -1,22 +1,22 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' });
 const node_xlsx = require('node-xlsx');
 const fs = require('fs');
 const request = require('request');
 
-const cookieParser = require('cookie-parser');
-expressrouter.use(cookieParser());
+const cookie_parser = require('cookie-parser');
+express_router.use(cookie_parser());
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-let cpUpload = upload.fields([{ name: 'quotefile', maxCount: 1 }]); 
+let cp_upload = upload.fields([{ name: 'quotefile', maxCount: 1 }]); 
 
-expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
+express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 
 	if( !req.cookies.Authorization || req.cookies.Authorization == ''){
 
@@ -24,21 +24,21 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 	}else{
 
-		let tokensplit = req.cookies.Authorization.split(' ');
+		let token_split = req.cookies.Authorization.split(' ');
 
-		let timenow = Date.now();
+		let time_now = Date.now();
 
-		let checkauthorization = "SELECT access_expired FROM master WHERE access_token=\"" + tokensplit[1] + "\"";
+		let check_authorization = "SELECT access_expired FROM master WHERE access_token=\"" + token_split[1] + "\"";
 
-		mysql.con.query(checkauthorization, (err,result)=>{
+		mysql.con.query(check_authorization, (err,result)=>{
 
-			if(err || result.length===0 || tokensplit[0] !="Bearer"){
+			if(err || result.length===0 || token_split[0] !="Bearer"){
 
 				return res.redirect('../masterquoteresult.html?status=6');
 			
 			}else{
 
-				if( timenow > result[0].access_expired ){
+				if( time_now > result[0].access_expired ){
 
 					return res.redirect('../masterquoteresult.html?status=6');
 				
@@ -53,9 +53,9 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							let obj = node_xlsx.parse(req.files.quotefile[0].path);
 
-							let excelobj = obj[0].data;
+							let excel_obj = obj[0].data;
 
-							if( excelobj[0][0] != "耗材編號" || excelobj[0][1] != "耗材名稱" || excelobj[0][2] != "耗材價錢(TWD)" || excelobj.length != 3){
+							if( excel_obj[0][0] != "耗材編號" || excel_obj[0][1] != "耗材名稱" || excel_obj[0][2] != "耗材價錢(TWD)" || excel_obj.length != 3){
 
 								fs.unlink( req.files.quotefile[0].path, function () {
 
@@ -65,19 +65,19 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							}
 
-							var getpchomeprice = new Promise(function(resolve,reject){
+							var get_pchome_price = new Promise(function(resolve,reject){
 
-								let sumofmaterialsprice = 0 ;
+								let sum_of_materials_price = 0 ;
 
-								let materailobj = {};
+								let materail_obj = {};
 
-								let materialobjcrawlerprice = {};
+								let material_obj_crawler_price = {};
 
 								var count = 0;
 
-								for( let i = 1 ; i < excelobj.length ; i++ ){						
+								for( let i = 1 ; i < excel_obj.length ; i++ ){						
 
-									if( typeof(excelobj[i][1]) != 'string' ){
+									if( typeof(excel_obj[i][1]) != 'string' ){
 
 										fs.unlink(req.files.quotefile[0].path, function () {
 
@@ -85,7 +85,7 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 										return res.redirect('../masterquoteresult.html?status=3&row=' + (i+1) + '&column=B');
 									
-									}else if( typeof(excelobj[i][2]) != 'number' || excelobj[i][2] < 0 || ( excelobj[i][2] - Math.floor(excelobj[i][2]) ) > 0 ){
+									}else if( typeof(excel_obj[i][2]) != 'number' || excel_obj[i][2] < 0 || ( excel_obj[i][2] - Math.floor(excel_obj[i][2]) ) > 0 ){
 
 										fs.unlink(req.files.quotefile[0].path, function () {
 
@@ -95,37 +95,37 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 									}else{
 
-										materailobj[excelobj[i][1]] = excelobj[i][2];
+										materail_obj[excel_obj[i][1]] = excel_obj[i][2];
 
-										sumofmaterialsprice = sumofmaterialsprice + excelobj[i][2] ;
+										sum_of_materials_price = sum_of_materials_price + excel_obj[i][2] ;
 
-										let materialitemstring = encodeURIComponent(excelobj[i][1]);
+										let material_item_string = encodeURIComponent(excel_obj[i][1]);
 
-										let crawlerstring = 'https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=' + materialitemstring + '&page=1&sort=sale/dc' ;
+										let crawler_string = 'https://ecshweb.pchome.com.tw/search/v3.3/all/results?q=' + material_item_string + '&page=1&sort=sale/dc' ;
 
-										let crawlerresult = request( crawlerstring, function (error, response, body) {
+										let crawler_result = request( crawler_string, function (error, response, body) {
 
 										    if ( !error && response.statusCode == 200) {
 
-										        let crawlerdataback = JSON.parse(body);
+										        let crawler_data_back = JSON.parse(body);
 
 										        count = count + 1 ;
 
-										        materialobjcrawlerprice[excelobj[i][1]] = crawlerdataback.prods[0].price;
+										        material_obj_crawler_price[excel_obj[i][1]] = crawler_data_back.prods[0].price;
 
-										        if( count == (excelobj.length-1) ){
+										        if( count == (excel_obj.length-1) ){
 
-													let allqoutedata = {};
+													let all_qoute_data = {};
 
-													allqoutedata.materialobjcrawlerprice = materialobjcrawlerprice;
+													all_qoute_data.material_obj_crawler_price = material_obj_crawler_price;
 
-													allqoutedata.sumofmaterialsprice = sumofmaterialsprice;
+													all_qoute_data.sum_of_materials_price = sum_of_materials_price;
 
-													allqoutedata.materailobj = materailobj;
+													all_qoute_data.materail_obj = materail_obj;
 
-													resolve(allqoutedata);
+													resolve(all_qoute_data);
 
-													return getpchomeprice;
+													return get_pchome_price;
 
 												}
 
@@ -139,30 +139,28 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							})
 
-							getpchomeprice.then((allqoutedata)=>{
+							get_pchome_price.then((all_qoute_data)=>{
 
-								console.log('hi');
+								let finalquote = + (originquote * 1.1).toFixed(0) + all_qoute_data.sum_of_materials_price ;
 
-								let finalquote = + (originquote * 1.1).toFixed(0) + allqoutedata.sumofmaterialsprice ;
+								let amount_pay_to_master = + originquote + all_qoute_data.sum_of_materials_price;
 
-								let amountpaytomaster = + originquote + allqoutedata.sumofmaterialsprice;
+								material_string = JSON.stringify(all_qoute_data.materail_obj);
 
-								materailstring = JSON.stringify(allqoutedata.materailobj);
+								material_obj_crawler_pricestring = JSON.stringify(all_qoute_data.material_obj_crawler_price);
 
-								materialobjcrawlerpricestring = JSON.stringify(allqoutedata.materialobjcrawlerprice);
-
-								let updateorderitems = {
+								let update_order_items = {
 									status:"quoted",
 									originquote:originquote,
 									finalquote:finalquote,
-									tooldetails:materailstring,
-									tooldetailsfinal:materialobjcrawlerpricestring,
-									paytomaster:amountpaytomaster
+									tooldetails:material_string,
+									tooldetailsfinal:material_obj_crawler_pricestring,
+									paytomaster:amount_pay_to_master
 								}
 
-								let queryupdateorder = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
+								let query_update_order = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
 								
-								mysql.con.query( queryupdateorder , updateorderitems ,(err,result)=>{
+								mysql.con.query( query_update_order , update_order_items ,(err,result)=>{
 
 									if( err ){
 
@@ -189,18 +187,18 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 							let finalquote = (originquote * 1.1).toFixed(0);
 
-							let amountpaytomaster = originquote;
+							let amount_pay_to_master = originquote;
 
-							let updateorderitems = {
+							let update_order_items = {
 								status:"quoted",
 								originquote:originquote,
 								finalquote:finalquote,
-								paytomaster:amountpaytomaster
+								paytomaster:amount_pay_to_master
 							}
 							
-							let updateorderquery = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
+							let update_order_query = 'UPDATE orders SET ? WHERE indexid=' + orderid ;
 
-							mysql.con.query( updateorderquery , updateorderitems ,(err,result)=>{
+							mysql.con.query( update_order_query , update_order_items ,(err,result)=>{
 
 								if( err ){
 
@@ -231,4 +229,4 @@ expressrouter.post('/api/masterquote', cpUpload  ,(req,res)=>{
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

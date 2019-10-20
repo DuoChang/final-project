@@ -118,7 +118,7 @@
           </div>
 
           <div class='buttons'>
-              <div><button class='goto' type="submit" onclick="SignUp()">註冊 ( Sign Up ) 當師傅</button></div>  
+              <div><button class='goto' type="submit" onclick="sign_up()">註冊 ( Sign Up ) 當師傅</button></div>  
           </div>
 
         </div>
@@ -130,48 +130,48 @@
 
       function ToSkill(){
 
-        let inputname = document.getElementById('name').value;
-        let inputemail = document.getElementById('email').value;
-        let inputphone = document.getElementById('phone').value;
-        let inputpass = document.getElementById('password').value;
-        let splitemail = inputemail.split('@');
+        let input_name = document.getElementById('name').value;
+        let input_email = document.getElementById('email').value;
+        let input_phone = document.getElementById('phone').value;
+        let input_pass = document.getElementById('password').value;
+        let split_email = input_email.split('@');
 
-        if( inputname == '' || inputemail == '' || inputphone == '' || inputpass == '' ){
+        if( input_name == '' || input_email == '' || input_phone == '' || input_pass == '' ){
 
           alert('未填寫完成');
 
-        }else if( inputpass.length < 8 ){
+        }else if( input_pass.length < 8 ){
 
           alert('密碼長度不足');
 
-        }else if( inputphone.length < 10 ){
+        }else if( input_phone.length < 10 ){
 
           alert('電話長度不足');
 
-        }else if( inputphone[0] != 0 || inputphone[1] != 9 || isNaN( +999999999 - inputphone ) ){
+        }else if( input_phone[0] != 0 || input_phone[1] != 9 || isNaN( +999999999 - input_phone ) ){
 
           alert('電話格式錯誤');
 
-        }else if( inputemail.indexOf('@') == -1 || splitemail[0] == '' || splitemail[1] == '' ){
+        }else if( input_email.indexOf('@') == -1 || split_email[0] == '' || split_email[1] == '' ){
 
           alert( 'email 格式錯誤' );
 
         }else{
 
-          let jsonsend = {};
-          jsonsend.provider = 'master';
-          jsonsend.email = inputemail;
-          jsonsend.name = inputname;
-          jsonsend.phone = inputphone;
-          jsonsend.password = inputpass;
+          let json_send = {};
+          json_send.provider = 'master';
+          json_send.email = input_email;
+          json_send.name = input_name;
+          json_send.phone = input_phone;
+          json_send.password = input_pass;
 
-          localStorage.setItem('masterbasic',JSON.stringify(jsonsend));
+          localStorage.setItem('masterbasic',JSON.stringify(json_send));
 
-          let basicdata = document.getElementById('basic');
-          let masterskill = document.getElementById('skill');
+          let basic_data = document.getElementById('basic');
+          let master_skill = document.getElementById('skill');
 
-          basicdata.style.display = 'none';
-          masterskill.style.display = 'flex';
+          basic_data.style.display = 'none';
+          master_skill.style.display = 'flex';
 
         }
 
@@ -179,95 +179,95 @@
 
       function ToArea(){
 
-        let inputskill = document.getElementsByClassName('inputskill');
+        let input_skill = document.getElementsByClassName('inputskill');
 
-        let skillarray = [];
+        let skill_array = [];
 
-        for( let i = 0 ; i < inputskill.length ; i++ ){
+        for( let i = 0 ; i < input_skill.length ; i++ ){
 
-          if( inputskill[i].checked ){
+          if( input_skill[i].checked ){
 
-            skillarray.push(inputskill[i].value);
+            skill_array.push(input_skill[i].value);
 
           }
 
         }
 
-        if( skillarray.length == 0 ){
+        if( skill_array.length == 0 ){
 
           alert('未選擇任一項目');
 
         }else{
 
-          localStorage.setItem("masterskill",JSON.stringify(skillarray));
+          localStorage.setItem("master_skill",JSON.stringify(skill_array));
 
-          let masterarea = document.getElementById('area');
-          let masterskill = document.getElementById('skill');
+          let master_area = document.getElementById('area');
+          let master_skill = document.getElementById('skill');
 
-          masterarea.style.display = 'flex';
-          masterskill.style.display = 'none';
+          master_area.style.display = 'flex';
+          master_skill.style.display = 'none';
 
         }
 
       }
 
 
-      function SignUp(){
+      function sign_up(){
 
-        let inputarea = document.getElementsByClassName('inputarea');
+        let input_area = document.getElementsByClassName('inputarea');
 
-        let areaarray = [];
+        let area_array = [];
 
-        for( let j = 0 ; j < inputarea.length ; j++ ){
+        for( let j = 0 ; j < input_area.length ; j++ ){
 
-          if( inputarea[j].checked ){
+          if( input_area[j].checked ){
 
-            areaarray.push(inputarea[j].value);
+            area_array.push(input_area[j].value);
 
           }
 
         }
 
-        if( areaarray.length == 0 ){
+        if( area_array.length == 0 ){
 
           alert('未選擇任一地區');
 
         }else{
 
-          let jsonsend = JSON.parse(localStorage.getItem('masterbasic'));
+          let json_send = JSON.parse(localStorage.getItem('masterbasic'));
 
-          let skillarray = JSON.parse(localStorage.getItem('masterskill'));
+          let skill_array = JSON.parse(localStorage.getItem('master_skill'));
 
-          jsonsend.skill = skillarray;
+          json_send.skill = skill_array;
 
-          jsonsend.area = areaarray;
+          json_send.area = area_array;
 
-          let sendjson = JSON.stringify(jsonsend);
+          let send_json = JSON.stringify(json_send);
 
-          let signupData = new XMLHttpRequest();
+          let sign_up_data = new XMLHttpRequest();
         
-          signupData.onreadystatechange=function(){
+          sign_up_data.onreadystatechange=function(){
 
-            if(signupData.readyState === 4){
+            if(sign_up_data.readyState === 4){
               
-             if (signupData.status === 200){
+             if (sign_up_data.status === 200){
 
                 localStorage.removeItem('masterbasic');
-                localStorage.removeItem('masterskill');
+                localStorage.removeItem('master_skill');
 
-                let signupback = JSON.parse(signupData.responseText);
+                let sign_upback = JSON.parse(sign_up_data.responseText);
 
-                if( signupback.error ){
+                if( sign_upback.error ){
 
                   alert('已註冊過 / 輸入內容錯誤');
 
-                  window.location.replace('signup-master.html');
+                  window.location.replace('sign_up-master.html');
 
-                }else if( signupback.message ){
+                }else if( sign_upback.message ){
 
                   alert('新建 Stripe 帳戶失敗');
 
-                  window.location.replace('signup-master.html');
+                  window.location.replace('sign_up-master.html');
 
                 }else{
 
@@ -281,12 +281,12 @@
 
           };
 
-          signupData.open('POST','/checktype/api/user/signup');
+          sign_up_data.open('POST','/checktype/api/user/signup');
 
-          signupData.setRequestHeader("Content-Type",
+          sign_up_data.setRequestHeader("Content-Type",
                 "application/json");        
          
-          signupData.send(sendjson);
+          sign_up_data.send(send_json);
 
         }
 

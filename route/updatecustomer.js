@@ -1,29 +1,29 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const createpasswordtoken=require("../util/createpasswordtoken.js");
-const expressrouter = express.Router();
+const create_password_token=require("../util/createpasswordtoken.js");
+const express_router = express.Router();
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-expressrouter.post('/checktype/checktoken/checkuserexpire/api/update/customerprofile',(req,res)=>{
+express_router.post('/checktype/checktoken/checkuserexpire/api/update/customerprofile',(req,res)=>{
 
-	let updatecustomerquery = 'UPDATE user SET ? WHERE userid=' + req.userid ;
+	let update_customer_query = 'UPDATE user SET ? WHERE userid=' + req.userid ;
 
-	let updatecustomerdata = {};
+	let update_customer_data = {};
 
-	updatecustomerdata.address = req.body.address;
+	update_customer_data.address = req.body.address;
 
 	if( req.body.password != '' ){
 
-		let passwordtoken = createpasswordtoken(req.body.password) ;
+		let password_token = create_password_token(req.body.password) ;
 
-		updatecustomerdata.password = passwordtoken;
+		update_customer_data.password = password_token;
 	
 	}
 
-	mysql.con.query( updatecustomerquery , updatecustomerdata ,(err,result)=>{
+	mysql.con.query( update_customer_query , update_customer_data ,(err,result)=>{
 
 		if( err ){
 
@@ -39,4 +39,4 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/update/customerpro
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

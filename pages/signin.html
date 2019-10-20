@@ -32,8 +32,8 @@
 
 	  		<div id="login">
 	  			<div id="chooserole">
-		  			<div id="signinform"><button id="changetoin" onclick="Customer()">我在找幫手</button></div>
-		  			<div id="signupform"><button id="changetoup" onclick="Master()">我是師傅</button></div>
+		  			<div id="signinform"><button id="changetoin" onclick="customer()">我在找幫手</button></div>
+		  			<div id="signupform"><button id="changetoup" onclick="master()">我是師傅</button></div>
 	  			</div>
 
   				<div id="inputdata">
@@ -51,7 +51,7 @@
   				</div>
 
 	  			<div id='buttons'>
-				      <div id='signinbutton'><button id='signin' type="submit" onclick="SignIn()">登入 ( Sign In )</button></div>  
+				      <div id='sign_inbutton'><button id='signin' type="submit" onclick="sign_in()">登入 ( Sign In )</button></div>  
 	  			</div>
 	  		</div>
 
@@ -60,100 +60,100 @@
 
     <script>
 
-      let rolecustomer = document.getElementById('changetoin');
-      let rolemaster = document.getElementById('changetoup');
-      let inputphone = document.getElementById('phone');
-      let inputpass = document.getElementById('password');
+      let role_customer = document.getElementById('changetoin');
+      let role_master = document.getElementById('changetoup');
+      let input_phone = document.getElementById('phone');
+      let input_pass = document.getElementById('password');
 
-    	function Customer(){
+      function customer(){
 
-        rolecustomer.style.backgroundColor = '#EFE6DD';
-        rolemaster.style.backgroundColor = '#FFFFFF';
-        inputphone.value = '' ;
-        inputpass.value = '';
+        role_customer.style.backgroundColor = '#EFE6DD';
+        role_master.style.backgroundColor = '#FFFFFF';
+        input_phone.value = '' ;
+        input_pass.value = '';
 
     	}
 
-      function Master(){
+      function master(){
   
-        rolecustomer.style.backgroundColor =  '#FFFFFF';
-        rolemaster.style.backgroundColor = '#EFE6DD';
-        inputphone.value = '' ;
-        inputpass.value = '';
+        role_customer.style.backgroundColor =  '#FFFFFF';
+        role_master.style.backgroundColor = '#EFE6DD';
+        input_phone.value = '' ;
+        input_pass.value = '';
 
       }
 
-      function SignIn(){
+      function sign_in(){
 
-        let rolecustomer = document.getElementById('changetoin');
-        let inputphone = document.getElementById('phone').value;
-        let inputpass = document.getElementById('password').value;
+        let role_customer = document.getElementById('changetoin');
+        let input_phone = document.getElementById('phone').value;
+        let input_pass = document.getElementById('password').value;
 
-        if( inputphone == '' || inputpass == '' ){
+        if( input_phone == '' || input_pass == '' ){
 
           alert('未填寫完成');
 
-        }else if( inputpass.length < 8 ){
+        }else if( input_pass.length < 8 ){
 
           alert('密碼長度不足');
 
-        }else if( inputphone.length < 10 ){
+        }else if( input_phone.length < 10 ){
 
           alert('電話長度不足');
 
-        }else if( inputphone[0] != 0 || inputphone[1] != 9 || isNaN( +999999999 - inputphone ) ){
+        }else if( input_phone[0] != 0 || input_phone[1] != 9 || isNaN( +999999999 - input_phone ) ){
 
           alert('電話格式錯誤');
 
         }else{
 
-          var signinData = new XMLHttpRequest();
+          var sign_in_data = new XMLHttpRequest();
         
-          signinData.onreadystatechange=function(){
+          sign_in_data.onreadystatechange=function(){
 
-            if(signinData.readyState === 4){
+            if(sign_in_data.readyState === 4){
               
-             if (signinData.status === 200){
+             if (sign_in_data.status === 200){
 
-                let signinback = JSON.parse(signinData.responseText);
+                let sign_in_back = JSON.parse(sign_in_data.responseText);
 
-                if( signinback.error != null ){
+                if( sign_in_back.error != null ){
 
                   alert('手機號碼/密碼錯誤 ( phone/password incorrect ) ');
 
-                }else if( signinback.message ){
+                }else if( sign_in_back.message ){
 
                   alert('帳號未啟用 ( account not active )');
 
                 }else{
 
-                  let backtoken = "Bearer " + signinback.data.access_token;         
+                  let back_token = "Bearer " + sign_in_back.data.access_token;         
 
-                  sessionStorage.setItem("Auth",backtoken);
+                  sessionStorage.setItem("Auth",back_token);
 
-                  let lastpageurl = document.referrer ;
+                  let last_page_url = document.referrer ;
 
-                  if(signinback.data.provider == 'customer'){
+                  if(sign_in_back.data.provider == 'customer'){
 
-                    if( lastpageurl.indexOf('signup') > -1 || lastpageurl.indexOf('g777708.com') == -1 || lastpageurl.indexOf('errordirect') > -1 || lastpageurl == 'https://g777708.com/' ){
+                    if( last_page_url.indexOf('signup') > -1 || last_page_url.indexOf('g777708.com') == -1 || last_page_url.indexOf('errordirect') > -1 || last_page_url == 'https://g777708.com/' ){
 
                       window.location.replace('searchcustomerorder.html');
 
                     }else{
 
-                      window.location.replace(lastpageurl);
+                      window.location.replace(last_page_url);
 
                     }    
 
                   }else{
 
-                    if( lastpageurl.indexOf('signup') > -1 || lastpageurl.indexOf('g777708.com') == -1 || lastpageurl.indexOf('errordirect') > -1 || lastpageurl.indexOf('mailverify') > -1 || lastpageurl.indexOf('mailsend') > -1 || lastpageurl == 'https://g777708.com/' ){
+                    if( last_page_url.indexOf('signup') > -1 || last_page_url.indexOf('g777708.com') == -1 || last_page_url.indexOf('errordirect') > -1 || last_page_url.indexOf('mailverify') > -1 || last_page_url.indexOf('mailsend') > -1 || last_page_url == 'https://g777708.com/' ){
 
                       window.location.replace('searchmasterorder.html');
 
                     }else{
 
-                      window.location.replace(lastpageurl);
+                      window.location.replace(last_page_url);
 
                     }                  
 
@@ -167,32 +167,32 @@
 
           };
 
-          signinData.open('POST','/checktype/api/user/signin');
+          sign_in_data.open('POST','/checktype/api/user/signin');
 
-          signinData.setRequestHeader("Content-Type",
+          sign_in_data.setRequestHeader("Content-Type",
                 "application/json");     
 
-          let jsonsend = {};
-          jsonsend.phone = inputphone;
-          jsonsend.password = inputpass;
+          let json_send = {};
+          json_send.phone = input_phone;
+          json_send.password = input_pass;
 
-          if( rolecustomer.style.backgroundColor == 'rgb(239, 230, 221)' ){
+          if( role_customer.style.backgroundColor == 'rgb(239, 230, 221)' ){
             
-            jsonsend.provider = 'customer';
+            json_send.provider = 'customer';
 
-          }else if(rolecustomer.style.backgroundColor == ''){
+          }else if(role_customer.style.backgroundColor == ''){
 
-            jsonsend.provider = 'customer';
+            json_send.provider = 'customer';
 
           }else{
 
-            jsonsend.provider = 'master';
+            json_send.provider = 'master';
 
           }
 
-          let sendjson = JSON.stringify(jsonsend);
+          let send_json = JSON.stringify(json_send);
 
-          signinData.send(sendjson);
+          sign_in_data.send(send_json);
 
         }
 

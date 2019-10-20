@@ -194,17 +194,17 @@
       
       function search(status,page){
 
-        let getsearchmasterResult = new XMLHttpRequest;
+        let get_search_master_result = new XMLHttpRequest;
 
-        getsearchmasterResult.onreadystatechange = function(){
+        get_search_master_result.onreadystatechange = function(){
 
-          if(getsearchmasterResult.readyState === 4){
+          if(get_search_master_result.readyState === 4){
             
-            if (getsearchmasterResult.status === 200){
+            if (get_search_master_result.status === 200){
 
-              let getmasterback = JSON.parse(getsearchmasterResult.responseText);
+              let get_master_back = JSON.parse(get_search_master_result.responseText);
 
-              if(getmasterback.error != null){
+              if(get_master_back.error != null){
 
                 alert('Error, 請確認登入資訊 ,將重整頁面');
                
@@ -214,7 +214,7 @@
 
               }else{             
 
-                if( getmasterback.message ){          
+                if( get_master_back.message ){          
 
                   showresultmaster.style.display = 'none';
 
@@ -226,7 +226,7 @@
 
                   noresult.style.display = 'none';
 
-                  for( let i = 0 ; i < getmasterback.data.length ; i++){
+                  for( let i = 0 ; i < get_master_back.data.length ; i++){
 
                     let neworderdetaillink = document.createElement('a');
 
@@ -234,19 +234,19 @@
 
                     if( status == 'created'){
 
-                      neworderdetaillink.href = 'masterquote.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      neworderdetaillink.href = 'masterquote.html?status=' + status + '&orderid=' + get_master_back.data[i].indexid;
 
                     }else if( status == 'quoted' ){
 
-                      neworderdetaillink.href = 'masterquotecheck.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      neworderdetaillink.href = 'masterquotecheck.html?status=' + status + '&orderid=' + get_master_back.data[i].indexid;
 
                     }else if( status == 'paid' ){
 
-                      neworderdetaillink.href = 'masterinputcode.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      neworderdetaillink.href = 'masterinputcode.html?status=' + status + '&orderid=' + get_master_back.data[i].indexid;
 
                     }else if( status == 'closed' ){
 
-                      neworderdetaillink.href = 'masterorderclose.html?status=' + status + '&orderid=' + getmasterback.data[i].indexid;
+                      neworderdetaillink.href = 'masterorderclose.html?status=' + status + '&orderid=' + get_master_back.data[i].indexid;
                       
                     }
                   
@@ -272,7 +272,7 @@
 
                     let newinputdiv = document.createElement('div');
 
-                    newinputdiv.innerHTML = '訂單 ID　：' + getmasterback.data[i].indexid;
+                    newinputdiv.innerHTML = '訂單 ID　：' + get_master_back.data[i].indexid;
 
                     inputdata[i].appendChild(newinputdiv);
 
@@ -280,11 +280,11 @@
 
                     if( status == 'created' || status == 'quoted'){
 
-                      newdatediv.innerHTML = '訂單日期：'　+ getmasterback.data[i].orderdate;
+                      newdatediv.innerHTML = '訂單日期：'　+ get_master_back.data[i].orderdate;
                     
                     }else if( status == 'paid' || status == 'closed' ){
                     
-                      newdatediv.innerHTML = '裝修日期：'　+ getmasterback.data[i].workdate;
+                      newdatediv.innerHTML = '裝修日期：'　+ get_master_back.data[i].workdate;
                     
                     }                    
 
@@ -292,7 +292,7 @@
 
                     let newareadiv = document.createElement('div');
 
-                    newareadiv.innerHTML = '地區：'　+ getmasterback.data[i].orderarea;
+                    newareadiv.innerHTML = '地區：'　+ get_master_back.data[i].orderarea;
 
                     inputdata[i].appendChild(newareadiv);
 
@@ -309,7 +309,7 @@
 
                     let newbuttondiv = document.createElement('div');
 
-                    newbuttondiv.innerHTML = '裝修項目：' + getmasterback.data[i].orderskill.toString();
+                    newbuttondiv.innerHTML = '裝修項目：' + get_master_back.data[i].orderskill.toString();
 
                     buttons[i].appendChild(newbuttondiv);
 
@@ -323,7 +323,7 @@
 
                   let pagearea = document.getElementById('pagearea');
 
-                  for( let i = 0 ; i < getmasterback.page ; i++ ){
+                  for( let i = 0 ; i < get_master_back.page ; i++ ){
 
                     let newpagebutton = document.createElement('button');
 
@@ -355,9 +355,9 @@
 
         }
 
-        getsearchmasterResult.open('GET','/checktoken/checkmasterexpire/api/search/order/master?status=' + status + '&page=' + page );
-        getsearchmasterResult.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
-        getsearchmasterResult.send();
+        get_search_master_result.open('GET','/checktoken/checkmasterexpire/api/search/order/master?status=' + status + '&page=' + page );
+        get_search_master_result.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        get_search_master_result.send();
 
       }
 

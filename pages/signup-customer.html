@@ -51,7 +51,7 @@
   				</div>
 
 	  			<div class='buttons'>
-				      <div><button class='goto' type="submit" onclick="SignUp()">註冊 ( Sign Up ) 找師傅</button></div>  
+				      <div><button class='goto' type="submit" onclick="sign_up()">註冊 ( Sign Up ) 找師傅</button></div>  
 	  			</div>
 	  		</div>
 
@@ -60,50 +60,50 @@
 
     <script>
 
-      function SignUp(){
+      function sign_up(){
 
-        let inputname = document.getElementById('name').value;
-        let inputaddress = document.getElementById('address').value;
-        let inputphone = document.getElementById('phone').value;
-        let inputpass = document.getElementById('password').value;
+        let input_name = document.getElementById('name').value;
+        let input_address = document.getElementById('address').value;
+        let input_phone = document.getElementById('phone').value;
+        let input_pass = document.getElementById('password').value;
 
-        if( inputname == '' || inputaddress == '' || inputphone == '' || inputpass == '' ){
+        if( input_name == '' || input_address == '' || input_phone == '' || input_pass == '' ){
 
           alert('未填寫完成');
 
-        }else if( inputpass.length < 8 ){
+        }else if( input_pass.length < 8 ){
 
           alert('密碼長度不足');
 
-        }else if( inputphone.length < 10 ){
+        }else if( input_phone.length < 10 ){
 
           alert('電話長度不足');
 
-        }else if( inputphone[0] != 0 || inputphone[1] != 9 || isNaN( +999999999 - inputphone ) ){
+        }else if( input_phone[0] != 0 || input_phone[1] != 9 || isNaN( +999999999 - input_phone ) ){
 
           alert('電話格式錯誤');
 
         }else{
 
-          var signupdata = new XMLHttpRequest();
+          var sign_up_data = new XMLHttpRequest();
         
-          signupdata.onreadystatechange=function(){
+          sign_up_data.onreadystatechange=function(){
 
-            if(signupdata.readyState === 4){
+            if(sign_up_data.readyState === 4){
               
-             if (signupdata.status === 200){
+             if (sign_up_data.status === 200){
 
-                let signinback = JSON.parse(signupdata.responseText);
+                let sign_in_back = JSON.parse(sign_up_data.responseText);
 
-                if( signinback.error != null ){
+                if( sign_in_back.error != null ){
 
                   alert('已註冊過 / 輸入內容錯誤');
 
                 }else{
 
-                  let backtoken = "Bearer " + signinback.data.access_token;         
+                  let back_token = "Bearer " + sign_in_back.data.access_token;         
 
-                  sessionStorage.setItem("Auth",backtoken);
+                  sessionStorage.setItem("Auth",back_token);
 
                   window.location.replace('searchmaster.html');
 
@@ -115,23 +115,23 @@
 
           };
 
-          signupdata.open('POST','/checktype/api/user/signup');
+          sign_up_data.open('POST','/checktype/api/user/signup');
 
-          signupdata.setRequestHeader("Content-Type",
+          sign_up_data.setRequestHeader("Content-Type",
                 "application/json");
 
           
 
-          let jsonsend = {};
-          jsonsend.provider = 'customer';
-          jsonsend.name = inputname;
-          jsonsend.address = inputaddress;
-          jsonsend.phone = inputphone;
-          jsonsend.password = inputpass;
+          let json_send = {};
+          json_send.provider = 'customer';
+          json_send.name = input_name;
+          json_send.address = input_address;
+          json_send.phone = input_phone;
+          json_send.password = input_pass;
 
-          let sendjson = JSON.stringify(jsonsend);
+          let send_json = JSON.stringify(json_send);
 
-          signupdata.send(sendjson);
+          sign_up_data.send(send_json);
 
         }
 

@@ -1,14 +1,14 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-expressrouter.get('/checktoken/checkuserexpire/api/quote/reject' ,(req,res)=>{
+express_router.get('/checktoken/checkuserexpire/api/quote/reject' ,(req,res)=>{
 
 	if( req.query.orderid ){
 
-		let rejectorderquery = 'UPDATE orders SET status=\"rejected\" WHERE indexid=' + req.query.orderid ;
+		let reject_order_query = 'UPDATE orders SET status=\"rejected\" WHERE indexid=' + req.query.orderid ;
 
-		mysql.con.query( rejectorderquery , (err,result)=>{
+		mysql.con.query( reject_order_query , (err,result)=>{
 
 			if( err ){
 
@@ -29,4 +29,4 @@ expressrouter.get('/checktoken/checkuserexpire/api/quote/reject' ,(req,res)=>{
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

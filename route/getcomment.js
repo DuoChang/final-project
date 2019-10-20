@@ -1,16 +1,16 @@
 const mysql=require("../util/mysqlcon.js");
-const changedatetype=require("../util/changedatetype.js");
+const change_date_type=require("../util/changedatetype.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-expressrouter.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
+express_router.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
 
 	if( req.query.masterid ){
 
-		let querymastercomments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
+		let query_master_comments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;
 	
-		mysql.con.query( querymastercomments ,(err,result)=>{
+		mysql.con.query( query_master_comments ,(err,result)=>{
 
 			if( err ){
 
@@ -18,12 +18,12 @@ expressrouter.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
 			}else{
 
-				result = changedatetype( result );
+				result = change_date_type( result );
 
-				let mastercomments = {};
-				mastercomments.data = result;
+				let master_comments = {};
+				master_comments.data = result;
 
-				res.send(mastercomments);
+				res.send(master_comments);
 
 
 			}									
@@ -32,9 +32,9 @@ expressrouter.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
 	}else if( req.query.orderid ){
 
-		let queryordercomment = "SELECT * FROM comments WHERE orderid=" + req.query.orderid ;
+		let query_order_comment = "SELECT * FROM comments WHERE orderid=" + req.query.orderid ;
 
-		mysql.con.query( queryordercomment ,(err,result)=>{
+		mysql.con.query( query_order_comment ,(err,result)=>{
 
 			if( err ){
 
@@ -60,4 +60,4 @@ expressrouter.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

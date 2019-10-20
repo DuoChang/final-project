@@ -1,12 +1,12 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-expressrouter.get('/api/user/mailverify',(req,res)=>{
+express_router.get('/api/user/mailverify',(req,res)=>{
 
-	let queryactivateemail = "UPDATE mailstatus SET status = \"active\" WHERE activecode =\"" + req.query.startfind + "\"";
+	let query_activate_email = "UPDATE mailstatus SET status = \"active\" WHERE activecode =\"" + req.query.startfind + "\"";
 
-	mysql.con.query( queryactivateemail ,(err,result)=>{
+	mysql.con.query( query_activate_email ,(err,result)=>{
 
 		if( err ){
 
@@ -22,4 +22,4 @@ expressrouter.get('/api/user/mailverify',(req,res)=>{
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

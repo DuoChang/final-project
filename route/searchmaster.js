@@ -1,19 +1,19 @@
 const mysql=require("../util/mysqlcon.js");
-const changedatetype=require("../util/changedatetype.js");
+const change_date_type=require("../util/changedatetype.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(req,res)=>{
+express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(req,res)=>{
 
-	var selectbyarea = new Promise(function(resolve,reject){
+	var select_by_area = new Promise(function(resolve,reject){
 
-		let querygetmasterbyarea = 'SELECT masterid FROM masterarea WHERE area=\"' + req.body.area + '\"';
+		let query_get_master_by_area = 'SELECT masterid FROM masterarea WHERE area=\"' + req.body.area + '\"';
 		
-		mysql.con.query( querygetmasterbyarea ,(err,result)=>{
+		mysql.con.query( query_get_master_by_area ,(err,result)=>{
 
 			if( err ){
 
@@ -31,25 +31,25 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 		
 		});
 
-		return selectbyarea;
+		return select_by_area;
 
 	})
 
-	var selectbymailstatus = new Promise(function(resolve,reject){
+	var select_by_mail_status = new Promise(function(resolve,reject){
 
-		selectbyarea.then((masterid)=>{
+		select_by_area.then((masterid)=>{
 
-			let masterarray = [] ;
+			let master_array = [] ;
 
 			for( let i = 0 ; i < masterid.length ; i++ ){
 
-				masterarray[i] = masterid[i].masterid ;
+				master_array[i] = masterid[i].masterid ;
 
 			}
 
-			let querygetemailstatus = 'SELECT masterid,email FROM master WHERE masterid IN (' + masterarray.toString() + ')'
+			let query_get_email_status = 'SELECT masterid,email FROM master WHERE masterid IN (' + master_array.toString() + ')'
 
-			mysql.con.query( querygetemailstatus ,(err,result)=>{
+			mysql.con.query( query_get_email_status ,(err,result)=>{
 
 				if( err ){
 
@@ -57,23 +57,23 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 				}else{
 
-					let emailarray = [];
+					let email_array = [];
 
-					let emailarrayforcheck = [] ;
+					let email_arrayforcheck = [] ;
 
-					let masteridarray = [];
+					let masterid_array = [];
 
 					for( let i = 0 ; i < result.length ; i++ ){
 
-						emailarray[i] = '\"' + result[i].email + '\"' ;
-						emailarrayforcheck[i] = result[i].email;
-						masteridarray[i] = result[i].masterid;
+						email_array[i] = '\"' + result[i].email + '\"' ;
+						email_arrayforcheck[i] = result[i].email;
+						masterid_array[i] = result[i].masterid;
 
 					}
 
-					let querycheckemailstatus = 'SELECT email FROM mailstatus WHERE email IN (' + emailarray.toString() + ') AND status=\"active\"' ;
+					let query_check_email_status = 'SELECT email FROM mailstatus WHERE email IN (' + email_array.toString() + ') AND status=\"active\"' ;
 
-					mysql.con.query( querycheckemailstatus ,(err,result)=>{
+					mysql.con.query( query_check_email_status ,(err,result)=>{
 
 						if( err ){
 
@@ -81,17 +81,17 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 						}else{
 
-							let masteridbystatus = [];
+							let masterid_by_status = [];
 
 							var count = 0 ;
 
-							for( let i = 0 ; i < emailarrayforcheck.length ; i++ ){
+							for( let i = 0 ; i < email_arrayforcheck.length ; i++ ){
 
 								for( let j = 0 ; j < result.length ; j++ ){
 
-									if( emailarrayforcheck[i] == result[j].email ){
+									if( email_arrayforcheck[i] == result[j].email ){
 
-										masteridbystatus.push( masteridarray[i] );
+										masterid_by_status.push( masterid_array[i] );
 
 									}
 
@@ -99,15 +99,15 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 								count += 1;
 
-								if( count == (emailarrayforcheck.length) ){
+								if( count == (email_arrayforcheck.length) ){
 
-									if( masteridbystatus.length == 0 ){
+									if( masterid_by_status.length == 0 ){
 
 										res.send("{\"message\": \"No result\"}");
 
 									}else{
 
-										resolve(masteridbystatus);
+										resolve(masterid_by_status);
 
 									}
 
@@ -123,23 +123,23 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 			})
 
-			return selectbyarea; 
+			return select_by_area; 
 
 		})
 
-		return selectbymailstatus;
+		return select_by_mail_status;
 
 	})
 
 
 
-	var selectbydate = new Promise(function(resolve,reject){
+	var select_by_date = new Promise(function(resolve,reject){
 
-		selectbymailstatus.then((masterid)=>{
+		select_by_mail_status.then((masterid)=>{
 
-			let querymasterdate = 'SELECT masterid FROM masterdate WHERE workdate=\"' + req.body.workdate + '\" AND masterid IN (' + masterid.toString() + ')';
+			let query_master_date = 'SELECT masterid FROM masterdate WHERE workdate=\"' + req.body.workdate + '\" AND masterid IN (' + masterid.toString() + ')';
 
-			mysql.con.query( querymasterdate ,(err,result)=>{
+			mysql.con.query( query_master_date ,(err,result)=>{
 
 				if( err ){
 
@@ -147,67 +147,67 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 				}else{
 
-					let resultarray = [];
+					let result_array = [];
 
 					for( let j = 0 ; j < result.length ; j++ ){
 
-						resultarray[j] = result[j].masterid ;
+						result_array[j] = result[j].masterid ;
 
 					}
 
-					let masteridarraybydate = [] ;
+					let masterid_array_by_date = [] ;
 
 					for( let i = 0 ; i < masterid.length ; i++ ){
 
-						if( resultarray.indexOf(masterid[i]) == -1 ){
+						if( result_array.indexOf(masterid[i]) == -1 ){
 
-							masteridarraybydate.push(masterid[i]);						
+							masterid_array_by_date.push(masterid[i]);						
 
 						}
 
 					}
 
-					resolve(masteridarraybydate);
+					resolve(masterid_array_by_date);
 
 				}
 
 			})
 
-			return selectbymailstatus;
+			return select_by_mail_status;
 
 		})
 
-		return selectbydate;
+		return select_by_date;
 
 	})
 
-	var selectbyskill = new Promise(function(resolve,reject){
+	var select_by_skill = new Promise(function(resolve,reject){
 
-		selectbydate.then((masteridarraybydate)=>{
+		select_by_date.then((masterid_array_by_date)=>{
 
 			
-			if( masteridarraybydate.length == 0 ){
+			if( masterid_array_by_date.length == 0 ){
 
 				res.send("{\"message\": \"No result\"}");
 
 			}else{
 
-				let skillsize = req.body.skill.length;
+				let skill_size = req.body.skill.length;
 				
-				let skillarray = [];
+				let skill_array = [];
 
-				let checkskillarray = [];
+				let check_skill_array = [];
 
-				for( let i = 0 ; i < skillsize ; i += 1){
+				for( let i = 0 ; i < skill_size ; i += 1){
 
-					skillarray[i] = req.body.skill[i] ;
-					checkskillarray[i] = 1;
+					skill_array[i] = req.body.skill[i] ;
+					check_skill_array[i] = 1;
 
 				}
 
-				let querymasterbyskill = 'SELECT masterid FROM masterskill WHERE (' + skillarray.toString() + ') IN ((' + checkskillarray.toString() + '))';
+				let query_master_by_skill = 'SELECT masterid FROM masterskill WHERE (' + skill_array.toString() + ') IN ((' + check_skill_array.toString() + '))';
 
-				mysql.con.query( querymasterbyskill ,(err,result)=>{
+				mysql.con.query( query_master_by_skill ,(err,result)=>{
 
 					if( err ){
 
@@ -219,23 +219,23 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 					
 					}else{
 
-						let masterarray = [] ;
+						let master_array = [] ;
 
-						for( let i = 0 ; i < masteridarraybydate.length ; i++ ){
+						for( let i = 0 ; i < masterid_array_by_date.length ; i++ ){
 
 							for( let j = 0 ; j < result.length ; j++ ){
 
-								if( masteridarraybydate[i] == result[j].masterid ){
+								if( masterid_array_by_date[i] == result[j].masterid ){
 
-									masterarray.push(masteridarraybydate[i]);
+									master_array.push(masterid_array_by_date[i]);
 
 								}
 
 							}
 
-							if( i == (masteridarraybydate.length-1)){
+							if( i == ( masterid_array_by_date.length - 1 ) ){
 
-								resolve(masterarray);
+								resolve(master_array);
 
 							}
 
@@ -249,27 +249,27 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 			}
 
-			return selectbyarea;
+			return select_by_area;
 
 		})
 
-		return selectbyskill;
+		return select_by_skill;
 
 	})
 
-	selectbyskill.then((masterarray)=>{
+	select_by_skill.then((master_array)=>{
 
-		var masteraveragerate = new Promise(function(resolve,reject){
+		var master_average_rate = new Promise(function(resolve,reject){
 
-			if( masterarray.length == 0 ){
+			if( master_array.length == 0 ){
 
 				res.send("{\"message\": \"No result\"}");
 
 			}else{
 
-				let querygetmasterrate = 'SELECT masterid,COUNT(*) AS count,SUM(heartrate)/COUNT(*) AS ave FROM comments WHERE masterid IN(' + masterarray.toString() + ') GROUP BY masterid ORDER BY ave DESC';
+				let query_get_master_rate = 'SELECT masterid,COUNT(*) AS count,SUM(heartrate)/COUNT(*) AS ave FROM comments WHERE masterid IN(' + master_array.toString() + ') GROUP BY masterid ORDER BY ave DESC';
 
-				mysql.con.query( querygetmasterrate ,(err,result)=>{
+				mysql.con.query( query_get_master_rate ,(err,result)=>{
 
 					if( err ){
 
@@ -277,24 +277,24 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 					}else if( result.length == 0 ){
 
-						let masterrate = [];
+						let master_rate = [];
 
-						for( let l = 0 ; l < masterarray.length ; l++ ){								
+						for( let l = 0 ; l < master_array.length ; l++ ){								
 
-							let nocommentobj = {};
-							nocommentobj.masterid = masterarray[l];
-							nocommentobj.rate = 'no';
-							nocommentobj.count = 0 ;
-							nocommentobj.comments = 'no';
-							masterrate.push(nocommentobj);
+							let no_comment_obj = {};
+							no_comment_obj.masterid = master_array[l];
+							no_comment_obj.rate = 'no';
+							no_comment_obj.count = 0 ;
+							no_comment_obj.comments = 'no';
+							master_rate.push(no_comment_obj);
 
 						}
 						
-						let searchmasterresult = {};
+						let search_master_result = {};
 
-						searchmasterresult.result = masterrate;	
+						search_master_result.result = master_rate;	
 
-						return res.send(searchmasterresult);
+						return res.send(search_master_result);
 
 					}else{
 
@@ -306,15 +306,15 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 			}				
 
-			return masteraveragerate;
+			return master_average_rate;
 
 		})
 
-		masteraveragerate.then((countrate)=>{
+		master_average_rate.then((count_rate)=>{
 
-			let querygetcomments = 'SELECT * FROM comments WHERE masterid IN(' + masterarray.toString() + ')';
+			let query_get_comments = 'SELECT * FROM comments WHERE masterid IN(' + master_array.toString() + ')';
 
-			mysql.con.query( querygetcomments ,(err,result)=>{
+			mysql.con.query( query_get_comments ,(err,result)=>{
 
 				if( err ){
 
@@ -322,70 +322,70 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 
 				}else{
 
-					result = changedatetype(result);
+					result = change_date_type(result);
 
-					let masterrate = [];
+					let master_rate = [];
 
-					for( let i = 0 ; i < countrate.length ; i++ ){
+					for( let i = 0 ; i < count_rate.length ; i++ ){
 
-						let mastercomments= [];
+						let master_comments= [];
 
 						for( let j = 0 ; j < result.length ; j++ ){
 
-							if( countrate[i].masterid == result[j].masterid ){
+							if( count_rate[i].masterid == result[j].masterid ){
 
-								mastercomments.push(result[j]);
+								master_comments.push(result[j]);
 
 							}
 
 						}
 
-						let masterdata = {};
+						let master_data = {};
 
-						masterdata.masterid = countrate[i].masterid;
+						master_data.masterid = count_rate[i].masterid;
 						
-						let averagerate = countrate[i].ave ;
+						let average_rate = count_rate[i].ave ;
 
-						averagerate = averagerate.toFixed(1);
+						average_rate = average_rate.toFixed(1);
 
-						masterdata.rate = averagerate;
+						master_data.rate = average_rate;
 
-						masterdata.count = countrate[i].count;
+						master_data.count = count_rate[i].count;
 
-						masterdata.comments = mastercomments;
+						master_data.comments = master_comments;
 
-						masterrate.push(masterdata);
-
-					}
-
-					let checkcommentidarray = [];
-
-					for( let a = 0 ; a < countrate.length ; a++ ){
-
-						checkcommentidarray[a] = countrate[a].masterid;
+						master_rate.push(master_data);
 
 					}
 
-					for( let l = 0 ; l < masterarray.length ; l++ ){
+					let check_commentid_array = [];
 
-						if(checkcommentidarray.indexOf(masterarray[l]) == -1){
+					for( let a = 0 ; a < count_rate.length ; a++ ){
 
-							let nocommentobj = {};
-							nocommentobj.masterid = masterarray[l];
-							nocommentobj.rate = 'no';
-							nocommentobj.count = 0 ;
-							nocommentobj.comments = 'no';
-							masterrate.push(nocommentobj);
+						check_commentid_array[a] = count_rate[a].masterid;
+
+					}
+
+					for( let l = 0 ; l < master_array.length ; l++ ){
+
+						if(check_commentid_array.indexOf(master_array[l]) == -1){
+
+							let no_comment_obj = {};
+							no_comment_obj.masterid = master_array[l];
+							no_comment_obj.rate = 'no';
+							no_comment_obj.count = 0 ;
+							no_comment_obj.comments = 'no';
+							master_rate.push(no_comment_obj);
 
 						}
 
 					}			
 
-					let searchmasterresult = {};
+					let search_master_result = {};
 
-					searchmasterresult.result = masterrate;
+					search_master_result.result = master_rate;
 
-					res.send(searchmasterresult);
+					res.send(search_master_result);
 
 				}
 
@@ -398,4 +398,4 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/search/master',(re
 })
 
 
-module.exports = expressrouter;
+module.exports = express_router;

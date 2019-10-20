@@ -1,11 +1,11 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 const moment = require('moment');
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -26,13 +26,13 @@ function paddingLeft(str,lenght){
 	
 }
 
-function randomusefloor(min,max) {
+function random_use_floor(min,max) {
 	let num = Math.floor(Math.random()*(max-min+1)+min);
 	let result = paddingLeft(num,6);
 	return result;
 }
 
-function makerandomletter(max) {
+function make_random_letter(max) {
   let text = "";
   let possible = "abcdefghijklmnopqrstuvwxyz";
   for (let i = 0; i < max; i++)
@@ -40,35 +40,36 @@ function makerandomletter(max) {
   return text;
 }
 
-function insertorder( res, receivebodyfromfront , orderdate , userid , skillarray ){
+function insert_order( res, receive_body_from_front , order_date , userid , skill_array ){
 
-	let num = makerandomletter(2) + randomusefloor(1,999999);
+	let num = make_random_letter(2) + random_use_floor(1,999999);
 
-	let queryordercode = 'SELECT code FROM orders WHERE code=\"' + num + '\" AND status <> \"closed\"';
-	let code = mysql.con.query( queryordercode, (err,result)=>{
+	let query_order_code = 'SELECT code FROM orders WHERE code=\"' + num + '\" AND status <> \"closed\"';
+	let code = mysql.con.query( query_order_code, (err,result)=>{
+
 		if( err || result !=0 ){
 
-			insertorder( res , receivebodyfromfront , orderdate , userid, skillarray );
+			insert_order( res , receive_body_from_front , order_date , userid, skill_array );
 		
 		}else{			
 
-			let orderdetails = {
+			let order_details = {
 
 				status:'created',
 				code: num,
 				userid:userid,
-				masterid:receivebodyfromfront.masterid,
-				orderdate:orderdate,
-				orderskill:receivebodyfromfront.skill.toString(),
-				orderarea:receivebodyfromfront.area,
-				ordertext: receivebodyfromfront.text,
-				workdate:receivebodyfromfront.workdate
+				masterid:receive_body_from_front.masterid,
+				orderdate:order_date,
+				orderskill:receive_body_from_front.skill.toString(),
+				orderarea:receive_body_from_front.area,
+				ordertext: receive_body_from_front.text,
+				workdate:receive_body_from_front.workdate
 
 			};
 
-			let queryinsertneworder = 'INSERT INTO orders SET ?' ;
+			let query_insert_new_order = 'INSERT INTO orders SET ?' ;
 
-			mysql.con.query( queryinsertneworder , orderdetails ,(err,result)=>{
+			mysql.con.query( query_insert_new_order , order_details ,(err,result)=>{
 
 				if( err ){
 
@@ -78,9 +79,9 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 
 					let orderid = result.insertId;
 
-					let querymasteremail= 'SELECT email FROM master WHERE masterid=' + receivebodyfromfront.masterid ;
+					let query_master_email= 'SELECT email FROM master WHERE masterid=' + receive_body_from_front.masterid ;
 
-					mysql.con.query(querymasteremail,(err,result)=>{
+					mysql.con.query(query_master_email,(err,result)=>{
 
 						if( err ){
 
@@ -96,7 +97,7 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 							  
 							  subject: 'Find 師傅-新需求通知 訂單編號:' + orderid,
 							  
-							  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>新需求明細如下，請查閱報價<br><br>地區：' + receivebodyfromfront.area + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + receivebodyfromfront.workdate + '<br>詳細敘述：' + receivebodyfromfront.text + '<br>請點選以下連結進行報價<br><a href="https://g777708.com/masterquote.html?status=created&orderid=' + orderid + '">前往報價</a></p></div>'
+							  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>新需求明細如下，請查閱報價<br><br>地區：' + receive_body_from_front.area + '<br>裝修項目：'+ skill_array.toString() +'<br>裝修日期：' + receive_body_from_front.workdate + '<br>詳細敘述：' + receive_body_from_front.text + '<br>請點選以下連結進行報價<br><a href="https://g777708.com/masterquote.html?status=created&orderid=' + orderid + '">前往報價</a></p></div>'
 
 
 							}, function(err){
@@ -109,11 +110,11 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 
 							})
 
-							let senddata = {};
+							let send_data = {};
 
-							senddata.data = orderid;
+							send_data.data = orderid;
 
-							res.send(senddata);
+							res.send(send_data);
 
 						}
 
@@ -130,55 +131,55 @@ function insertorder( res, receivebodyfromfront , orderdate , userid , skillarra
 
 }
 
-function changeskillcreate(skillchangetotext){
+function change_skill_create(skill_change_to_text){
 
-	let skillarray = [];
+	let skill_array = [];
 
-	let skillstringtoarray = skillchangetotext.skill;
+	let skill_string_to_array = skill_change_to_text.skill;
 
-	for( let i = 0 ; i < skillstringtoarray.length ; i++ ){
+	for( let i = 0 ; i < skill_string_to_array.length ; i++ ){
 
-		if( skillstringtoarray[i] == 'light' ){
-			skillarray.push('燈具維修');
-		}else if( skillstringtoarray[i] == 'toilet' ){
-			skillarray.push('馬桶裝修');
-		}else if( skillstringtoarray[i] == 'waterheater' ){
-			skillarray.push('熱水器');
-		}else if( skillstringtoarray[i] == 'pipe' ){
-			skillarray.push('水管');
-		}else if( skillstringtoarray[i] == 'faucet' ){
-			skillarray.push('水龍頭');
-		}else if( skillstringtoarray[i] == 'bathtub' ){
-			skillarray.push('浴缸/淋浴設備');
-		}else if( skillstringtoarray[i] == 'wire' ){
-			skillarray.push('電線');
-		}else if( skillstringtoarray[i] == 'soil' ){
-			skillarray.push('補土');
-		}else if( skillstringtoarray[i] == 'paint' ){
-			skillarray.push('油漆');
-		}else if( skillstringtoarray[i] == 'wallpaper' ){
-			skillarray.push('壁紙');
-		}else if( skillstringtoarray[i] == 'tile' ){
-			skillarray.push('磁磚');
+		if( skill_string_to_array[i] == 'light' ){
+			skill_array.push('燈具維修');
+		}else if( skill_string_to_array[i] == 'toilet' ){
+			skill_array.push('馬桶裝修');
+		}else if( skill_string_to_array[i] == 'waterheater' ){
+			skill_array.push('熱水器');
+		}else if( skill_string_to_array[i] == 'pipe' ){
+			skill_array.push('水管');
+		}else if( skill_string_to_array[i] == 'faucet' ){
+			skill_array.push('水龍頭');
+		}else if( skill_string_to_array[i] == 'bathtub' ){
+			skill_array.push('浴缸/淋浴設備');
+		}else if( skill_string_to_array[i] == 'wire' ){
+			skill_array.push('電線');
+		}else if( skill_string_to_array[i] == 'soil' ){
+			skill_array.push('補土');
+		}else if( skill_string_to_array[i] == 'paint' ){
+			skill_array.push('油漆');
+		}else if( skill_string_to_array[i] == 'wallpaper' ){
+			skill_array.push('壁紙');
+		}else if( skill_string_to_array[i] == 'tile' ){
+			skill_array.push('磁磚');
 		}
 
 	}
 
-	return skillarray;
+	return skill_array;
 
 }
 
 
-expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/create',(req,res)=>{
+express_router.post('/checktype/checktoken/checkuserexpire/api/order/create',(req,res)=>{
 
-	let orderdate = moment().format('YYYY-MM-DD');	
+	let order_date = moment().format('YYYY-MM-DD');	
 
-	let receivebodyfromfront = req.body ;
+	let receive_body_from_front = req.body ;
 
-	let skillarray = changeskillcreate(req.body);
+	let skill_array = change_skill_create(req.body);
 
-	let insertresult = insertorder( res , receivebodyfromfront , orderdate , req.userid , skillarray );
+	let insert_result = insert_order( res , receive_body_from_front , order_date , req.userid , skill_array );
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

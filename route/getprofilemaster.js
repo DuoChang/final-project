@@ -1,52 +1,50 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-expressrouter.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,res)=>{
+express_router.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,res)=>{
 
-	var querymasteralldataobj = new Promise(function(resolve,reject){
+	var query_master_all_data_obj = new Promise(function(resolve,reject){
 
-		let querymasterall = "SELECT master.account AS account,master.masterid AS masterid,master.name AS name,master.phone AS phone,master.email AS email,master.access_token AS access_token,master.access_expired AS access_expired,GROUP_CONCAT(DISTINCT masterarea.area) AS area FROM master,masterarea WHERE master.masterid=" + req.masterid + " AND masterarea.masterid=" + req.masterid ;
+		let query_master_all = "SELECT master.account AS account,master.masterid AS masterid,master.name AS name,master.phone AS phone,master.email AS email,master.access_token AS access_token,master.access_expired AS access_expired,GROUP_CONCAT(DISTINCT masterarea.area) AS area FROM master,masterarea WHERE master.masterid=" + req.masterid + " AND masterarea.masterid=" + req.masterid ;
 	
-		mysql.con.query( querymasterall ,(err,result)=>{
+		mysql.con.query( query_master_all ,(err,result)=>{
 
 			if( err ){
 
 				res.send("{\"error\": \"Invalid token.\"}");
 
 			}else{
+				
+				let master_res = {};
+				master_res.id = result[0].masterid;
+				master_res.name = result[0].name;
+				master_res.phone = result[0].phone;
+				master_res.email = result[0].email;
+				master_res.area = result[0].area;
+				master_res.account = result[0].account;
 
-				console.log(result);
+				let master_data = {};
+				master_data.access_token = result[0].access_token;
+				master_data.access_expired = result[0].access_expired;
+				master_data.provider = 'master';
+				master_data.basic = master_res;
 
-				let masterres = {};
-				masterres.id = result[0].masterid;
-				masterres.name = result[0].name;
-				masterres.phone = result[0].phone;
-				masterres.email = result[0].email;
-				masterres.area = result[0].area;
-				masterres.account = result[0].account;
-
-				let masterdata = {};
-				masterdata.access_token = result[0].access_token;
-				masterdata.access_expired = result[0].access_expired;
-				masterdata.provider = 'master';
-				masterdata.basic = masterres;
-
-				resolve(masterdata);
+				resolve(master_data);
 
 			}									
 
 		})
 
-		return querymasteralldataobj;
+		return query_master_all_data_obj;
 
 	})
 
-	querymasteralldataobj.then((masterdata)=>{
+	query_master_all_data_obj.then((master_data)=>{
 
-		let querymasterskill = 'SELECT * FROM masterskill WHERE masterid=' + req.masterid;
+		let query_master_skill = 'SELECT * FROM masterskill WHERE masterid=' + req.masterid;
 
-		mysql.con.query( querymasterskill ,(err,result)=>{
+		mysql.con.query( query_master_skill ,(err,result)=>{
 
 			if( err ){
 
@@ -54,47 +52,47 @@ expressrouter.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,re
 
 			}else{
 
-				let masterskillarray = [];
+				let master_skill_array = [];
 
 				if( result[0].light == 1){
-					masterskillarray.push('light');
+					master_skill_array.push('light');
 				}
 				if( result[0].toilet ==1 ){
-					masterskillarray.push('toilet');
+					master_skill_array.push('toilet');
 				}
 				if( result[0].waterheater ==1 ){
-					masterskillarray.push('waterheater');
+					master_skill_array.push('waterheater');
 				}
 				if( result[0].pipe ==1 ){
-					masterskillarray.push('pipe');
+					master_skill_array.push('pipe');
 				}
 				if( result[0].faucet ==1 ){
-					masterskillarray.push('faucet');
+					master_skill_array.push('faucet');
 				}
 				if( result[0].bathtub ==1 ){
-					masterskillarray.push('bathtub');
+					master_skill_array.push('bathtub');
 				}
 				if( result[0].wire ==1 ){
-					masterskillarray.push('wire');
+					master_skill_array.push('wire');
 				}
 				if( result[0].soil ==1 ){
-					masterskillarray.push('soil');
+					master_skill_array.push('soil');
 				}
 				if( result[0].paint ==1 ){
-					masterskillarray.push('paint');
+					master_skill_array.push('paint');
 				}
 				if( result[0].wallpaper ==1 ){
-					masterskillarray.push('wallpaper');
+					master_skill_array.push('wallpaper');
 				}
 				if( result[0].tile ==1 ){
-					masterskillarray.push('tile');
+					master_skill_array.push('tile');
 				}
 
-				masterdata.skill = masterskillarray;
+				master_data.skill = master_skill_array;
 
-				let mastertotalres = {};
-				mastertotalres.data = masterdata;
-				res.json(mastertotalres);
+				let master_total_res = {};
+				master_total_res.data = master_data;
+				res.json(master_total_res);
 
 			}
 
@@ -107,4 +105,4 @@ expressrouter.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,re
 
 
 
-module.exports = expressrouter;
+module.exports = express_router;

@@ -10,19 +10,19 @@
     <title>Find Master Profile</title>
     <script>
 
-      function sendupdate(data){
+      function send_update(data){
 
-        let updatemaster = new XMLHttpRequest;
+        let update_master = new XMLHttpRequest;
 
-        updatemaster.onreadystatechange = function(){
+        update_master.onreadystatechange = function(){
 
-          if(updatemaster.readyState === 4){
+          if(update_master.readyState === 4){
             
-           if (updatemaster.status === 200){
+           if (update_master.status === 200){
 
-            let updateresponse= JSON.parse(updatemaster.responseText);
+            let update_response= JSON.parse(update_master.responseText);
 
-            if( updateresponse.data ){
+            if( update_response.data ){
 
                 alert('更新成功');
               
@@ -38,14 +38,14 @@
 
         }
 
-        updatemaster.open('POST','/checktype/checktoken/checkmasterexpire/api/update/masterprofile');
+        update_master.open('POST','/checktype/checktoken/checkmasterexpire/api/update/masterprofile');
 
-        updatemaster.setRequestHeader("Content-Type",
+        update_master.setRequestHeader("Content-Type",
               "application/json");
 
-        updatemaster.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        update_master.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
-        updatemaster.send(data); 
+        update_master.send(data); 
 
 
       }
@@ -96,7 +96,7 @@
   				</div>
 
 	  			<div class='buttons'>
-				      <div><button class='goto' type="button" onclick="UpdateBasic()">更新 ( Update )</button></div>  
+				      <div><button class='goto' type="button" onclick="update_basic()">更新 ( Update )</button></div>  
 	  			</div>
 	  		</div>
 
@@ -127,7 +127,7 @@
           </div>
 
           <div class='buttons'>
-                <div><button class='goto' type="button" onclick="UpdateSkill()">更新 ( Update )</button></div>  
+                <div><button class='goto' type="button" onclick="update_skill()">更新 ( Update )</button></div>  
           </div>
 
         </div>
@@ -163,7 +163,7 @@
           </div>
 
           <div class='buttons'>
-              <div><button class='goto' type="button" onclick="UpdateArea()">更新 ( Update )</button></div>  
+              <div><button class='goto' type="button" onclick="update_area()">更新 ( Update )</button></div>  
           </div>
 
         </div>
@@ -181,17 +181,17 @@
 
       }else{
 
-        let getmasterData = new XMLHttpRequest;
+        let get_master_data = new XMLHttpRequest;
 
-        getmasterData.onreadystatechange = function(){
+        get_master_data.onreadystatechange = function(){
 
-          if(getmasterData.readyState === 4){
+          if(get_master_data.readyState === 4){
             
-           if (getmasterData.status === 200){
+           if (get_master_data.status === 200){
 
-            let getmasterback = JSON.parse(getmasterData.responseText);
+            let get_master_back = JSON.parse(get_master_data.responseText);
 
-            if(getmasterback.error != null){
+            if(get_master_back.error != null){
 
               alert('登入已過時,請重新登入');
 
@@ -204,26 +204,26 @@
               let idnum = document.getElementById('idnum');
               let name = document.getElementById('name');
               let email = document.getElementById('email');
-              let inputphone = document.getElementById('phone');
+              let input_phone = document.getElementById('phone');
               let account = document.getElementById('account');
 
-              idnum.innerHTML = getmasterback.data.basic.id;
-              name.innerHTML = getmasterback.data.basic.name;
-              email.innerHTML = getmasterback.data.basic.email;
-              inputphone.value = getmasterback.data.basic.phone;
-              account.innerHTML = getmasterback.data.basic.account;
+              idnum.innerHTML = get_master_back.data.basic.id;
+              name.innerHTML = get_master_back.data.basic.name;
+              email.innerHTML = get_master_back.data.basic.email;
+              input_phone.value = get_master_back.data.basic.phone;
+              account.innerHTML = get_master_back.data.basic.account;
 
-              let skillarray = getmasterback.data.skill;        
+              let skill_array = get_master_back.data.skill;        
 
-              let inputskill = document.getElementsByClassName('inputskill');
+              let input_skill = document.getElementsByClassName('inputskill');
 
-              for( let i = 0 ; i < skillarray.length ; i++ ){
+              for( let i = 0 ; i < skill_array.length ; i++ ){
 
-                for( let j = 0 ; j < inputskill.length ; j++ ){
+                for( let j = 0 ; j < input_skill.length ; j++ ){
 
-                  if( skillarray[i] == inputskill[j].value){
+                  if( skill_array[i] == input_skill[j].value){
 
-                    inputskill[j].checked = true;
+                    input_skill[j].checked = true;
 
                   }
 
@@ -231,18 +231,18 @@
 
               }
 
-              let areaarray = [];
-              areaarray = getmasterback.data.basic.area.split(',');
+              let area_array = [];
+              area_array = get_master_back.data.basic.area.split(',');
 
-              let inputarea = document.getElementsByClassName('inputarea');
+              let input_area = document.getElementsByClassName('inputarea');
 
-              for( let i = 0 ; i < areaarray.length ; i++ ){
+              for( let i = 0 ; i < area_array.length ; i++ ){
 
-                for( let j = 0 ; j < inputarea.length ; j++ ){
+                for( let j = 0 ; j < input_area.length ; j++ ){
 
-                  if( areaarray[i] == inputarea[j].value){
+                  if( area_array[i] == input_area[j].value){
 
-                    inputarea[j].checked = true;
+                    input_area[j].checked = true;
 
                   }
 
@@ -258,53 +258,53 @@
 
         }
 
-        getmasterData.open('GET','/checktoken/checkmasterexpire/api/userprofile/master');
-        getmasterData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
-        getmasterData.send();
+        get_master_data.open('GET','/checktoken/checkmasterexpire/api/userprofile/master');
+        get_master_data.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        get_master_data.send();
         
 
       }
 
 
-      function UpdateBasic(){
+      function update_basic(){
 
         let idnum = document.getElementById('idnum').innerHTML;
-        let inputphone = document.getElementById('phone').value;
-        let inputpass = document.getElementById('password').value;      
+        let input_phone = document.getElementById('phone').value;
+        let input_pass = document.getElementById('password').value;      
 
-        if( inputpass != '' && inputpass.length < 8 ){
+        if( input_pass != '' && input_pass.length < 8 ){
 
           alert('更新密碼長度不足');
 
         }else{
 
-          let jsonsend = {};
+          let json_send = {};
 
-          jsonsend.masterid = idnum;
-          jsonsend.phone = inputphone;
-          jsonsend.password = inputpass;
+          json_send.masterid = idnum;
+          json_send.phone = input_phone;
+          json_send.password = input_pass;
 
-          jsonsend.update = 'basic';
+          json_send.update = 'basic';
 
-          let sendjson = JSON.stringify(jsonsend);
+          let send_json = JSON.stringify(json_send);
 
-          sendupdate(sendjson);
+          send_update(send_json);
 
         }     
 
       }
 
-      function UpdateSkill(){
+      function update_skill(){
 
-        let inputskill = document.getElementsByClassName('inputskill');
+        let input_skill = document.getElementsByClassName('inputskill');
 
-        let skillarray = [];
+        let skill_array = [];
 
-        for( let i = 0 ; i < inputskill.length ; i++ ){
+        for( let i = 0 ; i < input_skill.length ; i++ ){
 
-          if( inputskill[i].checked ){
+          if( input_skill[i].checked ){
 
-            skillarray.push(inputskill[i].value);
+            skill_array.push(input_skill[i].value);
 
           }
 
@@ -312,30 +312,30 @@
 
         let idnum = document.getElementById('idnum').innerHTML;
 
-        let jsonsend = {};
+        let json_send = {};
 
-        jsonsend.masterid = idnum;
-        jsonsend.skill = skillarray;
-        jsonsend.update = 'skill';
+        json_send.masterid = idnum;
+        json_send.skill = skill_array;
+        json_send.update = 'skill';
 
-        let sendjson = JSON.stringify(jsonsend);
+        let send_json = JSON.stringify(json_send);
 
-        sendupdate(sendjson);
+        send_update(send_json);
 
       }
 
 
-      function UpdateArea(){
+      function update_area(){
 
-        let inputarea = document.getElementsByClassName('inputarea');
+        let input_area = document.getElementsByClassName('inputarea');
 
-        let areaarray = [];
+        let area_array = [];
 
-        for( let j = 0 ; j < inputarea.length ; j++ ){
+        for( let j = 0 ; j < input_area.length ; j++ ){
 
-          if( inputarea[j].checked ){
+          if( input_area[j].checked ){
 
-            areaarray.push(inputarea[j].value);
+            area_array.push(input_area[j].value);
 
           }
 
@@ -343,17 +343,15 @@
 
         let idnum = document.getElementById('idnum').innerHTML;
 
-        let jsonsend = {};
+        let json_send = {};
 
-        jsonsend.masterid = idnum;
-        jsonsend.area = areaarray;
-        jsonsend.update = 'area';
+        json_send.masterid = idnum;
+        json_send.area = area_array;
+        json_send.update = 'area';
 
-        let sendjson = JSON.stringify(jsonsend);
+        let send_json = JSON.stringify(json_send);
 
-        let updatemasterarea = new XMLHttpRequest;
-
-        sendupdate(sendjson);
+        send_update(send_json);
 
       }
 

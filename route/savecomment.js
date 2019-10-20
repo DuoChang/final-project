@@ -1,17 +1,17 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 const moment = require('moment');
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/savecomment',(req,res)=>{
+express_router.post('/checktype/checktoken/checkuserexpire/api/order/savecomment',(req,res)=>{
 
-	let querymasterid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
+	let query_masterid = 'SELECT masterid FROM orders WHERE indexid=' + req.body.orderid;
 
-	mysql.con.query( querymasterid ,(err,result)=>{
+	mysql.con.query( query_masterid ,(err,result)=>{
 
 		if( err || result.length == 0 ){
 
@@ -21,9 +21,9 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/savecomment'
 
 			let commentdate = moment().format('YYYY-MM-DD');
 
-			let insertnewcomment = 'INSERT INTO comments SET ?';
+			let insert_new_comment = 'INSERT INTO comments SET ?';
 
-			let commentdetails = {
+			let comment_details = {
 				content:req.body.content,
 				orderid:req.body.orderid,
 				heartrate:req.body.heartrate,
@@ -32,7 +32,7 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/savecomment'
 				masterid:result[0].masterid
 			}
 
-			mysql.con.query( insertnewcomment , commentdetails ,(err,result)=>{
+			mysql.con.query( insert_new_comment , comment_details ,(err,result)=>{
 
 				if( err ){
 
@@ -52,4 +52,4 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/savecomment'
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

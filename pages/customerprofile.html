@@ -77,9 +77,9 @@
 
 	    function updatecustomer(){
 
-        	let inputpass = document.getElementById('password').value;
+        	let input_pass = document.getElementById('password').value;
 
-        	if( inputpass != '' && inputpass.length < 8 ){
+        	if( input_pass != '' && input_pass.length < 8 ){
 
 	          alert('更新密碼長度不足');
 
@@ -89,24 +89,24 @@
 
 	        }else{
 
-	        	let jsonsend = {};
+	        	let json_send = {};
 
-		        jsonsend.password = inputpass;
-		        jsonsend.address = address.value;
+		        json_send.password = input_pass;
+		        json_send.address = address.value;
 
-		        let sendjson = JSON.stringify(jsonsend);
+		        let send_json = JSON.stringify(json_send);
 
-		        let updatecustomerData = new XMLHttpRequest;
+		        let update_customer_data = new XMLHttpRequest;
 
-		        updatecustomerData.onreadystatechange = function(){
+		        update_customer_data.onreadystatechange = function(){
 
-		          if(updatecustomerData.readyState === 4){
+		          if(update_customer_data.readyState === 4){
 		            
-		           if (updatecustomerData.status === 200){
+		           if (update_customer_data.status === 200){
 
-		           	let updateresponse= JSON.parse(updatecustomerData.responseText);
+		           	let update_response= JSON.parse(update_customer_data.responseText);
 
-		           	if( updateresponse.data ){
+		           	if( update_response.data ){
 
 		           		alert('更新成功');
 		           	
@@ -122,29 +122,29 @@
 
 		        }
 
-		        updatecustomerData.open('POST','/checktype/checktoken/checkuserexpire/api/update/customerprofile');
+		        update_customer_data.open('POST','/checktype/checktoken/checkuserexpire/api/update/customerprofile');
 
-		        updatecustomerData.setRequestHeader("Content-Type","application/json");
+		        update_customer_data.setRequestHeader("Content-Type","application/json");
 
-		        updatecustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+		        update_customer_data.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
 
-		        updatecustomerData.send(sendjson); 
+		        update_customer_data.send(send_json); 
 
 	    	}
 
 	    }
 
-	    let getcustomerData = new XMLHttpRequest;
+	    let get_customer_data = new XMLHttpRequest;
 
-        getcustomerData.onreadystatechange = function(){
+        get_customer_data.onreadystatechange = function(){
 
-          if(getcustomerData.readyState === 4){
+          if(get_customer_data.readyState === 4){
             
-           if (getcustomerData.status === 200){
+           if (get_customer_data.status === 200){
 
-           	let customerData = JSON.parse(getcustomerData.responseText);
+           	let customer_data = JSON.parse(get_customer_data.responseText);
 
-           	if(customerData.error != null){
+           	if(customer_data.error != null){
 
               alert('登入已過時,請重新登入');
               
@@ -154,13 +154,13 @@
 
             }else{
 
-		       	idnum.innerHTML = customerData.data.userid;
+		       	idnum.innerHTML = customer_data.data.userid;
 
-		       	name.innerHTML = customerData.data.name;
+		       	name.innerHTML = customer_data.data.name;
 
-		       	phone.innerHTML = customerData.data.phone;
+		       	phone.innerHTML = customer_data.data.phone;
 
-		       	address.value = customerData.data.address;
+		       	address.value = customer_data.data.address;
 
            }
 
@@ -170,9 +170,9 @@
           
         }
 
-        getcustomerData.open('GET','/checktoken/checkuserexpire/api/userprofile/customer');
-        getcustomerData.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
-        getcustomerData.send(); 	
+        get_customer_data.open('GET','/checktoken/checkuserexpire/api/userprofile/customer');
+        get_customer_data.setRequestHeader("Authorization",sessionStorage.getItem("Auth"));
+        get_customer_data.send(); 	
 
     </script>
 

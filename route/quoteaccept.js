@@ -1,13 +1,13 @@
 const mysql=require("../util/mysqlcon.js");
-const changeskill=require("../util/changeskill.js");
-const changedatetype=require("../util/changedatetype.js");
+const change_skill=require("../util/changeskill.js");
+const change_date_type=require("../util/changedatetype.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -19,7 +19,7 @@ const mailTransport = nodemailer.createTransport({
   }
 });
 
-expressrouter.post('/api/quote/accept' ,(req,res)=>{
+express_router.post('/api/quote/accept' ,(req,res)=>{
 
 	if( !req.body.Authorization || req.body.Authorization == ''){
 
@@ -27,24 +27,24 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 	
 	}else{
 
-		let tokensplit = req.body.Authorization.split(' ');
+		let token_split = req.body.Authorization.split(' ');
 
-		let timenow = Date.now();
+		let time_now = Date.now();
 
-		let checkauthorization = "SELECT name,phone,access_expired FROM user WHERE access_token=\"" + tokensplit[1] + "\"";
+		let check_authorization = "SELECT name,phone,access_expired FROM user WHERE access_token=\"" + token_split[1] + "\"";
 
-		mysql.con.query( checkauthorization ,(err,result)=>{
+		mysql.con.query( check_authorization ,(err,result)=>{
 
-			if( err || result.length===0 || tokensplit[0] !="Bearer" ){
+			if( err || result.length===0 || token_split[0] !="Bearer" ){
 
 				return res.redirect('../../customerpaidresult.html?status=error');
 			
 			}else{
 
-				let userphone = result[0].phone;
-				let username = result[0].name;
+				let user_phone = result[0].phone;
+				let user_name = result[0].name;
 
-				if( timenow > result[0].access_expired ){
+				if( time_now > result[0].access_expired ){
 
 					return res.redirect('../../customerpaidresult.html?status=error');
 				
@@ -52,9 +52,9 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 					if( req.body.orderid ){
 
-						let queryorderdetails = 'SELECT code,masterid,workdate,address,ordertext,orderskill FROM orders WHERE indexid=' + req.body.orderid ;
+						let query_order_details = 'SELECT code,masterid,workdate,address,ordertext,orderskill FROM orders WHERE indexid=' + req.body.orderid ;
 
-						mysql.con.query( queryorderdetails , (err,result)=>{
+						mysql.con.query( query_order_details , (err,result)=>{
 
 							if( err ){
 
@@ -62,13 +62,13 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 							}else{
 
-								result = changeskill( result );
+								result = change_skill( result );
 
-								result = changedatetype( result );
+								result = change_date_type( result );
 
 								let code = result[0].code;
 
-								let detailaddress = result[0].address;
+								let detail_address = result[0].address;
 
 								let workdate = result[0].workdate;
 
@@ -76,16 +76,16 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 								let skillarray = result[0].orderskill;
 
-								let workdatedetail = {
+								let workdate_detail = {
 									masterid:result[0].masterid,
 									workdate:result[0].workdate
 								};
 
-								let querygetmasteraccount = 'SELECT email,account FROM master WHERE masterid=' + result[0].masterid ;
+								let query_get_master_account = 'SELECT email,account FROM master WHERE masterid=' + result[0].masterid ;
 
-								mysql.con.query( querygetmasteraccount , (err,result)=>{
+								mysql.con.query( query_get_master_account , (err,result)=>{
 
-									let masteremail = result[0].email;
+									let master_email = result[0].email;
 
 									stripe.charges.create({
 									  amount: req.body.price*100,
@@ -95,9 +95,9 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 									}).then(function(charge) {
 									  // asynchronously called
 
-									  	let queryupdateorderstautspaid = 'UPDATE orders SET status=\"paid\",paymentid=\"' + charge.id + '\" WHERE indexid=' + req.body.orderid ;
+									  	let query_update_order_stauts_paid = 'UPDATE orders SET status=\"paid\",paymentid=\"' + charge.id + '\" WHERE indexid=' + req.body.orderid ;
 
-										mysql.con.query( queryupdateorderstautspaid , (err,result)=>{
+										mysql.con.query( query_update_order_stauts_paid , (err,result)=>{
 
 											if( err ){
 
@@ -105,9 +105,9 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 											}else{
 
-												let queryinsertworkdate = 'INSERT INTO masterdate SET ?';
+												let query_insert_workdate = 'INSERT INTO masterdate SET ?';
 
-												mysql.con.query( queryinsertworkdate , workdatedetail , (err,result)=>{
+												mysql.con.query( query_insert_workdate , workdate_detail , (err,result)=>{
 
 													if( err || result.length == 0 ){
 
@@ -119,11 +119,11 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 												  
 														  from: '<deathscythe.ms98@g2.nctu.edu.tw>',
 														  
-														  to: masteremail,
+														  to: master_email,
 														  
 														  subject: 'Find 師傅-消費者已確認報價 訂單編號:' + req.body.orderid,
 														  
-														  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>需求明細如下，請查閱詳細訊息<br><br>客戶：'+ username +'<br>連絡電話：' + userphone + '<br>地區：' + detailaddress + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + workdate + '<br>詳細敘述：' + ordertext + '<br>請點選以下連結前往訂單<br><a href="https://g777708.com/masterinputcode.html?status=paid&orderid=' + req.body.orderid + '">查看訂單</a></p></div>'
+														  html: '<div style="border: 3px double #A89B8C"><p style="font-family:Microsoft JhengHei">您好<br>需求明細如下，請查閱詳細訊息<br><br>客戶：'+ user_name +'<br>連絡電話：' + user_phone + '<br>地區：' + detail_address + '<br>裝修項目：'+ skillarray.toString() +'<br>裝修日期：' + workdate + '<br>詳細敘述：' + ordertext + '<br>請點選以下連結前往訂單<br><a href="https://g777708.com/masterinputcode.html?status=paid&orderid=' + req.body.orderid + '">查看訂單</a></p></div>'
 
 
 														}, function(err){
@@ -181,4 +181,4 @@ expressrouter.post('/api/quote/accept' ,(req,res)=>{
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

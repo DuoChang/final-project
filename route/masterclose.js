@@ -1,19 +1,19 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-expressrouter.post('/checktype/checktoken/checkmasterexpire/api/master/order/close' ,(req,res)=>{
+express_router.post('/checktype/checktoken/checkmasterexpire/api/master/order/close' ,(req,res)=>{
 
 	if( req.body.code ){
 
-		let querypaymasterdetail = 'SELECT paytomaster,masterid,indexid,paymentid,code FROM orders WHERE indexid=' + req.body.orderid;
+		let query_pay_master_detail = 'SELECT paytomaster,masterid,indexid,paymentid,code FROM orders WHERE indexid=' + req.body.orderid;
 
-		mysql.con.query( querypaymasterdetail ,(err,result)=>{
+		mysql.con.query( query_pay_master_detail ,(err,result)=>{
 
 			if( err ){
 
@@ -33,9 +33,9 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/master/order/clo
 
 				if( result[0].code == req.body.code ){
 
-					let querygetmasteraccount = 'SELECT account FROM master WHERE masterid=' + result[0].masterid ;
+					let query_get_master_account = 'SELECT account FROM master WHERE masterid=' + result[0].masterid ;
 
-					mysql.con.query( querygetmasteraccount ,(err,result)=>{
+					mysql.con.query( query_get_master_account ,(err,result)=>{
 
 						if( err ){
 
@@ -57,9 +57,9 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/master/order/clo
 
 							  	// asynchronously called
 
-								let querycloseorder = 'UPDATE orders SET transactionid=\"' + transfer.id + '\",status=\"closed\" WHERE code=\"' + req.body.code + '\" AND indexid=' + orderid;
+								let query_close_order = 'UPDATE orders SET transactionid=\"' + transfer.id + '\",status=\"closed\" WHERE code=\"' + req.body.code + '\" AND indexid=' + orderid;
 
-								mysql.con.query( querycloseorder ,(err,result)=>{
+								mysql.con.query( query_close_order ,(err,result)=>{
 
 									if( err ){
 
@@ -101,4 +101,4 @@ expressrouter.post('/checktype/checktoken/checkmasterexpire/api/master/order/clo
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

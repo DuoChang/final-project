@@ -1,16 +1,16 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/saveaddress',(req,res)=>{
+express_router.post('/checktype/checktoken/checkuserexpire/api/order/saveaddress',(req,res)=>{
 
-	let saveorderaddressquery = 'UPDATE orders SET address=\"' + req.body.address + '\" WHERE indexid=' + req.body.ordernumber;
+	let save_order_address_query = 'UPDATE orders SET address=\"' + req.body.address + '\" WHERE indexid=' + req.body.ordernumber;
 
-	mysql.con.query( saveorderaddressquery ,(err,result)=>{
+	mysql.con.query( save_order_address_query ,(err,result)=>{
 
 		if( err ){
 
@@ -26,4 +26,4 @@ expressrouter.post('/checktype/checktoken/checkuserexpire/api/order/saveaddress'
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;

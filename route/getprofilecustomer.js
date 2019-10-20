@@ -1,13 +1,13 @@
 const mysql=require("../util/mysqlcon.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-expressrouter.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,res)=>{
+express_router.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,res)=>{
 
 
-	let queryuserdetail='SELECT * FROM user WHERE userid=' + req.userid ;
+	let query_user_detail='SELECT * FROM user WHERE userid=' + req.userid ;
 
-	mysql.con.query( queryuserdetail ,(err,result)=>{
+	mysql.con.query( query_user_detail ,(err,result)=>{
 
 		if( err ){
 
@@ -15,9 +15,9 @@ expressrouter.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,re
 
 		}else{
 
-			let usertotalres = {};
-			usertotalres.data = result[0];
-			res.json(usertotalres);
+			let user_total_res = {};
+			user_total_res.data = result[0];
+			res.json(user_total_res);
 
 		}
 
@@ -29,4 +29,4 @@ expressrouter.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,re
 
 
 
-module.exports = expressrouter;
+module.exports = express_router;

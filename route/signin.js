@@ -1,22 +1,22 @@
 const mysql=require("../util/mysqlcon.js");
-const createtoken=require("../util/createtoken.js");
-const createpasswordtoken=require("../util/createpasswordtoken.js");
+const create_token=require("../util/createtoken.js");
+const create_password_token=require("../util/createpasswordtoken.js");
 const express = require('express');
-const expressrouter = express.Router();
+const express_router = express.Router();
 
-const bodyParser = require('body-parser');
-expressrouter.use(bodyParser.json());
-expressrouter.use(bodyParser.urlencoded({extended:true}));
+const body_parser = require('body-parser');
+express_router.use(body_parser.json());
+express_router.use(body_parser.urlencoded({extended:true}));
 
-expressrouter.post('/checktype/api/user/signin',(req,res)=>{
+express_router.post('/checktype/api/user/signin',(req,res)=>{
 
 	if( req.body.provider == "customer" ){		
 
 					/*--確認註冊過--*/
 
-		let passwordtoken = createpasswordtoken(req.body.password) ;
+		let password_token = create_password_token(req.body.password) ;
 
-		mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
+		mysql.con.query( 'SELECT phone,password FROM user WHERE phone=\"' + req.body.phone + '\" AND password = \"' + password_token + '\"' ,(err,result)=>{
 
 			if( err || result.length ===0 ){
 
@@ -24,9 +24,9 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 			}else{
 
-				let customertokentosave = createtoken(req.body.phone);
+				let customer_token_save = create_token(req.body.phone);
 
-				mysql.con.query( 'Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' , customertokentosave , (err,result)=>{
+				mysql.con.query( 'Update user SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + password_token + '\"' , customer_token_save , (err,result)=>{
 
 					if( err || result.length ===0 ){
 
@@ -34,15 +34,15 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 					}else{
 
-						let userdata = {};
-						userdata.access_token = customertokentosave.access_token;
-						userdata.access_expired = customertokentosave.access_expired;
-						userdata.provider = 'customer';
+						let user_data = {};
+						user_data.access_token = customer_token_save.access_token;
+						user_data.access_expired = customer_token_save.access_expired;
+						user_data.provider = 'customer';
 
 
-						let usertotalres = {};
-						usertotalres.data = userdata;
-						res.json(usertotalres);
+						let user_total_res = {};
+						user_total_res.data = user_data;
+						res.json(user_total_res);
 
 					}
 
@@ -54,11 +54,11 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 	}else if( req.body.provider == "master" ){
 
-		let passwordtoken = createpasswordtoken( req.body.password ) ;
+		let password_token = create_password_token( req.body.password ) ;
 
 					/*--確認註冊過--*/
 		
-		mysql.con.query( 'SELECT masterid,email,phone,password FROM master WHERE phone=\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' ,(err,result)=>{
+		mysql.con.query( 'SELECT masterid,email,phone,password FROM master WHERE phone=\"' + req.body.phone + '\" AND password = \"' + password_token + '\"' ,(err,result)=>{
 
 			if( err || result.length ===0 ){
 
@@ -68,9 +68,9 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 				/*--確認帳號已啟用--*/
 
-				let querycheckmail = "SELECT status FROM mailstatus WHERE email=\"" + result[0].email + "\"";
+				let query_check_mail = "SELECT status FROM mailstatus WHERE email=\"" + result[0].email + "\"";
 
-				mysql.con.query(querycheckmail,(err,result)=>{
+				mysql.con.query(query_check_mail,(err,result)=>{
 
 					if( err || result.length ===0 ){
 
@@ -78,9 +78,9 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 					}else if( result[0].status == 'active'){
 
-						let mastertokentosave = createtoken(req.body.phone);
+						let master_token_save = create_token(req.body.phone);
 
-						mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + passwordtoken + '\"' , mastertokentosave , (err,result)=>{
+						mysql.con.query('Update master SET ? WHERE phone =\"' + req.body.phone + '\" AND password = \"' + password_token + '\"' , master_token_save , (err,result)=>{
 
 							if( err || result.length ===0 ){
 
@@ -88,14 +88,14 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 							}else{
 
-								let masterdata = {};
-								masterdata.access_token = mastertokentosave.access_token;
-								masterdata.access_expired = mastertokentosave.access_expired;
-								masterdata.provider = 'master';
+								let master_data = {};
+								master_data.access_token = master_token_save.access_token;
+								master_data.access_expired = master_token_save.access_expired;
+								master_data.provider = 'master';
 
-								let mastertotalres = {};
-								mastertotalres.data = masterdata;
-								res.json(mastertotalres);
+								let master_total_res = {};
+								master_total_res.data = master_data;
+								res.json(master_total_res);
 
 							}
 
@@ -118,4 +118,4 @@ expressrouter.post('/checktype/api/user/signin',(req,res)=>{
 
 })
 
-module.exports = expressrouter;
+module.exports = express_router;
