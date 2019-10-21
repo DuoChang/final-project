@@ -4,7 +4,6 @@ const express_router = express.Router();
 
 express_router.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,res)=>{
 
-
 	let query_user_detail='SELECT * FROM user WHERE userid=' + req.userid ;
 
 	mysql.con.query( query_user_detail ,(err,result)=>{
@@ -23,10 +22,6 @@ express_router.get('/checktoken/checkuserexpire/api/userprofile/customer',(req,r
 
 	})
 
-
 })
-
-
-
 
 module.exports = express_router;

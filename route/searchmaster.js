@@ -83,7 +83,7 @@ express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(r
 
 							let masterid_by_status = [];
 
-							var count = 0 ;
+							let count = 0 ;
 
 							for( let i = 0 ; i < email_arrayforcheck.length ; i++ ){
 

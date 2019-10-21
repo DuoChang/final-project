@@ -5,7 +5,6 @@ const express_router = express.Router();
 
 express_router.get('/checktoken/checkuserexpire/api/getcomment',(req,res)=>{
 
-
 	if( req.query.masterid ){
 
 		let query_master_comments = "SELECT * FROM comments WHERE masterid=" + req.query.masterid + " ORDER BY commentdate DESC" ;

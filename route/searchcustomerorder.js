@@ -43,9 +43,7 @@ express_router.get('/checktoken/checkuserexpire/api/search/order/customer',(req,
 
 					res.send("{\"message\": \"No result\"}");
 
-				}
-
-				
+				}	
 
 			}
 

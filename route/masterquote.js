@@ -55,7 +55,7 @@ express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 
 							let excel_obj = obj[0].data;
 
-							if( excel_obj[0][0] != "耗材編號" || excel_obj[0][1] != "耗材名稱" || excel_obj[0][2] != "耗材價錢(TWD)" || excel_obj.length != 3){
+							if( excel_obj[0][0] != "耗材編號" || excel_obj[0][1] != "耗材名稱" || excel_obj[0][2] != "耗材價錢(TWD)" || excel_obj[0].length != 3){
 
 								fs.unlink( req.files.quotefile[0].path, function () {
 
@@ -73,7 +73,7 @@ express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 
 								let material_obj_crawler_price = {};
 
-								var count = 0;
+								let count = 0;
 
 								for( let i = 1 ; i < excel_obj.length ; i++ ){						
 
@@ -125,7 +125,6 @@ express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 
 													resolve(all_qoute_data);
 
-													// return get_pchome_price;
 													return ;
 
 												}
@@ -180,7 +179,6 @@ express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 									}
 
 								})
-
 
 							})
 
