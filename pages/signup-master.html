@@ -135,6 +135,7 @@
         let input_phone = document.getElementById('phone').value;
         let input_pass = document.getElementById('password').value;
         let split_email = input_email.split('@');
+        let check_letter_number = /^[0-9a-zA-Z]+$/;
 
         if( input_name == '' || input_email == '' || input_phone == '' || input_pass == '' ){
 
@@ -155,6 +156,10 @@
         }else if( input_email.indexOf('@') == -1 || split_email[0] == '' || split_email[1] == '' ){
 
           alert( 'email 格式錯誤' );
+
+        }else if( !input_pass.match(check_letter_number) ){
+
+          alert("僅接受數字和英文！");
 
         }else{
 

@@ -66,6 +66,7 @@
         let input_address = document.getElementById('address').value;
         let input_phone = document.getElementById('phone').value;
         let input_pass = document.getElementById('password').value;
+        let check_letter_number = /^[0-9a-zA-Z]+$/;
 
         if( input_name == '' || input_address == '' || input_phone == '' || input_pass == '' ){
 
@@ -82,6 +83,10 @@
         }else if( input_phone[0] != 0 || input_phone[1] != 9 || isNaN( +999999999 - input_phone ) ){
 
           alert('電話格式錯誤');
+
+        }else if( !input_pass.match(check_letter_number) ){
+
+          alert("僅接受數字和英文！");
 
         }else{
 

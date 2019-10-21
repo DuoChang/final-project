@@ -270,11 +270,16 @@
 
         let idnum = document.getElementById('idnum').innerHTML;
         let input_phone = document.getElementById('phone').value;
-        let input_pass = document.getElementById('password').value;      
+        let input_pass = document.getElementById('password').value;
+        let check_letter_number = /^[0-9a-zA-Z]+$/;      
 
         if( input_pass != '' && input_pass.length < 8 ){
 
           alert('更新密碼長度不足');
+
+        }else if( input_pass != '' && !input_pass.match(check_letter_number) ){
+
+          alert("僅接受數字和英文！");
 
         }else{
 
