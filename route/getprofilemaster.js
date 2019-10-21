@@ -4,7 +4,7 @@ const express_router = express.Router();
 
 express_router.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,res)=>{
 
-	var query_master_all_data_obj = new Promise(function(resolve,reject){
+	let query_master_all_data_obj = new Promise(function(resolve,reject){
 
 		let query_master_all = "SELECT master.account AS account,master.masterid AS masterid,master.name AS name,master.phone AS phone,master.email AS email,master.access_token AS access_token,master.access_expired AS access_expired,GROUP_CONCAT(DISTINCT masterarea.area) AS area FROM master,masterarea WHERE master.masterid=" + req.masterid + " AND masterarea.masterid=" + req.masterid ;
 	
@@ -36,7 +36,7 @@ express_router.get('/checktoken/checkmasterexpire/api/userprofile/master',(req,r
 
 		})
 
-		return query_master_all_data_obj;
+		return ;
 
 	})
 

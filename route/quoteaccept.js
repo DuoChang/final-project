@@ -9,8 +9,8 @@ const body_parser = require('body-parser');
 express_router.use(body_parser.json());
 express_router.use(body_parser.urlencoded({extended:true}));
 
-const nodemailer = require('nodemailer');
 require('dotenv').config();
+const nodemailer = require('nodemailer');
 const mailTransport = nodemailer.createTransport({
   service: 'Gmail',
   auth: {

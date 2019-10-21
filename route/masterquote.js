@@ -65,7 +65,7 @@ express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 
 							}
 
-							var get_pchome_price = new Promise(function(resolve,reject){
+							let get_pchome_price = new Promise(function(resolve,reject){
 
 								let sum_of_materials_price = 0 ;
 
@@ -125,7 +125,8 @@ express_router.post('/api/masterquote', cp_upload  ,(req,res)=>{
 
 													resolve(all_qoute_data);
 
-													return get_pchome_price;
+													// return get_pchome_price;
+													return ;
 
 												}
 

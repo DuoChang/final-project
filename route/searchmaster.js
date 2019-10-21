@@ -9,7 +9,7 @@ express_router.use(body_parser.urlencoded({extended:true}));
 
 express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(req,res)=>{
 
-	var select_by_area = new Promise(function(resolve,reject){
+	let select_by_area = new Promise(function(resolve,reject){
 
 		let query_get_master_by_area = 'SELECT masterid FROM masterarea WHERE area=\"' + req.body.area + '\"';
 		
@@ -31,11 +31,11 @@ express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(r
 		
 		});
 
-		return select_by_area;
+		return ;
 
 	})
 
-	var select_by_mail_status = new Promise(function(resolve,reject){
+	let select_by_mail_status = new Promise(function(resolve,reject){
 
 		select_by_area.then((masterid)=>{
 
@@ -127,13 +127,11 @@ express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(r
 
 		})
 
-		return select_by_mail_status;
+		return ;
 
 	})
 
-
-
-	var select_by_date = new Promise(function(resolve,reject){
+	let select_by_date = new Promise(function(resolve,reject){
 
 		select_by_mail_status.then((masterid)=>{
 
@@ -177,11 +175,11 @@ express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(r
 
 		})
 
-		return select_by_date;
+		return ;
 
 	})
 
-	var select_by_skill = new Promise(function(resolve,reject){
+	let select_by_skill = new Promise(function(resolve,reject){
 
 		select_by_date.then((masterid_array_by_date)=>{
 
@@ -253,13 +251,13 @@ express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(r
 
 		})
 
-		return select_by_skill;
+		return ;
 
 	})
 
 	select_by_skill.then((master_array)=>{
 
-		var master_average_rate = new Promise(function(resolve,reject){
+		let master_average_rate = new Promise(function(resolve,reject){
 
 			if( master_array.length == 0 ){
 
@@ -306,7 +304,7 @@ express_router.post('/checktype/checktoken/checkuserexpire/api/search/master',(r
 
 			}				
 
-			return master_average_rate;
+			return ;
 
 		})
 
